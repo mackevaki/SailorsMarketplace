@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="WEb Application: Exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/WEb_Application__Exploded</output-path>
+    <root id="root" />
+  </artifact>
+</component>

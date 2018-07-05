@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="Web Applicarion: Archive">
+    <output-path>$PROJECT_DIR$/out/artifacts/Web_Applicarion__Archive</output-path>
+    <root id="archive" name="Web Applicarion_ Archive.war" />
+  </artifact>
+</component>
