@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>The Sailors Marketplace</title>
+    <link rel="stylesheet" href="/res/js/jquery-ui.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/res/css/style.css">
+    <script src="/res/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                var url = "/rest/accounts/";
+                $('<p>').html('Request: ' + url).appendTo('#request');
+                $.getJSON(url,
+                    function ( data ) {
+                        console.log( data );
+                        $('<p>').html('Raw response: <code>' + JSON.stringify(data) + '</code>').appendTo('#raw');
+                        $('<p>').html('Output: ').appendTo('#result');
+                        $('<p>').html('Operation: ' + data.operation).appendTo('#result');
+                        $('<p>').html('<br>Left: ' + data.firstname).appendTo('#result');
+                        $('<p>').html('<br>Right: ' + data.lastname).appendTo('#result');
+                        $('<p>').html('<br>Result: ' + data.email).appendTo('#result');
+                    })
+                    .fail(function() {
+                        console.log( "error" );
+                    })
+                    .always(function() {
+                        $("#status").text("Status: Complete.");
+                    });
+            });
+        })(jQuery);
+    </script>
+</head>
+<body>
+<h4>This is the /index.html</h4>
+<nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+
+    <!-- A Search form is another commmon non-linear way to navigate through a website. -->
+    <form>
+        <input type="search" name="q" placeholder="Search query">
+        <input type="submit" value="Go!">
+    </form>
+</nav>
+   <main>
+        <!-- It contains an article -->
+        <article>
+            <h2>...</h2>
+
+            <p>...</p>
+
+            <h3>...</h3>
+        </article>
+
+       <div id="content">
+           <ul id="contentList">
+               <li id="request"></li>
+               <li id="result"></li>
+               <li id="raw"></li>
+               <li><p id="status">Status: Waiting...</p></li>
+           </ul>
+       </div>
+
+        <!-- the aside content can also be nested within the main content -->
+        <aside>
+            <h2>Related</h2>
+
+            <ul>
+                <li><a href="/signup.html">Registration</a></li>
+            </ul>
+        </aside>
+    </main>
+    <!-- And here is our main footer that is used across all the pages of our website -->
+    <footer>
+        <p>©Copyright 2050 by nobody. All rights reversed.</p>
+    </footer>
+</body>
+</html>

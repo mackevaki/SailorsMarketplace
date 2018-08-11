@@ -6,7 +6,6 @@ import com.company.sailorsmarketplace.validators.StringValidator;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,14 +13,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "SignationUpController", urlPatterns = "/processsignup", loadOnStartup = 1)
 public class SignationUpController extends HttpServlet {
-    private ServletConfig config;
+
     @Override
     public void init (ServletConfig config) {
-        this.config = config;
         ServletContext sc = config.getServletContext();
         sc.log( "Started OK!" );
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter();
     }
 
     @Override
@@ -40,9 +42,9 @@ public class SignationUpController extends HttpServlet {
 
     private String determineUrl(List<String> violations) {
         if (!violations.isEmpty()) {
-            return "/META-INF/index.jsp";
+            return "/static-root/signup.html"; // response.sendRedirect
         } else {
-            return "/META-INF/accountinfo.jsp";
+            return "/static-root/accountsinfo.html";
         }
     }
 

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User Sign Up</title>
+
+    <link rel="stylesheet" href="/res/js/jquery-ui.css" />
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="/res/css/style.css">
+    <script src="/res/js/jquery-3.3.1.js"></script>
+
+    <script type="text/javascript">
+        var serverContext = "http://localhost:9998";
+
+            function register(){
+                $(".alert").html("").hide();
+                $(".error-list").html("");
+                var formData = $('sign-upForm').serialize();
+                $.post(serverContext + "/rest/accounts", formData, function(data){
+                    if(ajax.getSettings().responseFields.json.state() === "success"){
+                        window.location.href = serverContext +"/accountsinfo.html";
+                    }
+                })
+                    .fail(function(data) {
+                        if (data.responseJSON.error.indexOf("MailError") > -1) {
+                            window.location.href = serverContext + "/emailError.html";
+                        }
+                        else if (data.responseJSON.error.indexOf("InternalError") > -1) {
+                            window.location.href = serverContext +
+                                "/login.html?message=" + data.responseJSON.message;
+                        }
+                        else if (data.responseJSON.error === "UserAlreadyExist") {
+                            $("#emailError").show().html(data.responseJSON.message);
+                        }
+                        else {
+                            var errors = $.parseJSON(data.responseJSON.message);
+                            $.each(errors, function (index, item) {
+                                $("#" + item.field + "Error").show().html(item.defaultMessage);
+                            });
+                            errors = $.parseJSON(data.responseJSON.error);
+                            $.each(errors, function (index, item) {
+                                $("#globalError").show().append(item.defaultMessage + "<br>");
+                            });
+                        }
+                    })
+            }
+
+        // function createRegistrationForm() {
+        //     HTMLFormElement.prototype.create();
+        //     var el = createElem({
+        //         doc: document,
+        //         tag: HTMLFormElement.prototype.getAttribute("tag").valueOf(),
+        //         path: HTMLFormElement.prototype.href,
+        //         name: "registration",
+        //         className: "form-group",
+        //         id: "registration-form"
+        //     });
+        //     //FormData.append
+        //     var formData = new FormData(document.forms.namedItem("registration-form"));
+        // }
+
+        var form = document.querySelector("form");
+        var log = document.querySelector("#log");
+
+        form.addEventListener("submit", function(event) {
+            var data = new FormData(form);
+            var output = "";
+            for (const entry in data) {
+                output = entry[0] + "=" + entry[1] + "\r";
+            }
+            log.innerText = output;
+            event.preventDefault();
+        }, false);
+    </script>
+</head>
+<body>
+    <h1 class="text-center">User Sign Up</h1>
+        <div>
+            <div class="rowColor col-sm-6 ui-icon-arrow-1-e html-editor-align-center" id="registration-info">
+                <form class="col-sm-6" id="registration-form" action="/rest/accounts/registration" method="post" enctype="application/x-www-form-urlencoded">
+                    <div class="form-group">
+                        <p><label for="email">Email: </label></p>
+                        <p><input class="form-control item" type="email" name="email" required="" id="email" placeholder="Ваш Email" aria-label="Ваш email" multiple></p>
+                        <p><span class="alert alert-danger col-sm-4" id="emailError" style="display:inline-block"></span></p>
+                    </div>
+                    <div class="form-group">
+                        <p><label for="username">Username:</label></p>
+                        <p><input class="form-control item" type="text" id="username" name="username" required /></p>
+                    </div>
+                    <div class="form-group">
+                        <p><label for="password">Password:</label></p>
+                        <p><input class="form-control item password-field" type="password" id="password" name="password" minlength="8" required="" placeholder="8 characters minimum"/></p>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="sign-up" value="Зарегистрироваться">
+                    </div>
+                </form>
+            </div>
+
+                <pre id="log"></pre>
+        </div>
+    </div>
+</body>
+</html>

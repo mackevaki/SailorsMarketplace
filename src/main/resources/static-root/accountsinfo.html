@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Sign Up</title>
+
+    <link rel="stylesheet" href="/res/js/jquery-ui.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/res/css/style.css">
+    <script src="/res/js/jquery-3.3.1.js"></script>
+
+    <script type="text/javascript">
+        // Personalized welcome message code
+        onloadstart(function(event) {
+            var frm = $("#get-form");
+            var myButton = document.querySelector(HTMLButtonElement.prototype.name = "button");
+            var myHeading = document.getElementById("h1");
+
+            frm.submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: frm.attr('method'),
+                    url: serverContext + frm.attr('action'),
+                    data: frm.toJSON.serialize(),
+                    success: function (data) {
+                        alert('account:' + data.firstname + " " + data.lastname + "\nemail:" + data.email);
+                    },
+                    error: function (xhr, str) {
+                        document.getElementById("status1").innerHTML = "First Name is mandatory";
+
+                        alert('User exist!');
+                    }
+                });
+            });
+
+
+            function setUserName() {
+                var myName = prompt('Please enter your name.');
+                localStorage.setItem('name', myName);
+                myHeading.innerHTML = 'Mozilla is cool, ' + myName;
+            }
+
+            if(!localStorage.getItem('name')) {
+               setUserName();
+            } else {
+                var storedName = localStorage.getItem('name');
+                myHeading.innerHTML = 'Mozilla is cool, ' + storedName;
+            }
+
+            myButton.onclick = function() {
+                setUserName();
+            };
+
+        });
+
+        var fnm = document.firstname;
+        var lnm = document.lastname;
+        var eml = document.email;
+
+        document.getElementById("fname").onload = function() {
+            document.getElementById("fname").outerHTML = fnm.value;
+            document.getElementById("lname").outerHTML = lnm.value;
+            document.getElementById("mail").outerHTML = eml.value;
+        };
+
+    </script>
+</head>
+<body>
+    <h1>Thanks for registration!</h1>
+    <h2>You provided the following data:</h2>
+
+    <nav role="navigation">
+    <ul>...</ul>
+    <form role="search">
+        <input type="search" name="q" placeholder="Search query" aria-label="Search through site content">
+        <!-- search form  -->
+    </form>
+    </nav>
+
+    <p><label for="fname" class="label">First Name: </label><span id="fname"></span></p>
+    <p><label for="lname" class="label">Last Name: </label><span id="lname"></span></p>
+    <p><label for="mail" class="label">Email: </label><span id="mail"></span></p>
+
+    <div data-message="This is from the first button" tabindex="0" role="button">Click me!</div>
+
+    <div class="col-sm-6" id="profile-info">
+        <form class="form-group" id="profile-form" action="/rest/accounts/accounts-info" method="post" enctype="application/x-www-form-urlencoded">
+            <h3 class="text-center">Account's information</h3>
+            <div>
+                <div class="form-group">
+                    <label for="firstname">First Name :
+                        <span class="warning">*(Allows only letters.)</span>
+                    </label>
+                    <input class="form-control item" type="text" name="firstname" required="" maxlength="15" id="firstname" minlength="4" placeholder="Firstname">
+                    <span class="alert alert-danger col-sm-4" id="firstnameError" style="display:inline-block"></span>
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name:<abbr title="required">*</abbr></label>
+                    <input class="form-control item" type="text" name="lastname" required="" minlength="3" id="lastname" placeholder="Lastname">
+                    <span class="alert alert-danger col-sm-4" id="lastnameError" style="display:inline-block"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <img src="" alt="Аватар" class="img-thumbnail" style="width: 200px; height: 200px">
+                </div>
+                <div class="date-picker form-group col-md-6">
+                    <label for="inputBirthDate" class="col-form-label">Дата рождения</label>
+                    <input class="date-picker" type="date" id="inputBirthDate" min="1900-01-01" max="2018-12-31" placeholder="22.04.1870" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                </div>
+                <fieldset class="col-md-4">
+                    <legend class="chart-legend">Пол</legend>
+                    <div><input class="color-input-field" type="radio" id="male" name="sex" value="male" checked/>
+                        <label class="radio-menu-item radio label" for="male">Мужской</label>
+                        <span class="validity"></span>
+                    </div>
+                    <div><input class="radio ui-spinner-input" type="radio" id="female" name="sex" value="female" />
+                        <label class="label" for="female">Женский</label>
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    <div class="form-group col-md-6">
+                        <label for="inputCity" class="col-form-label">Город</label>
+                        <input class="form-control" id="inputCity" placeholder="Ульяновск">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputOrganization" class="label">Организация</label>
+                        <input class="form-control" id="inputOrganization" placeholder="АСПС">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="sign-up" value="Sign Up">
+                </div>
+                <div class="errors" role="alert" aria-relevant="all" data-message="ошибки"></div>
+            </div>
+        </form>
+    </div>
+    <div class="errors" role="alert" aria-relevant="all">
+    </div>
+</body>
+</html>
