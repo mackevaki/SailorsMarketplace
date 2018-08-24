@@ -7,4 +7,11 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_10" default="false" project-jdk-name="10" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="sendto.SendTOConfigurationGUI">
+    <serverURL value="" />
+    <port value="" />
+    <userId value="" />
+    <passwd value="" />
+    <rootPath value="" />
+  </component>
 </project>

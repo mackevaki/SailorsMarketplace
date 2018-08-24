@@ -25,7 +25,7 @@
                     url: serverContext + frm.attr('action'),
                     data: frm.toJSON.serialize(),
                     success: function (data) {
-                        alert('account:' + data.firstname + " " + data.lastname + "\nemail:" + data.email);
+                        alert('user:' + data.firstname + " " + data.lastname + "\nemail:" + data.email);
                     },
                     error: function (xhr, str) {
                         document.getElementById("status1").innerHTML = "First Name is mandatory";
@@ -105,31 +105,31 @@
                     <img src="" alt="Аватар" class="img-thumbnail" style="width: 200px; height: 200px">
                 </div>
                 <div class="date-picker form-group col-md-6">
-                    <label for="inputBirthDate" class="col-form-label">Дата рождения</label>
-                    <input class="date-picker" type="date" id="inputBirthDate" min="1900-01-01" max="2018-12-31" placeholder="22.04.1870" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                    <label for="birthdate" class="col-form-label">Дата рождения</label>
+                    <input class="date-picker" type="date" id="birthdate" min="1900-01-01" max="2018-12-31" placeholder="22.04.1870" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 </div>
                 <fieldset class="col-md-4">
                     <legend class="chart-legend">Пол</legend>
-                    <div><input class="color-input-field" type="radio" id="male" name="sex" value="male" checked/>
+                    <div><input class="color-input-field" type="radio" id="male" name="gender" value="male" checked/>
                         <label class="radio-menu-item radio label" for="male">Мужской</label>
                         <span class="validity"></span>
                     </div>
-                    <div><input class="radio ui-spinner-input" type="radio" id="female" name="sex" value="female" />
+                    <div><input class="radio ui-spinner-input" type="radio" id="female" name="gender" value="female" />
                         <label class="label" for="female">Женский</label>
                     </div>
                 </fieldset>
                 <div class="form-group">
                     <div class="form-group col-md-6">
-                        <label for="inputCity" class="col-form-label">Город</label>
-                        <input class="form-control" id="inputCity" placeholder="Ульяновск">
+                        <label for="city" class="col-form-label">Город</label>
+                        <input class="form-control" id="city" placeholder="Ульяновск">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputOrganization" class="label">Организация</label>
-                        <input class="form-control" id="inputOrganization" placeholder="АСПС">
+                        <label for="organization" class="label">Организация</label>
+                        <input class="form-control" id="organization" placeholder="АСПС">
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" name="sign-up" value="Sign Up">
+                    <input type="submit" name="sign-up" value="Завершить регистрацию">
                 </div>
                 <div class="errors" role="alert" aria-relevant="all" data-message="ошибки"></div>
             </div>

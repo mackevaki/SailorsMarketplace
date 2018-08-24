@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/res/css/style.css">
-    <script src="/res/js/jquery-3.3.1.js"></script>
+    <script src="res/js/jquery-3.3.1.js"></script>
     <script type="text/javascript">
         (function($) {
             $(document).ready(function() {
@@ -17,7 +17,7 @@
                         $('<p>').html('Raw response: <code>' + JSON.stringify(data) + '</code>').appendTo('#raw');
                         $('<p>').html('Output: ').appendTo('#result');
                         $('<p>').html('Operation: ' + data.operation).appendTo('#result');
-                        $('<p>').html('<br>Left: ' + data.firstname).appendTo('#result');
+                        $('<p>').html('<br>Left: ' + data.username).appendTo('#result');
                         $('<p>').html('<br>Right: ' + data.lastname).appendTo('#result');
                         $('<p>').html('<br>Result: ' + data.email).appendTo('#result');
                     })

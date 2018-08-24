@@ -36,10 +36,17 @@ dependencies {
     compile "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
     compile "org.eclipse.jetty:apache-jsp:${jettyVersion}"
 
+// https://mvnrepository.com/artifact/com.google.inject/guice
+    compile group: 'com.google.inject', name: 'guice', version: '4.2.0'
+
+    compile "org.hibernate:hibernate-core:5.3.5.Final"
+    compile "org.hibernate.validator:hibernate-validator:6.0.12.Final"
+    compile "mysql:mysql-connector-java:8.0.12"
+
+
     compile group: 'org.mortbay.jetty', name: 'jsp-2.1', version: '6.1.14'
 
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compile group: 'javax.el', name: 'javax.el-api', version: '3.0.1-b06'
 

@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <title>User Sign Up</title>
 
-    <link rel="stylesheet" href="/res/js/jquery-ui.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+
+    <link rel="stylesheet" type="text/css" href="../js/jquery-ui.css"/>
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
-    <link rel="stylesheet" href="/res/css/style.css">
-    <script src="/res/js/jquery-3.3.1.js"></script>
-
-    <script type="text/javascript">
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <script type="text/javascript" src="../js/jquery-3.3.1.js">
         var serverContext = "http://localhost:9998";
 
             function register(){
                 $(".alert").html("").hide();
                 $(".error-list").html("");
                 var formData = $('sign-upForm').serialize();
-                $.post(serverContext + "/rest/accounts", formData, function(data){
+                $.post(serverContext + "/rest/accounts/create", formData, function(data){
                     if(ajax.getSettings().responseFields.json.state() === "success"){
                         window.location.href = serverContext +"/accountsinfo.html";
                     }
@@ -60,28 +60,27 @@
         //     var formData = new FormData(document.forms.namedItem("registration-form"));
         // }
 
-        var form = document.querySelector("form");
-        var log = document.querySelector("#log");
-
-        form.addEventListener("submit", function(event) {
-            var data = new FormData(form);
-            var output = "";
-            for (const entry in data) {
-                output = entry[0] + "=" + entry[1] + "\r";
-            }
-            log.innerText = output;
-            event.preventDefault();
-        }, false);
+        // var form = document.querySelector("form");
+        // var log = document.querySelector("#log");
+        //
+        // form.addEventListener("submit", function(event) {
+        //     var data = new FormData(form);
+        //     var output = "";
+        //     for (const entry in data) {
+        //         output = entry[0] + "=" + entry[1] + "\r";
+        //     }
+        //     log.innerText = output;
+        //     event.preventDefault();
+        // }, false);
     </script>
 </head>
 <body>
     <h1 class="text-center">User Sign Up</h1>
-        <div>
             <div class="rowColor col-sm-6 ui-icon-arrow-1-e html-editor-align-center" id="registration-info">
-                <form class="col-sm-6" id="registration-form" action="/rest/accounts/registration" method="post" enctype="application/x-www-form-urlencoded">
+                <form class="col-sm-6" id="registration-form" action="/rest/accounts/" method="post">
                     <div class="form-group">
                         <p><label for="email">Email: </label></p>
-                        <p><input class="form-control item" type="email" name="email" required="" id="email" placeholder="Ваш Email" aria-label="Ваш email" multiple></p>
+                        <p><input class="form-control item" type="email" name="email" required="" id="email" placeholder="Ваш Email" aria-label="Ваш email" multiple/></p>
                         <p><span class="alert alert-danger col-sm-4" id="emailError" style="display:inline-block"></span></p>
                     </div>
                     <div class="form-group">
@@ -92,14 +91,13 @@
                         <p><label for="password">Password:</label></p>
                         <p><input class="form-control item password-field" type="password" id="password" name="password" minlength="8" required="" placeholder="8 characters minimum"/></p>
                     </div>
-                    <div class="form-group">
-                        <input type="submit" name="sign-up" value="Зарегистрироваться">
+                    <div class="text-input">
+                        <p><input class="form-select-button" type="submit" name="sign-up" value="Зарегистрироваться"/></p>
                     </div>
                 </form>
             </div>
-
+            <div>
                 <pre id="log"></pre>
-        </div>
-    </div>
+            </div>
 </body>
 </html>
