@@ -1,0 +1,75 @@
+package com.company.sailorsmarketplace.dao;
+
+import com.company.sailorsmarketplace.dbmodel.UsersEntity;
+import com.company.sailorsmarketplace.hbutil.HibernateSessionFactoryUtil;
+import com.company.sailorsmarketplace.hbutil.HibernateUtils;
+import com.google.inject.Singleton;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import java.util.List;
+
+//@Singleton
+public class UserDAO implements Database {
+//    private Session session;
+
+//    @Override
+//    public void openConnection() {
+//        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+//        session = sessionFactory.openSession();
+//    }
+
+    @Override
+    public UsersEntity saveUserProfile(UsersEntity userProfile) {
+//        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+//        Transaction tx1 = session.beginTransaction();
+//        session.save(userProfile);
+//        tx1.commit();
+//        session.close();
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        session.save(userProfile);
+
+        session.getTransaction().commit();
+        session.close();
+
+
+        HibernateUtils.shutdown();
+        return userProfile;
+    }
+
+    public UsersEntity findById(int id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(UsersEntity.class, id);
+    }
+
+    public void save(UsersEntity user) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.save(user);
+        tx1.commit();
+        session.close();
+    }
+
+    public void update(UsersEntity user) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.update(user);
+        tx1.commit();
+        session.close();
+    }
+
+    public void delete(UsersEntity user) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.delete(user);
+        tx1.commit();
+        session.close();
+    }
+
+
+    public List<UsersEntity> findAll() {
+        List<UsersEntity> users = (List<UsersEntity>)  HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("From UsersEntity").list();
+        return users;
+    }
+}

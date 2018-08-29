@@ -10,12 +10,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class AccountService implements IAccountService {
     @Inject
-    private final Database database;
+    private Database database;
 
-    public AccountService(Database database) {
-        this.database = database;
-
-    }
+//    @Inject
+//    public AccountService(Database database) {
+//        this.database = database;
+//
+//    }
 
 //    @Inject
 //    public AccountService(Database database) {
@@ -39,11 +40,12 @@ public class AccountService implements IAccountService {
         userEntity.setSalt(userDto.getSalt());
 
         // Connect to database
-        try {                System.out.println("YT BGBHUJUU");
+        try {
+            System.out.println("YT BGBHUJUU");
 
-            this.database.openConnection();
+//            database.openConnection();
 
-            UsersEntity storedUserEntity = this.database.saveUserProfile(userEntity);
+            UsersEntity storedUserEntity = database.saveUserProfile(userEntity);
             if(storedUserEntity != null && storedUserEntity.getUserId() > 0) {
 
                 returnValue = new UserProfileDto();
@@ -54,10 +56,9 @@ public class AccountService implements IAccountService {
                 returnValue.setTelephone(storedUserEntity.getTelephone());
                 returnValue.setEnabled(storedUserEntity.getEnabled());
                 returnValue.setSalt(storedUserEntity.getSalt());
-//                returnValue.setConfirmationToken(storedUserEntity.getConfirmationToken());
             }
         }  finally {
-            this.database.closeConnection();
+//            database.closeConnection();
         }
 
         return returnValue;

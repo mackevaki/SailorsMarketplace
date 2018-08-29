@@ -42,13 +42,12 @@ public class Launcher {
 
         // Setup the basic application "context" for this application at "/"
         // This is also known as the handler tree (in jetty speak)
-        ServletContextHandler basicContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        basicContext.setContextPath("/");
+        ServletContextHandler basicContext = new ServletContextHandler(server, "/");
         basicContext.setBaseResource(new PathResource(pwdPath));
 
         // Fist, add special pathspec of "/home/" content mapped to the homePath
         ServletHolder holderHome = new ServletHolder("static-home", DefaultServlet.class);
-        holderHome.setInitParameter("resourceBase", "file:/home/mackevaki/SailorsMarketplace/build/resources/main/");
+        holderHome.setInitParameter("resourceBase", "../resources/main/");
         holderHome.setInitParameter("dirAllowed","true");
         // Use request pathInfo, don't calculate from contextPath
         holderHome.setInitParameter("pathInfoOnly","true");
@@ -63,15 +62,15 @@ public class Launcher {
 //                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
         jerseyServlet.setInitOrder(0);
 
-        basicContext.addServlet(jerseyServlet, "/api/");
+        basicContext.addServlet(jerseyServlet, "/rest/*");
 
         // Lastly, the default servlet for root content
         // It is important that this is last.
-//        String defName = "default"; // the important "default" name
-//        ServletHolder holderDef = new ServletHolder(defName, DefaultServlet.class);
-//        holderDef.setInitParameter("dirAllowed","true");
-//        holderDef.setInitParameter("resourceBase", staticRootUri.toASCIIString());
-//        basicContext.addServlet(holderDef,"/"); // the servlet spec "default url-pattern"
+        String defName = "default"; // the important "default" name
+        ServletHolder holderDef = new ServletHolder(defName, DefaultServlet.class);
+        holderDef.setInitParameter("dirAllowed","true");
+        holderDef.setInitParameter("resourceBase", staticRootUri.toASCIIString());
+        basicContext.addServlet(holderDef,"/"); // the servlet spec "default url-pattern"
 //        // Add Security Filter by the name
 //        context.addFilter(
 //                new FilterHolder( new DelegatingFilterProxy( "securityFilterChain" ) ),

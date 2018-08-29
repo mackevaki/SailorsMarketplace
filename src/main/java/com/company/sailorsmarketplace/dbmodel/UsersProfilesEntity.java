@@ -9,29 +9,31 @@ import java.util.Objects;
 @Entity
 @Table(name = "users_profiles", schema = "smarket")
 public class UsersProfilesEntity {
-    private Integer userId;
+    private long userId;
     private String firstname;
     private String lastname;
     private Date birthdate;
-    private Serializable gender;
+    private Enum gender;
     private String city;
     private String organization;
     private byte[] avatar;
     private Integer telegramId;
     private UsersEntity usersByUserId;
 
+    public UsersProfilesEntity() {}
+
     @Id
     @Column(name = "user_id", nullable = false)
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
     @Basic
-    @Column(name = "firstname", nullable = true, length = 25)
+    @Column(name = "firstname", nullable = true, length = 45)
     public String getFirstname() {
         return firstname;
     }
@@ -41,7 +43,7 @@ public class UsersProfilesEntity {
     }
 
     @Basic
-    @Column(name = "lastname", nullable = true, length = 25)
+    @Column(name = "lastname", nullable = true, length = 45)
     public String getLastname() {
         return lastname;
     }
@@ -62,11 +64,11 @@ public class UsersProfilesEntity {
 
     @Basic
     @Column(name = "gender", nullable = true)
-    public Serializable getGender() {
+    public Enum getGender() {
         return gender;
     }
 
-    public void setGender(Serializable gender) {
+    public void setGender(Enum gender) {
         this.gender = gender;
     }
 

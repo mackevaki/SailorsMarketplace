@@ -4,7 +4,7 @@ import com.company.sailorsmarketplace.dbmodel.AccountEntity;
 import com.company.sailorsmarketplace.dbmodel.UsersEntity;
 
 public interface Database {
-    void openConnection();
+//    void openConnection();
     UsersEntity saveUserProfile(UsersEntity userProfile);
-    void closeConnection();
+//    void closeConnection();
 }

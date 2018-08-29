@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +14,13 @@ public class UsersEntity {
     private Byte enabled;
     private String telephone;
     private UsersProfilesEntity usersProfilesByUserId;
+    private String salt;
+    private Collection<EventsEntity> eventsByUserId;
+    private Collection<OrganizationsEntity> organizationsByUserId;
+    private Collection<ParticipationsEntity> participationsByUserId;
+    private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
+
+    public UsersEntity() {}
 
     @Id
     @Column(name = "user_id", nullable = false)
@@ -55,7 +63,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "enabled", nullable = true)
+    @Column(name = "enabled", nullable = false)
     public Byte getEnabled() {
         return enabled;
     }
@@ -102,14 +110,49 @@ public class UsersEntity {
         this.usersProfilesByUserId = usersProfilesByUserId;
     }
 
-    private String salt;
-
     @Basic
+    @Column(name = "salt", nullable = false, length = 45)
     public String getSalt() {
         return salt;
     }
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    @OneToMany(mappedBy = "usersByChargeUserId")
+    public Collection<EventsEntity> getEventsByUserId() {
+        return eventsByUserId;
+    }
+
+    public void setEventsByUserId(Collection<EventsEntity> eventsByUserId) {
+        this.eventsByUserId = eventsByUserId;
+    }
+
+    @OneToMany(mappedBy = "usersByOwnerId")
+    public Collection<OrganizationsEntity> getOrganizationsByUserId() {
+        return organizationsByUserId;
+    }
+
+    public void setOrganizationsByUserId(Collection<OrganizationsEntity> organizationsByUserId) {
+        this.organizationsByUserId = organizationsByUserId;
+    }
+
+    @OneToMany(mappedBy = "usersByUserId")
+    public Collection<ParticipationsEntity> getParticipationsByUserId() {
+        return participationsByUserId;
+    }
+
+    public void setParticipationsByUserId(Collection<ParticipationsEntity> participationsByUserId) {
+        this.participationsByUserId = participationsByUserId;
+    }
+
+    @OneToMany(mappedBy = "usersByUserId")
+    public Collection<TelegramConnectionsEntity> getTelegramConnectionsByUserId() {
+        return telegramConnectionsByUserId;
+    }
+
+    public void setTelegramConnectionsByUserId(Collection<TelegramConnectionsEntity> telegramConnectionsByUserId) {
+        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
     }
 }

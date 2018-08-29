@@ -12,7 +12,7 @@ public class JerseyConfig extends ResourceConfig {
 
 //        register(Guice.createInjector((Module) binder -> {
 //            binder.bind(IAccountService.class).to(AccountService.class);
-//            binder.bind(Database.class).to(MySQLDAO.class);
+//            binder.bind(Database.class).to(UserDAO.class);
 //        }));
         Injector injector = Guice.createInjector(new Module());
         HK2toGuiceModule hk2Module = new HK2toGuiceModule(injector);

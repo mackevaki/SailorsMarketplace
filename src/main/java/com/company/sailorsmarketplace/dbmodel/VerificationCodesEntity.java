@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "verification_codes", schema = "smarket")
+@Table(name = "verification_codes", schema = "smarket", catalog = "")
 public class VerificationCodesEntity implements Serializable {
     private EnumType sourceSystem;
     private String verificationCode;
