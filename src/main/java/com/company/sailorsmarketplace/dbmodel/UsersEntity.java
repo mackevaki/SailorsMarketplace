@@ -17,7 +17,7 @@ public class UsersEntity {
     private String salt;
     private Collection<EventsEntity> eventsByUserId;
     private Collection<OrganizationsEntity> organizationsByUserId;
-    private Collection<ParticipationsEntity> participationsByUserId;
+    private Collection<EventsEntity> events;
     private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
 
     public UsersEntity() {}
@@ -138,14 +138,14 @@ public class UsersEntity {
         this.organizationsByUserId = organizationsByUserId;
     }
 
-    @OneToMany(mappedBy = "usersByUserId")
-    public Collection<ParticipationsEntity> getParticipationsByUserId() {
-        return participationsByUserId;
-    }
-
-    public void setParticipationsByUserId(Collection<ParticipationsEntity> participationsByUserId) {
-        this.participationsByUserId = participationsByUserId;
-    }
+//    @OneToMany(mappedBy = "usersByUserId")
+//    public Collection<ParticipationsEntity> getParticipationsByUserId() {
+//        return participationsByUserId;
+//    }
+//
+//    public void setParticipationsByUserId(Collection<ParticipationsEntity> participationsByUserId) {
+//        this.participationsByUserId = participationsByUserId;
+//    }
 
     @OneToMany(mappedBy = "usersByUserId")
     public Collection<TelegramConnectionsEntity> getTelegramConnectionsByUserId() {

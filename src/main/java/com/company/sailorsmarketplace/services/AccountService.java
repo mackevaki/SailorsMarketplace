@@ -63,6 +63,11 @@ public class AccountService implements IAccountService {
 
         return returnValue;
     }
+
+    @Override
+    public String chh() {
+        return database.ch();
+    }
 //
 //    private static List<User> data;
 //    private static long count = 5;

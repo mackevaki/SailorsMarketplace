@@ -16,7 +16,7 @@ public class EventsEntity {
     private Date dateEnd;
     private byte[] place;
     private UsersEntity usersByChargeUserId;
-    private Collection<ParticipationsEntity> participationsByEventId;
+    private Collection<UsersEntity> participants;
 
     @Id
     @Column(name = "event_id", nullable = false)
@@ -108,12 +108,12 @@ public class EventsEntity {
         this.usersByChargeUserId = usersByChargeUserId;
     }
 
-    @OneToMany(mappedBy = "eventsByEventId")
-    public Collection<ParticipationsEntity> getParticipationsByEventId() {
-        return participationsByEventId;
-    }
-
-    public void setParticipationsByEventId(Collection<ParticipationsEntity> participationsByEventId) {
-        this.participationsByEventId = participationsByEventId;
-    }
+//    @OneToMany(mappedBy = "eventsByEventId", targetEntity = ParticipationsEntity.class)
+//    public Collection<ParticipationsEntity> getParticipationsByEventId() {
+//        return participationsByEventId;
+//    }
+//
+//    public void setParticipationsByEventId(Collection<ParticipationsEntity> participationsByEventId) {
+//        this.participationsByEventId = participationsByEventId;
+//    }
 }

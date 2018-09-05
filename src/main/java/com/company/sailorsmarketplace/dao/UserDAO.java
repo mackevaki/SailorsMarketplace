@@ -3,15 +3,21 @@ package com.company.sailorsmarketplace.dao;
 import com.company.sailorsmarketplace.dbmodel.UsersEntity;
 import com.company.sailorsmarketplace.hbutil.HibernateSessionFactoryUtil;
 import com.company.sailorsmarketplace.hbutil.HibernateUtils;
+import com.company.sailorsmarketplace.hbutil.JPAUtil;
 import com.google.inject.Singleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 //@Singleton
 public class UserDAO implements Database {
+    @PersistenceContext(unitName = "SMARKET")
+    private EntityManager entityManager;
+
 //    private Session session;
 
 //    @Override
@@ -43,12 +49,22 @@ public class UserDAO implements Database {
         return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(UsersEntity.class, id);
     }
 
-    public void save(UsersEntity user) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction tx1 = session.beginTransaction();
-        session.save(user);
-        tx1.commit();
-        session.close();
+    @Override
+    public String ch() {
+        entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+        entityManager.getTransaction().begin();
+
+        // Check database version
+        String sql = "select version()";
+
+        String result = (String) entityManager.createNativeQuery(sql).getSingleResult();
+        System.out.println(result);
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        JPAUtil.shutdown();
+        return result;
     }
 
     public void update(UsersEntity user) {

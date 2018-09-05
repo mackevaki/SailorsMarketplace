@@ -43,7 +43,7 @@ dependencies {
     compile "com.sun.xml.bind:jaxb-core:2.3.0"
     compile "com.sun.xml.bind:jaxb-impl:2.3.0"
 //    compile "org.hibernate.validator:hibernate-validator:6.0.12.Final"
-    compile "mysql:mysql-connector-java:5.0.8"
+    compile "mysql:mysql-connector-java:8.0.12"
 
 
     compile group: 'org.mortbay.jetty', name: 'jsp-2.1', version: '6.1.14'

@@ -1,18 +1,18 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "participations", schema = "smarket", catalog = "")
+//@Table(name = "participations", schema = "smarket", catalog = "")
 public class ParticipationsEntity {
     private EventsEntity eventsByEventId;
     private UsersEntity usersByUserId;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false)
+    @Id
+    private long id;
+
+    @ManyToOne(targetEntity = EventsEntity.class)
+    @JoinColumn(name = "event_id", nullable = false)
     public EventsEntity getEventsByEventId() {
         return eventsByEventId;
     }
@@ -29,5 +29,13 @@ public class ParticipationsEntity {
 
     public void setUsersByUserId(UsersEntity usersByUserId) {
         this.usersByUserId = usersByUserId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

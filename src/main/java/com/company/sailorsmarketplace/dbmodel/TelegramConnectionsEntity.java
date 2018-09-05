@@ -58,7 +58,7 @@ public class TelegramConnectionsEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false)
     public UsersEntity getUsersByUserId() {
         return usersByUserId;
     }

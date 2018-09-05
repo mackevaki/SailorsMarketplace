@@ -1,0 +1,13 @@
+
+.gitignore
+.gradle/
+
+build/
+out/
+.idea
+
+*.jar
+*.war
+*.ear
+*.tar.gz
+*.rar

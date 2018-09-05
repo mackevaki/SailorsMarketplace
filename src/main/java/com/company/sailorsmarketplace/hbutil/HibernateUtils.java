@@ -31,7 +31,7 @@ public class HibernateUtils {
             // so destroy it manually.
             StandardServiceRegistryBuilder.destroy( registry );
 
-            throw new ExceptionInInitializerError("Initial SessionFactory failed" + e);
+            throw e;
         }
         return sessionFactory;
     }

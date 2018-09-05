@@ -2,8 +2,12 @@ package com.company.sailorsmarketplace.rest;
 import com.company.sailorsmarketplace.dto.UserProfileDto;
 import com.company.sailorsmarketplace.model.User;
 import com.company.sailorsmarketplace.services.IAccountService;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -11,28 +15,29 @@ import java.io.*;
 import java.net.URL;
 import java.util.Random;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 @Path("/accounts")
 //@Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
     @Inject
     private IAccountService accountService;
 
-
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createUserProfile(@DefaultValue("") @FormParam("username") String username,
                                       @DefaultValue("") @FormParam("email") String email,
                                       @DefaultValue("") @FormParam("password") String password,
-                                     @Context HttpServletResponse servletResponse) {
+                                      @Context HttpServletResponse servletResponse) {
         User userProfile = new User();
         userProfile.setPassword(password);
         userProfile.setUsername(username);
         userProfile.setEmail(email);
-        userProfile.setTelephone("562789339");
+        userProfile.setTelephone("562779339");
         userProfile.setEnabled((byte) 1);
         userProfile.setAccountId(new Random().nextLong());
-        userProfile.setSalt("tokrandom");
+        userProfile.setSalt("tokggrandom");
         User returnValue = null;
 
         UserProfileDto userProfileDto = new UserProfileDto();
@@ -73,7 +78,7 @@ public class UsersResource {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @Path("/registration")
     public Response register() throws IOException {
 //        servletResponse.setContentType("text/html");
@@ -99,7 +104,7 @@ public class UsersResource {
     @Path("/count")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCount() {
-        return "gggg";
+        return "gggg" + accountService.chh();
     }
 
 //    @GET
@@ -198,4 +203,27 @@ public class UsersResource {
 //        servletResponse.sendRedirect("/accountsinfo.html");
 //    }
 
+//    @POST
+//    @Consumes(APPLICATION_JSON)
+//    @Produces(APPLICATION_JSON)
+//    public Response createUser(CreateUserRequest request) {
+//
+//        return;
+//    }
+//
+//    static class CreateUserRequest {
+//        public final String username;
+//        public final String password;
+//        public final String email;
+//
+//        @JsonCreator
+//        public CreateUserRequest(
+//                @JsonProperty("username") String username,
+//                @JsonProperty("password") String password,
+//                @JsonProperty("email") String email) {
+//            this.username = username;
+//            this.password = password;
+//            this.email = email;
+//        }
+//    }
 }
