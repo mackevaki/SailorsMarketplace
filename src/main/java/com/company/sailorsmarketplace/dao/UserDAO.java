@@ -1,12 +1,10 @@
 package com.company.sailorsmarketplace.dao;
 
 import com.company.sailorsmarketplace.dbmodel.UsersEntity;
-import com.company.sailorsmarketplace.hbutil.HibernateSessionFactoryUtil;
-import com.company.sailorsmarketplace.hbutil.HibernateUtils;
-import com.company.sailorsmarketplace.hbutil.JPAUtil;
-import com.google.inject.Singleton;
+import com.company.sailorsmarketplace.utils.HibernateSessionFactoryUtil;
+import com.company.sailorsmarketplace.utils.HibernateUtils;
+import com.company.sailorsmarketplace.utils.JPAUtil;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;

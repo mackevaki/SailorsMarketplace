@@ -1,19 +1,9 @@
-package com.company.sailorsmarketplace.hbutil;
+package com.company.sailorsmarketplace.utils;
 
-import com.company.sailorsmarketplace.dbmodel.*;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.*;
-import org.hibernate.service.spi.ServiceRegistryImplementor;
-
-import java.io.File;
 
 public class HibernateUtils {
     private static SessionFactory sessionFactory = buildSessionFactory();

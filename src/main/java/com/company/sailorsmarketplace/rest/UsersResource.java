@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -29,15 +27,16 @@ public class UsersResource {
     public Response createUserProfile(@DefaultValue("") @FormParam("username") String username,
                                       @DefaultValue("") @FormParam("email") String email,
                                       @DefaultValue("") @FormParam("password") String password,
+                                      @DefaultValue("") @FormParam("telephone") String telephone,
                                       @Context HttpServletResponse servletResponse) {
         User userProfile = new User();
         userProfile.setPassword(password);
         userProfile.setUsername(username);
         userProfile.setEmail(email);
-        userProfile.setTelephone("562779339");
+        userProfile.setTelephone(telephone);
         userProfile.setEnabled((byte) 1);
         userProfile.setAccountId(new Random().nextLong());
-        userProfile.setSalt("tokggrandom");
+        userProfile.setSalt("tokfggrandom");
         User returnValue = null;
 
         UserProfileDto userProfileDto = new UserProfileDto();
@@ -49,14 +48,6 @@ public class UsersResource {
         userProfileDto.setEnabled(userProfile.isEnabled());
         userProfileDto.setSalt(userProfile.getSalt());
 
-        System.out.println("EMAIL       !      " + email + "      ! username                     " + username + "          ! passs    " + password);
-            if (accountService == null) {
-                System.out.println("22222222222222222222222222222222U");
-
-            } else {
-                System.out.println("333333333333333U");
-
-            }
 //        IAccountService usersService = new AccountService();
         UserProfileDto storedUserDetails = accountService.saveUser(userProfileDto);
 
@@ -203,27 +194,37 @@ public class UsersResource {
 //        servletResponse.sendRedirect("/accountsinfo.html");
 //    }
 
-//    @POST
-//    @Consumes(APPLICATION_JSON)
-//    @Produces(APPLICATION_JSON)
-//    public Response createUser(CreateUserRequest request) {
-//
-//        return;
-//    }
-//
-//    static class CreateUserRequest {
-//        public final String username;
-//        public final String password;
-//        public final String email;
-//
-//        @JsonCreator
-//        public CreateUserRequest(
-//                @JsonProperty("username") String username,
-//                @JsonProperty("password") String password,
-//                @JsonProperty("email") String email) {
-//            this.username = username;
-//            this.password = password;
-//            this.email = email;
-//        }
-//    }
+    @POST
+    @Path("/reg")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    public Response createUser(CreateUserRequest request) {
+        User returnValue = new User();
+        returnValue.setUsername(request.username);
+        returnValue.setEmail(request.email);
+        returnValue.setPassword(request.password);
+        returnValue.setTelephone(request.telephone);
+        returnValue.setEnabled((byte) 1);
+        returnValue.setAccountId(new Random().nextLong());
+        return Response.ok(returnValue).build();
+    }
+
+    static class CreateUserRequest {
+        public final String username;
+        public final String password;
+        public final String email;
+        public final String telephone;
+
+        @JsonCreator
+        public CreateUserRequest(
+                @JsonProperty("username") String username,
+                @JsonProperty("password") String password,
+                @JsonProperty("email") String email,
+                @JsonProperty("telephone") String telephone) {
+            this.username = username;
+            this.password = password;
+            this.email = email;
+            this.telephone = telephone;
+        }
+    }
 }

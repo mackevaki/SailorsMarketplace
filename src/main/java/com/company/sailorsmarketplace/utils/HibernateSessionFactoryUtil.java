@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.hbutil;
+package com.company.sailorsmarketplace.utils;
 
 import com.company.sailorsmarketplace.dbmodel.*;
 import org.hibernate.SessionFactory;

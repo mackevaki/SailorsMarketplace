@@ -1,8 +1,7 @@
-package com.company.sailorsmarketplace.hbutil;
+package com.company.sailorsmarketplace.utils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.spi.PersistenceProvider;
 
 public class JPAUtil {
     private static final String PERSISTENCE_UNIT_NAME = "SMARKET";
