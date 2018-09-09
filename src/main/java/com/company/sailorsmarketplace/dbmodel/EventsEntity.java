@@ -2,12 +2,10 @@ package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
-@Table(name = "events", schema = "smarket", catalog = "")
+@Table(name = "events", schema = "smarket")
 public class EventsEntity {
     private Integer eventId;
     private String name;
@@ -16,7 +14,10 @@ public class EventsEntity {
     private Date dateEnd;
     private byte[] place;
     private UsersEntity usersByChargeUserId;
-    private Collection<UsersEntity> participants;
+
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private Collection<UsersEntity> usersEntities = new ArrayList<>();
+//    private Collection<UsersEntity> participants;
 
     @Id
     @Column(name = "event_id", nullable = false)

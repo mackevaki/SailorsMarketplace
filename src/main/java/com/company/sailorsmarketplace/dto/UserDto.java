@@ -1,18 +1,37 @@
 package com.company.sailorsmarketplace.dto;
 
+import com.company.sailorsmarketplace.validators.ValidPassword;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class UserProfileDto implements Serializable {
-    private long accountId;
+public class UserDto implements Serializable {
+    @Positive(message = "Id must have positive value")
+    private Long userId;
+    @NotEmpty
     private String username;
+    @ValidPassword
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String telephone;
+
     private Byte enabled;
-//    private String confirmationToken;
     private String salt;
 
-    public UserProfileDto() {}
+    public UserDto() {}
+
+    public UserDto(String username, String password, String email, String telephone) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.telephone = telephone;
+    }
 
     public String getSalt() {
         return salt;
@@ -38,12 +57,12 @@ public class UserProfileDto implements Serializable {
         this.email = email;
     }
 
-    public long getAccountId() {
-        return accountId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -62,7 +81,7 @@ public class UserProfileDto implements Serializable {
         this.telephone = telephone;
     }
 
-    public Byte isEnabled() {
+    public Byte getEnabled() {
         return enabled;
     }
 

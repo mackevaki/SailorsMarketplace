@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Launcher {
     private static final Logger log = LoggerFactory.getLogger(Launcher.class);
-    public static final int SERVER_PORT = 9998;
+    public static final int SERVER_PORT = 9993;
     private static Server server;
 
     public static void main(String[] args) throws Exception {

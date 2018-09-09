@@ -12,7 +12,7 @@ public abstract class BeanValidator<T> {
     protected Set<ConstraintViolation<T>> constraintViolations;
 
     protected BeanValidator() {
-        this.validator= Validation.buildDefaultValidatorFactory().getValidator();
+        this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     public final boolean validate(T t) {
@@ -21,7 +21,7 @@ public abstract class BeanValidator<T> {
     }
 
     public final List<String> getConstraintViolations() {
-        List<String> violations = new ArrayList<String>();
+        List<String> violations = new ArrayList<>();
         for (ConstraintViolation<T> violation : constraintViolations ) {
             violations.add(violation.getMessage());
         }

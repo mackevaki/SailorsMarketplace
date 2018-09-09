@@ -1,5 +1,7 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -7,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "users", schema = "smarket")
 public class UsersEntity {
-    private long userId;
+    private Long userId;
     private String username;
     private String email;
     private String password;
@@ -17,18 +19,21 @@ public class UsersEntity {
     private String salt;
     private Collection<EventsEntity> eventsByUserId;
     private Collection<OrganizationsEntity> organizationsByUserId;
+//    @ManyToMany(mappedBy = "")
     private Collection<EventsEntity> events;
     private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
 
     public UsersEntity() {}
 
     @Id
+    @GenericGenerator(name = "user_gen", strategy = "increment")
+    @GeneratedValue(generator = "user_gen")
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -80,25 +85,6 @@ public class UsersEntity {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
-        return userId == that.userId &&
-                Objects.equals(username, that.username) &&
-                Objects.equals(email, that.email) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(enabled, that.enabled) &&
-                Objects.equals(telephone, that.telephone);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(userId, username, email, password, enabled, telephone);
     }
 
     @OneToOne(mappedBy = "usersByUserId")
@@ -154,5 +140,32 @@ public class UsersEntity {
 
     public void setTelegramConnectionsByUserId(Collection<TelegramConnectionsEntity> telegramConnectionsByUserId) {
         this.telegramConnectionsByUserId = telegramConnectionsByUserId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UsersEntity that = (UsersEntity) o;
+        return userId.equals(that.userId) &&
+                Objects.equals(getUsername(), that.getUsername()) &&
+                Objects.equals(getEmail(), that.getEmail()) &&
+                Objects.equals(getPassword(), that.getPassword()) &&
+                Objects.equals(getEnabled(), that.getEnabled()) &&
+                Objects.equals(getTelephone(), that.getTelephone()) &&
+                Objects.equals(getSalt(), that.getSalt());
+    }
+
+    @Override
+    public String toString() {
+        if (userId != null && username != null && email != null && telephone != null && password != null && salt != null && enabled != null) {
+            return userId.toString() + " " + username + " " + email + " " + telephone + " " + password + " " + salt + " " + enabled.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, username, email, password, enabled, telephone);
     }
 }

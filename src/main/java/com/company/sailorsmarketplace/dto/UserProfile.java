@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.model;
+package com.company.sailorsmarketplace.dto;
 
 import java.util.Date;
 import java.util.Objects;
