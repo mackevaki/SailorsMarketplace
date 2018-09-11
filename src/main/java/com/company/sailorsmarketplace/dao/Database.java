@@ -1,16 +1,21 @@
 package com.company.sailorsmarketplace.dao;
 
-import com.company.sailorsmarketplace.dbmodel.UsersEntity;
+import com.company.sailorsmarketplace.dbmodel.User;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface Database {
-    UsersEntity save(UsersEntity user);
-    UsersEntity getById(Long id);
-    UsersEntity getByUsername(String username);
-    UsersEntity getByEmail(String email);
-    void update(UsersEntity user);
-    void delete(UsersEntity user);
-    List<UsersEntity> findAll();
+    User save(User user);
+
+    User getById(Long id);
+
+    User getByUsername(String username);
+
+    User getByEmail(String email);
+
+    void update(User user);
+
+    void delete(User user);
+
+    List<User> findAll();
 }

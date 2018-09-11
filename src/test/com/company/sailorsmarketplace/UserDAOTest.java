@@ -1,21 +1,14 @@
 package com.company.sailorsmarketplace;
 
 import com.company.sailorsmarketplace.dao.UserDAO;
-import com.company.sailorsmarketplace.dbmodel.UsersEntity;
-import com.company.sailorsmarketplace.dto.UserDto;
-import com.company.sailorsmarketplace.rest.CreateUserRequest;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.company.sailorsmarketplace.dbmodel.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Scanner;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -26,7 +19,7 @@ public class UserDAOTest {
 
     private Long userId;
     private String findEmail;
-    private static UsersEntity usersEntity;
+    private static User user;
 
     @Before
     public void startServer() throws Exception {
@@ -44,7 +37,7 @@ public class UserDAOTest {
 
     @Test
     public void getByIdTest() {
-        UsersEntity user = database.getById(userId);
+        User user = database.getById(userId);
         assertNotNull(user);
         assertThat(user.getUserId(), equalTo(userId));
         System.out.println(user.toString());
@@ -52,8 +45,8 @@ public class UserDAOTest {
 
     @Test
     public void findAllTest() {
-        List<UsersEntity> usersEntities = database.findAll();
-        for (UsersEntity u : usersEntities) {
+        List<User> usersEntities = database.findAll();
+        for (User u : usersEntities) {
             System.out.println("---------------------------------");
             assertNotNull(u);
             System.out.println(u.toString());
@@ -62,14 +55,14 @@ public class UserDAOTest {
 
     @Test
     public void getUserByEmailTest() throws Throwable {
-        UsersEntity user = database.getByEmail(findEmail);
+        User user = database.getByEmail(findEmail);
         assertNotNull(user);
         System.out.println(user.toString());
     }
 
     @Test
     public void deleteUserTest() {
-        UsersEntity user = database.getById(userId);
+        User user = database.getById(userId);
         System.out.println(user.toString());
         database.delete(user);
         assertNull(database.getById(userId));
@@ -77,7 +70,7 @@ public class UserDAOTest {
 
     @Test
     public void updateUserTest() {
-        UsersEntity userUpdate = database.getById(userId);
+        User userUpdate = database.getById(userId);
         userUpdate.setPassword("fghdjjiks1");
         database.update(userUpdate);
 
@@ -86,18 +79,18 @@ public class UserDAOTest {
 
     @Test
     public void saveUserTest() throws Throwable {
-        UsersEntity createdUser = database.save(usersEntity);
+        User createdUser = database.save(user);
         assertThat(database.getById(createdUser.getUserId()).getUserId(), equalTo(createdUser.getUserId()));
     }
 
     private void setUp() {
-        usersEntity = new UsersEntity();
-        usersEntity.setUsername("p1337fvh");
-        usersEntity.setTelephone("78642352");
-        usersEntity.setPassword("hgj11ffsd");
-        usersEntity.setEmail("fff@fdh.yu");
-        usersEntity.setEnabled((byte)1);
-        usersEntity.setSalt("ssssss");
+        user = new User();
+        user.setUsername("p1337fvh");
+        user.setTelephone("78642352");
+        user.setPassword("hgj11ffsd");
+        user.setEmail("fff@fdh.yu");
+        user.setEnabled((byte)1);
+        user.setSalt("ssssss");
         userId = 6L;
         findEmail = "ds@gb.uyu";
     }

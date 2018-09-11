@@ -1,8 +1,7 @@
 package com.company.sailorsmarketplace;
 
 import com.company.sailorsmarketplace.dao.UserDAO;
-import com.company.sailorsmarketplace.dto.UserDto;
-import com.company.sailorsmarketplace.rest.CreateUserRequest;
+import com.company.sailorsmarketplace.rest.CreateUpdateUserRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertThat;
 
 public class UsersResourceTest {
     private WebTarget target;
-    private CreateUserRequest createUserRequest;
+    private CreateUpdateUserRequest createUpdateUserRequest;
     private UserDAO database = new UserDAO();
 
     @Before
@@ -37,11 +36,11 @@ public class UsersResourceTest {
     }
 
     @Test
-    public void createUserTest() {
+    public void shouldCreateUserWhenAllInputsAreValid() {
         WebTarget userWebTarget = target.path("rest/accounts/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
+        Response response = invocationBuilder.post(Entity.entity(createUpdateUserRequest, MediaType.APPLICATION_JSON));
 //        System.out.println("-----------  " + ((UserDto)response.getEntity()).getUsername());
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
@@ -56,6 +55,5 @@ public class UsersResourceTest {
     private void setUp() {
         String email = RandomStringUtils.randomAlphanumeric(5) + "@mail.ru";
         String username = RandomStringUtils.randomAlphanumeric(8);
-        createUserRequest = new CreateUserRequest("de8cc", "hfud888545j", matchingPassword, "hfh88fj@hf.yi", "0345884473");//(username, "qwerty", email, String.valueOf(RandomUtils.nextLong()));
     }
 }

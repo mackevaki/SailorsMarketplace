@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
-public class CreateUserRequest {
+public class CreateUpdateUserRequest {
     @Size(max = 20, min = 3, message = "Invalid Username")
     @NotEmpty(message = "Please enter username")
     public final String username;
@@ -35,7 +35,7 @@ public class CreateUserRequest {
     public final String telephone;
 
     @JsonCreator
-    public CreateUserRequest(
+    public CreateUpdateUserRequest(
             @JsonProperty("username") String username,
             @JsonProperty("password") String password,
             @JsonProperty String matchingPassword,

@@ -1,16 +1,18 @@
 package com.company.sailorsmarketplace.rest;
-import com.company.sailorsmarketplace.dto.UserDto;
+
+import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.services.IUserService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.io.*;
-import java.net.URL;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
+import static com.company.sailorsmarketplace.services.CreateUpdateUserParams.Builder.createUpdateUserParams;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/accounts")
@@ -64,7 +66,7 @@ public class UsersResource {
     @DELETE
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
-        if (userService.deleteUserById(id)) {
+        if (userService.deleteUser(id)) {
             return Response.ok("removed").build();
         } else {
             return Response.status(404).entity(String.format("User with id %d does not exist\n", id)).build();
@@ -73,8 +75,8 @@ public class UsersResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(@Valid UserDto user) {
-        UserDto updCustomer = userService.updateUser(user);
+    public Response updateUser(@Valid CreateUpdateUserRequest user) {
+        final User updCustomer = userService.updateUser(user);
         if (updCustomer != null) {
             return Response.ok(updCustomer).build();
         } else {
@@ -86,16 +88,21 @@ public class UsersResource {
     @Path("/reg")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response createUser(@Valid CreateUserRequest request) {
-
+    public Response createUser(@Valid CreateUpdateUserRequest request) {
         if (userService.userExists(request.email)) {
-            return Response.status(404).entity(new UserExistsException(request.email)).build();
+            return Response.status(400).entity(new UserExistsException(request.email)).build();
         }
-        UserDto res = userService.createNewUser(request);
-        if (res == null) {
-            return Response.status(500).entity("Can not create new user\n").build();
-        }
-        return Response.ok(res).build();
+
+        final User createdUser = userService.createNewUser(
+                createUpdateUserParams()
+                        .username(request.username)
+                        .password(request.password)
+                        .email(request.email)
+                        .telephone(request.telephone)
+                        .build()
+        );
+
+        return Response.ok(createdUser.getUserId()).build();
     }
 
 
