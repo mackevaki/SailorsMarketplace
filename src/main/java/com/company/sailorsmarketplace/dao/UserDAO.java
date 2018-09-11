@@ -1,8 +1,10 @@
 package com.company.sailorsmarketplace.dao;
 
-import com.company.sailorsmarketplace.dbmodel.UsersEntity;
+import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.utils.HibernateUtils;
-import org.hibernate.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.swing.*;
@@ -12,23 +14,20 @@ import java.util.List;
 public class UserDAO implements Database {
 
     @Override
-    public UsersEntity save(UsersEntity user) {
+    public User save(User user) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.save(user);
             tx.commit();
             return user;
-        } catch (ExceptionInInitializerError ex) {
-            System.out.println(ex.getException().getMessage());
-            return null;
         }
     }
 
     @Override
-    public UsersEntity getById(Long id) {
-        UsersEntity user;
+    public User getById(Long id) {
+        User user;
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            user = session.get(UsersEntity.class, id);
+            user = session.get(User.class, id);
             return user;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка при getbyid", JOptionPane.ERROR_MESSAGE);
@@ -37,19 +36,19 @@ public class UserDAO implements Database {
     }
 
     @Override
-    public UsersEntity getByUsername(String username) {
+    public User getByUsername(String username) {
         return null;
     }
 
     @Override
-    public UsersEntity getByEmail(String findEmail) {
-        UsersEntity user;
+    public User getByEmail(String findEmail) {
+        User user;
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 
-            Query query = session.createQuery("select ue from UsersEntity ue where email = :findEmail", UsersEntity.class);
+            Query query = session.createQuery("select ue from UsersEntity ue where email = :findEmail", User.class);
             query.setParameter("findEmail", findEmail);
-            user = (UsersEntity)query.getSingleResult();
+            user = (User) query.getSingleResult();
             tx.commit();
             session.clear();
             return user;
@@ -59,7 +58,7 @@ public class UserDAO implements Database {
     }
 
     @Override
-    public void update(UsersEntity user) {
+    public void update(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User is null");
         }
@@ -75,7 +74,7 @@ public class UserDAO implements Database {
     }
 
     @Override
-    public void delete(UsersEntity user) {
+    public void delete(User user) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.delete(user);
@@ -86,12 +85,12 @@ public class UserDAO implements Database {
     }
 
     @Override
-    public List<UsersEntity> findAll() {
+    public List<User> findAll() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        List<UsersEntity> list = session.createQuery("select DISTINCT ue from UsersEntity ue", UsersEntity.class).getResultList();
+        List<User> list = session.createQuery("select DISTINCT ue from UsersEntity ue", User.class).getResultList();
         tx.commit();
         session.close();
-        return list;//(List<UsersEntity>) HibernateUtils.getSessionFactory().openSession().createQuery("From UsersEntity").list();
+        return list;//(List<User>) HibernateUtils.getSessionFactory().openSession().createQuery("From User").list();
     }
 }

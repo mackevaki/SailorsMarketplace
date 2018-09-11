@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "smarket")
-public class UsersEntity {
+public class User {
     private Long userId;
     private String username;
     private String email;
@@ -23,7 +23,15 @@ public class UsersEntity {
     private Collection<EventsEntity> events;
     private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
 
-    public UsersEntity() {}
+    public User() {
+    }
+
+    public User(String username, String password, String email, String telephone) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.telephone = telephone;
+    }
 
     @Id
     @GenericGenerator(name = "user_gen", strategy = "increment")
@@ -146,7 +154,7 @@ public class UsersEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
+        User that = (User) o;
         return userId.equals(that.userId) &&
                 Objects.equals(getUsername(), that.getUsername()) &&
                 Objects.equals(getEmail(), that.getEmail()) &&

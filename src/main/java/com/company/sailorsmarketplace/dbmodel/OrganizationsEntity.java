@@ -8,7 +8,7 @@ import java.util.Objects;
 public class OrganizationsEntity {
     private Integer orgId;
     private String name;
-    private UsersEntity usersByOwnerId;
+    private User usersByOwnerId;
 
     @Id
     @Column(name = "org_id", nullable = false)
@@ -46,11 +46,11 @@ public class OrganizationsEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByOwnerId() {
+    public User getUsersByOwnerId() {
         return usersByOwnerId;
     }
 
-    public void setUsersByOwnerId(UsersEntity usersByOwnerId) {
+    public void setUsersByOwnerId(User usersByOwnerId) {
         this.usersByOwnerId = usersByOwnerId;
     }
 }
