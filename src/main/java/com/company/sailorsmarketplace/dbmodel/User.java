@@ -4,11 +4,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "smarket")
-public class UsersEntity {
+public class User {
     private Long userId;
     private String username;
     private String email;
@@ -17,13 +18,36 @@ public class UsersEntity {
     private String telephone;
     private UsersProfilesEntity usersProfilesByUserId;
     private String salt;
-    private Collection<EventsEntity> eventsByUserId;
-    private Collection<OrganizationsEntity> organizationsByUserId;
-//    @ManyToMany(mappedBy = "")
-    private Collection<EventsEntity> events;
-    private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
+    private String token;
 
-    public UsersEntity() {}
+
+
+    private Collection<EventsEntity> eventsByUserId;
+//    @OneToMany(mappedBy = "usersByOwnerId")
+//    private Collection<OrganizationsEntity> organizationsByUserId;
+//    @ManyToMany(mappedBy = "usersEntities")
+//    private Collection<EventsEntity> events;
+//    @OneToMany(mappedBy = "usersByUserId")
+//    private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
+//    @ManyToMany(mappedBy = "users")//cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private Collection<Authority> authorities;
+
+//    public Collection<Authority> getAuthorities() {
+//        return authorities;
+//    }
+//
+//    public void setAuthorities(Collection<Authority> authorities) {
+//        this.authorities = authorities;
+//    }
+
+    public User() {}
+
+    public User(String username, String password, String email, String telephone) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.telephone = telephone;
+    }
 
     @Id
     @GenericGenerator(name = "user_gen", strategy = "increment")
@@ -87,6 +111,15 @@ public class UsersEntity {
         this.telephone = telephone;
     }
 
+    @Basic
+    @Column(name = "token", nullable = false, length = 60)
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
     @OneToOne(mappedBy = "usersByUserId")
     public UsersProfilesEntity getUsersProfilesByUserId() {
         return usersProfilesByUserId;
@@ -105,24 +138,23 @@ public class UsersEntity {
     public void setSalt(String salt) {
         this.salt = salt;
     }
+//
+//    @OneToMany(mappedBy = "usersByChargeUserId")
+//    public Collection<EventsEntity> getEventsByUserId() {
+//        return eventsByUserId;
+//    }
 
-    @OneToMany(mappedBy = "usersByChargeUserId")
-    public Collection<EventsEntity> getEventsByUserId() {
-        return eventsByUserId;
-    }
-
-    public void setEventsByUserId(Collection<EventsEntity> eventsByUserId) {
-        this.eventsByUserId = eventsByUserId;
-    }
-
-    @OneToMany(mappedBy = "usersByOwnerId")
-    public Collection<OrganizationsEntity> getOrganizationsByUserId() {
-        return organizationsByUserId;
-    }
-
-    public void setOrganizationsByUserId(Collection<OrganizationsEntity> organizationsByUserId) {
-        this.organizationsByUserId = organizationsByUserId;
-    }
+//    public void setEventsByUserId(Collection<EventsEntity> eventsByUserId) {
+//        this.eventsByUserId = eventsByUserId;
+//    }
+//
+//    public Collection<OrganizationsEntity> getOrganizationsByUserId() {
+//        return organizationsByUserId;
+//    }
+//
+//    public void setOrganizationsByUserId(Collection<OrganizationsEntity> organizationsByUserId) {
+//        this.organizationsByUserId = organizationsByUserId;
+//    }
 
 //    @OneToMany(mappedBy = "usersByUserId")
 //    public Collection<ParticipationsEntity> getParticipationsByUserId() {
@@ -133,20 +165,27 @@ public class UsersEntity {
 //        this.participationsByUserId = participationsByUserId;
 //    }
 
-    @OneToMany(mappedBy = "usersByUserId")
-    public Collection<TelegramConnectionsEntity> getTelegramConnectionsByUserId() {
-        return telegramConnectionsByUserId;
-    }
+//    public Collection<TelegramConnectionsEntity> getTelegramConnectionsByUserId() {
+//        return telegramConnectionsByUserId;
+//    }
+//
+//    public void setTelegramConnectionsByUserId(Collection<TelegramConnectionsEntity> telegramConnectionsByUserId) {
+//        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
+//    }
 
-    public void setTelegramConnectionsByUserId(Collection<TelegramConnectionsEntity> telegramConnectionsByUserId) {
-        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
-    }
+//    public Collection<Authority> getAuthorities() {
+//        return authorities;
+//    }
+//
+//    public void setAuthorities(Collection<Authority> authorities) {
+//        this.authorities = authorities;
+//    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
+        User that = (User) o;
         return userId.equals(that.userId) &&
                 Objects.equals(getUsername(), that.getUsername()) &&
                 Objects.equals(getEmail(), that.getEmail()) &&

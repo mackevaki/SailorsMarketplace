@@ -40,7 +40,6 @@ public class AdminsRolesEntity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(roleId, roleName);
     }
 }

@@ -9,16 +9,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class UserDto implements Serializable {
-    @Positive(message = "Id must have positive value")
     private Long userId;
-    @NotEmpty
     private String username;
-    @ValidPassword
-    @NotEmpty
     private String password;
-    @NotEmpty
     private String email;
-    @NotEmpty
     private String telephone;
 
     private Byte enabled;

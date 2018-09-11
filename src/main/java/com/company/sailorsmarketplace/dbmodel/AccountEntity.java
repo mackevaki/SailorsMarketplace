@@ -106,7 +106,7 @@ public class AccountEntity implements Serializable {
 //            return false;
 //        AccountEntity account = (User) o;
 //        return Objects.equals(getId(), account.getId()) &&
-//                username.compareTo(account.username) == 0; //&&
+//                email.compareTo(account.email) == 0; //&&
 ////                Objects.equals(getOpenDate(), account.getOpenDate());
 //    }
 

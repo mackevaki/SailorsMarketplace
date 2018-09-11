@@ -10,7 +10,7 @@ public class TelegramConnectionsEntity {
     private Long userId;
     private Integer telegramId;
     private Byte verified;
-    private UsersEntity usersByUserId;
+    private User usersByUserId;
 
     @Id
     @Column(name = "user_id", nullable = false)
@@ -59,11 +59,11 @@ public class TelegramConnectionsEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false)
-    public UsersEntity getUsersByUserId() {
+    public User getUsersByUserId() {
         return usersByUserId;
     }
 
-    public void setUsersByUserId(UsersEntity usersByUserId) {
+    public void setUsersByUserId(User usersByUserId) {
         this.usersByUserId = usersByUserId;
     }
 }

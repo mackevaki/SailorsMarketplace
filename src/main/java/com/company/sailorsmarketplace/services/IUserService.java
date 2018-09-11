@@ -1,21 +1,20 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dbmodel.UsersEntity;
+import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.UserDto;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
-import com.company.sailorsmarketplace.rest.CreateUserRequest;
+import com.company.sailorsmarketplace.dto.CreateUserRequest;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 
 import java.util.List;
 
 public interface IUserService {
-    UserDto createNewUser(CreateUserRequest request);
-    UserDto getUserById(Long id);
-    boolean deleteUser(UserDto user);
+    User createNewUser(CreateUserRequest request) throws UserExistsException;
+    User getUserById(Long id);
     boolean deleteUserById(Long id);
     List<UserDto> getAllUsers();
     UserDto updateUser(UserDto user);
     boolean userExists(String email);
-    boolean validateUser(CreateUserRequest createUserRequest);
-    UserDto getUserByEmail(String email) throws UserExistsException;
-//    UserDto getUserByUsername(String username);
+    User getUserByEmail(String email) throws UserExistsException;
+    User getUserByUsername(String username) throws UserNotFoundException;
 }

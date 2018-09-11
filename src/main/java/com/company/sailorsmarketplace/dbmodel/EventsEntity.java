@@ -13,11 +13,11 @@ public class EventsEntity {
     private Date dateStart;
     private Date dateEnd;
     private byte[] place;
-    private UsersEntity usersByChargeUserId;
+    private User usersByChargeUserId;
 
-//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    private Collection<UsersEntity> usersEntities = new ArrayList<>();
-//    private Collection<UsersEntity> participants;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Collection<User> usersEntities;
+//    private Collection<User> participants;
 
     @Id
     @Column(name = "event_id", nullable = false)
@@ -101,11 +101,11 @@ public class EventsEntity {
 
     @ManyToOne
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByChargeUserId() {
+    public User getUsersByChargeUserId() {
         return usersByChargeUserId;
     }
 
-    public void setUsersByChargeUserId(UsersEntity usersByChargeUserId) {
+    public void setUsersByChargeUserId(User usersByChargeUserId) {
         this.usersByChargeUserId = usersByChargeUserId;
     }
 

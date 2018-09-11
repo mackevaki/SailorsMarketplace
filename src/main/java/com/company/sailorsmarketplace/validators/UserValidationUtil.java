@@ -1,6 +1,6 @@
 package com.company.sailorsmarketplace.validators;
 
-import com.company.sailorsmarketplace.rest.CreateUserRequest;
+import com.company.sailorsmarketplace.dto.CreateUserRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;

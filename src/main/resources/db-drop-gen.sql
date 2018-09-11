@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `smarket`.`users` ;
 
 CREATE TABLE IF NOT EXISTS `smarket`.`users` (
   `user_id` BIGINT(11) GENERATED ALWAYS AS () VIRTUAL,
-  `username` VARCHAR(25) NOT NULL,
+  `email` VARCHAR(25) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(64) NOT NULL,
   `salt` VARCHAR(45) NOT NULL,
@@ -181,7 +181,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `smarket`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `smarket`.`user` (
-  `username` VARCHAR(16) NOT NULL,
+  `email` VARCHAR(16) NOT NULL,
   `email` VARCHAR(255) NULL,
   `password` VARCHAR(32) NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP);

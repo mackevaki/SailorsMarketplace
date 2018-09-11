@@ -1,16 +1,16 @@
 package com.company.sailorsmarketplace.dao;
 
-import com.company.sailorsmarketplace.dbmodel.UsersEntity;
+import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface Database {
-    UsersEntity save(UsersEntity user);
-    UsersEntity getById(Long id);
-    UsersEntity getByUsername(String username);
-    UsersEntity getByEmail(String email);
-    void update(UsersEntity user);
-    void delete(UsersEntity user);
-    List<UsersEntity> findAll();
+    User save(User user);
+    User getById(Long id);
+    User getByUsername(String username) throws UserNotFoundException;
+    User getByEmail(String email) throws UserNotFoundException;
+    void update(User user);
+    void delete(User user);
+    List<User> findAll();
 }

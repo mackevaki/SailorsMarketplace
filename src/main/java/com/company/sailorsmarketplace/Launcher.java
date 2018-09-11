@@ -1,6 +1,6 @@
 package com.company.sailorsmarketplace;
 
-import com.company.sailorsmarketplace.rest.JerseyConfig;
+import com.company.sailorsmarketplace.config.JerseyConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -11,16 +11,12 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
 
 /**
  * Starts jetty-server on the specified port

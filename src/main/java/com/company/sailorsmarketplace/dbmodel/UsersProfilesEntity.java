@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.Objects;
@@ -18,7 +17,7 @@ public class UsersProfilesEntity {
     private String organization;
     private byte[] avatar;
     private Integer telegramId;
-    private UsersEntity usersByUserId;
+    private User usersByUserId;
 
     public UsersProfilesEntity() {}
 
@@ -138,11 +137,11 @@ public class UsersProfilesEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    public UsersEntity getUsersByUserId() {
+    public User getUsersByUserId() {
         return usersByUserId;
     }
 
-    public void setUsersByUserId(UsersEntity usersByUserId) {
+    public void setUsersByUserId(User usersByUserId) {
         this.usersByUserId = usersByUserId;
     }
 }

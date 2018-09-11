@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace;
+package com.company.sailorsmarketplace.config;
 
 import com.company.sailorsmarketplace.services.IUserService;
 import com.google.inject.Injector;
