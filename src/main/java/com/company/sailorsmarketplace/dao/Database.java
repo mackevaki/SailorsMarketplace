@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.dao;
 
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 
 import java.util.List;
 

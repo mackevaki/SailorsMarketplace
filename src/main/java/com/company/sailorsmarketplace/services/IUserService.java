@@ -14,9 +14,11 @@ public interface IUserService {
 
     List<User> getAllUsers();
 
-    User updateUser(CreateUpdateUserParams params);
+    User updateUser(CreateUpdateUserParams params, Long userId);
+
     boolean userExists(String email);
 
     User getUserByEmail(String email) throws UserExistsException;
-//    UserDto getUserByUsername(String username);
+
+    User getUserByUsername(String username);
 }

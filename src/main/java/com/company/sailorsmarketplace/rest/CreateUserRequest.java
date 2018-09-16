@@ -10,19 +10,19 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
-public class CreateUpdateUserRequest {
-    @Size(max = 20, min = 3, message = "Invalid Username")
+public class CreateUserRequest {
+    @Size(min = 3, max = 20, message = "Invalid Username")
     @NotEmpty(message = "Please enter username")
     public final String username;
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String password;
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String matchingPassword;
 
     @Email(message = "Invalid Email")
@@ -31,14 +31,14 @@ public class CreateUpdateUserRequest {
 
 
     @Size(max = 12, message = "Must be between less 12 characters")
-    @NotEmpty(message = "Please enter password")
+    @NotEmpty(message = "Phone must be in format +71234567890")
     public final String telephone;
 
     @JsonCreator
-    public CreateUpdateUserRequest(
+    public CreateUserRequest(
             @JsonProperty("username") String username,
             @JsonProperty("password") String password,
-            @JsonProperty String matchingPassword,
+            @JsonProperty("matchingPassword") String matchingPassword,
             @JsonProperty("email") String email,
             @JsonProperty("telephone") String telephone) {
         this.username = username;

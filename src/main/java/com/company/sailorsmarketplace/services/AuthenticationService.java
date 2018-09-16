@@ -15,6 +15,8 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.company.sailorsmarketplace.dto.AllUserParamsDto.Builder.allUserParamsDto;
+
 @Singleton
 public class AuthenticationService implements IAuthenticationService {
     Database database;
@@ -52,7 +54,7 @@ public class AuthenticationService implements IAuthenticationService {
         if (!authenticated) {
             throw new AuthenticationException("Authentication failed");
         }
-        userDto = AllUserParamsDto.getBuilder()
+        userDto = allUserParamsDto()
                 .id(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -96,7 +98,7 @@ public class AuthenticationService implements IAuthenticationService {
         String secureUserPassword = null;
         secureUserPassword = AuthenticationUtil.
                 generateSecurePassword(password, salt);
-        userDto = AllUserParamsDto.getBuilder()
+        userDto = allUserParamsDto()
                 .id(userDto.id)
                 .username(userDto.username)
                 .email(userDto.email)

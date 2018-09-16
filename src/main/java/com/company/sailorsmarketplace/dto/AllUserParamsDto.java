@@ -10,21 +10,19 @@ public class AllUserParamsDto {
     public final byte enabled;
 
     private AllUserParamsDto(
-            Long id,
-            String username, String email, String password, String telephone, String salt,
-            byte enabled) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.telephone = telephone;
-        this.salt = salt;
-        this.enabled = enabled;
+            Builder builder) {
+        this.id = builder.id;
+        this.username = builder.username;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.telephone = builder.telephone;
+        this.salt = builder.salt;
+        this.enabled = builder.enabled;
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
-    }
+//    public static Builder getBuilder() {
+//        return new Builder();
+//    }
 
     public static class Builder {
         private Long id;
@@ -36,6 +34,11 @@ public class AllUserParamsDto {
         private byte enabled;
 
         private Builder() {}
+
+        public static Builder allUserParamsDto() {
+            return new Builder();
+        }
+
 
         public Builder id(Long id) {
             this.id = id;
@@ -70,7 +73,7 @@ public class AllUserParamsDto {
         }
 
         public AllUserParamsDto build() {
-            return new AllUserParamsDto(id, username, email, password, telephone, salt, enabled);
+            return new AllUserParamsDto(this);
         }
     }
 }

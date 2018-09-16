@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.dao;
 
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,8 +37,18 @@ public class UserDAO implements Database {
     }
 
     @Override
-    public User getByUsername(String username) {
-        return null;
+    public User getByUsername(String username) throws UserNotFoundException{
+        User user;
+        try(Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+            Query query = session.createQuery("from User where username='" + username + "'");
+            user = (User) query.getSingleResult();
+            tx.commit();
+            session.clear();
+            return user;
+        } catch (NoResultException ex) {
+            throw new UserNotFoundException();
+        }
     }
 
     @Override
@@ -46,7 +57,7 @@ public class UserDAO implements Database {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 
-            Query query = session.createQuery("select ue from UsersEntity ue where email = :findEmail", User.class);
+            Query query = session.createQuery("select u from User u where email = :findEmail", User.class);
             query.setParameter("findEmail", findEmail);
             user = (User) query.getSingleResult();
             tx.commit();
@@ -88,7 +99,7 @@ public class UserDAO implements Database {
     public List<User> findAll() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        List<User> list = session.createQuery("select DISTINCT ue from UsersEntity ue", User.class).getResultList();
+        List<User> list = session.createQuery("select DISTINCT u from User u", User.class).getResultList();
         tx.commit();
         session.close();
         return list;//(List<User>) HibernateUtils.getSessionFactory().openSession().createQuery("From User").list();
