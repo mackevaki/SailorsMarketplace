@@ -1,14 +1,12 @@
-package sailorsmarketplace;
+package com.company.sailorsmarketplace;
 
-import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.dto.CreateUserRequest;
+import com.company.sailorsmarketplace.dao.UserDAO;
+import com.company.sailorsmarketplace.rest.CreateUpdateUserRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -20,8 +18,8 @@ import static org.junit.Assert.assertThat;
 
 public class UsersResourceTest {
     private WebTarget target;
-    private CreateUserRequest createUserRequest;
-    private static final Logger log = LoggerFactory.getLogger(Logger.class);
+    private CreateUpdateUserRequest createUpdateUserRequest;
+    private UserDAO database = new UserDAO();
 
     @Before
     public void startServer() throws Exception {
@@ -38,23 +36,16 @@ public class UsersResourceTest {
     }
 
     @Test
-    public void createUserTest() {
-        log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        WebTarget userWebTarget = target.path("/rest").path("/accounts").path("/all");
+    public void shouldCreateUserWhenAllInputsAreValid() {
+        WebTarget userWebTarget = target.path("rest/accounts/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
-        createUserRequest = new CreateUserRequest(
-                "hfudiek",
-                "hgj11ffsd",
-                "hgj11ffsd",
-                "kira@mail.ru",
-                "89356757323"
-        );
-        Response response = invocationBuilder.get();//post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
-        System.out.println(response.readEntity(String.class));
+
+        Response response = invocationBuilder.post(Entity.entity(createUpdateUserRequest, MediaType.APPLICATION_JSON));
+//        System.out.println("-----------  " + ((UserDto)response.getEntity()).getUsername());
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
-//        String userDto = response.readEntity(String.class);
-//        assertThat(userDto.getUserId(), equalTo(database.getById(userDto.getUserId()).getUserId()));
+        UserDto userDto = response.readEntity(UserDto.class);
+        assertThat(userDto.getUserId(), equalTo(database.getById(userDto.getUserId()).getUserId()));
 
 //        assertNotNull(createdEntity.getUsername());
 //        assertNotNull(createdEntity.getId());
@@ -64,6 +55,5 @@ public class UsersResourceTest {
     private void setUp() {
         String email = RandomStringUtils.randomAlphanumeric(5) + "@mail.ru";
         String username = RandomStringUtils.randomAlphanumeric(8);
-        createUserRequest = new CreateUserRequest("mackevak1i", "deceiver1337", "deceiver1337", "yuyuyu@hf.yi", "9345884473");//(email, "qwerty", email, String.valueOf(RandomUtils.nextLong()));
     }
 }

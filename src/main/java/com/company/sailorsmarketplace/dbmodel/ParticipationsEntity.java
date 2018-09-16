@@ -1,6 +1,9 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 //@Table(name = "participations", schema = "smarket", catalog = "")

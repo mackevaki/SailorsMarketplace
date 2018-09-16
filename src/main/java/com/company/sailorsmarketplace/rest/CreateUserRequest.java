@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.dto;
+package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.validators.PasswordMatches;
 import com.company.sailorsmarketplace.validators.ValidPassword;
@@ -10,9 +10,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
-public class CreateUserRequest {
+public class CreateUpdateUserRequest {
     @Size(max = 20, min = 3, message = "Invalid Username")
-    @NotEmpty(message = "Please enter email")
+    @NotEmpty(message = "Please enter username")
     public final String username;
 
     @NotEmpty
@@ -35,10 +35,10 @@ public class CreateUserRequest {
     public final String telephone;
 
     @JsonCreator
-    public CreateUserRequest(
-            @JsonProperty("email") String username,
+    public CreateUpdateUserRequest(
+            @JsonProperty("username") String username,
             @JsonProperty("password") String password,
-            @JsonProperty("matchingPassword") String matchingPassword,
+            @JsonProperty String matchingPassword,
             @JsonProperty("email") String email,
             @JsonProperty("telephone") String telephone) {
         this.username = username;

@@ -1,11 +1,7 @@
-package sailorsmarketplace;
+package com.company.sailorsmarketplace;
 
-import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
-import com.company.sailorsmarketplace.dto.CreateUserRequest;
-import com.company.sailorsmarketplace.services.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +17,9 @@ public class UserDAOTest {
     private WebTarget target;
     private UserDAO database = new UserDAO();
 
-//    @Inject
-//    private IUserService userService;
-    private UserService userService = new UserService();
-
     private Long userId;
     private String findEmail;
     private static User user;
-    private CreateUserRequest createUserRequest;
 
     @Before
     public void startServer() throws Exception {
@@ -63,7 +54,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void getUserByEmailTest()  {
+    public void getUserByEmailTest() throws Throwable {
         User user = database.getByEmail(findEmail);
         assertNotNull(user);
         System.out.println(user.toString());
@@ -87,41 +78,21 @@ public class UserDAOTest {
     }
 
     @Test
-    public void saveUserTest() {
+    public void saveUserTest() throws Throwable {
         User createdUser = database.save(user);
         assertThat(database.getById(createdUser.getUserId()).getUserId(), equalTo(createdUser.getUserId()));
     }
 
     private void setUp() {
         user = new User();
-        user.setUsername("p1337hgvh");
-        user.setTelephone("786423352");
+        user.setUsername("p1337fvh");
+        user.setTelephone("78642352");
         user.setPassword("hgj11ffsd");
-        user.setEmail("ffaf@fdh.yu");
+        user.setEmail("fff@fdh.yu");
         user.setEnabled((byte)1);
-        user.setSalt("sssfsss");
-        userId = 8L;
+        user.setSalt("ssssss");
+        userId = 6L;
         findEmail = "ds@gb.uyu";
-    }
-
-    private void setUpCreateUserRequest() {
-
-    }
-
-    @Test
-    public void createUserServiceTest() throws UserExistsException {
-        createUserRequest = new CreateUserRequest(
-                "hfudiek",
-                "hgj11ffsd",
-                "hgj11ffsd",
-                "kira@mail.ru",
-                "89356757323"
-        );
-
-        User res = userService.createNewUser(createUserRequest);
-        System.out.println(res.toString());
-        assertEquals(res.getUsername(), createUserRequest.username);
-
     }
 
 }

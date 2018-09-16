@@ -2,11 +2,10 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/smarket?useLegacyDatetimeCode=false&amp;serverTimezone=UTC </property>
-        <property name="connection.email">smarket</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/smarket?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
+        <property name="connection.username">smarket</property>
         <property name="connection.password">smarket</property>
         <property name="connection.pool_size">10</property>
 
@@ -23,8 +22,7 @@
         <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRolesEntity"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.EventsEntity"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.OrganizationsEntity"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.Authority"/>
+        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.ParticipationsEntity"/>-->
         <mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnectionsEntity"/>
-
     </session-factory>
 </hibernate-configuration>

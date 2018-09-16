@@ -1,6 +1,6 @@
 package com.company.sailorsmarketplace.validators;
 
-import com.company.sailorsmarketplace.dto.CreateUserRequest;
+import com.company.sailorsmarketplace.rest.CreateUpdateUserRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,7 +13,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        CreateUserRequest user = (CreateUserRequest) obj;
+        CreateUpdateUserRequest user = (CreateUpdateUserRequest) obj;
         return user.password.equals(user.matchingPassword);
     }
 }

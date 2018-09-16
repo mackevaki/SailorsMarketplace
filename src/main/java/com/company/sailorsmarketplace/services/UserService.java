@@ -1,44 +1,32 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.dao.UserDAO;
+import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dto.UserDto;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
-import com.company.sailorsmarketplace.dto.CreateUserRequest;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
-import com.company.sailorsmarketplace.utils.AuthenticationUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.company.sailorsmarketplace.rest.CreateUpdateUserRequest;
+import com.company.sailorsmarketplace.utils.PasswordUtils;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Singleton
 public class UserService implements IUserService {
-    private static final Logger log = LoggerFactory.getLogger(Launcher.class);
-
-//    @Inject
-//    private Database database;
-    private UserDAO database = new UserDAO();
+    @Inject
+    private Database database;
 
     @Override
-    public User createNewUser(CreateUserRequest request) throws UserExistsException {
-        UserDto userDto = createUserRequestToDto(request);
-        log.info("dddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeee");
-        User userEntity = userDtoToUsersEntity(userDto);
-        if (userExists(userDto.getEmail())) {
-            throw new UserExistsException(userDto.getEmail());
-        }
+    public User createNewUser(CreateUpdateUserParams params) {
+        final User userEntity = new User(
+                params.username,
+                params.password,
+                params.email,
+                params.telephone
+        );
 
-        try {
-            return database.save(userEntity);
-        }  catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return database.save(userEntity);
     }
 
     @Override
@@ -76,30 +64,38 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUserByEmail(String email) throws UserNotFoundException {
-        User user = database.getByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException(email);
+    public boolean validateUser(CreateUpdateUserRequest createUpdateUserRequest) {
+
+
+        return false;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) throws UserExistsException {
+        UserDto userDto = usersEntityToUserDto(database.getByEmail(email));
+        if (userDto == null) {
+            throw new UserExistsException(email);
         }
-        return user;
+        return userDto;
     }
 
     @Override
-    public User getUserByUsername(String username) throws UserNotFoundException {
-        return database.getByUsername(username);
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        User user = database.getById(id);
-        if (user == null) {
+    public UserDto getUserById(Long id) {
+        UserDto userDto = usersEntityToUserDto(database.getById(id));
+        if (userDto == null) {
             return null;
         }
-        return user;
+        return userDto;
     }
 
     @Override
-    public boolean deleteUserById(Long id) {
+    public boolean deleteUser(UserDto user) {
+//        database.delete(paramsToUsersEntity(user));
+        return deleteUser(user.getUserId());//database.getById(user.getUserId()) == null;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
         User entity = database.getById(id);
         database.delete(entity);
         return database.getById(id) == null;
@@ -115,19 +111,6 @@ public class UserService implements IUserService {
         return userDtos;
     }
 
-    private User userDtoToUsersEntity(UserDto userDto) {
-        User userEntity = new User();
-//        userEntity.setUserId(userDto.getUserId());
-        userEntity.setUsername(userDto.getUsername());
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setEmail(userDto.getEmail());
-        userEntity.setTelephone(userDto.getTelephone());
-        userEntity.setEnabled(userDto.getEnabled());
-        userEntity.setSalt(userDto.getSalt());
-
-        return userEntity;
-    }
-
     private UserDto usersEntityToUserDto(User user) {
         UserDto returnValue = new UserDto();
         returnValue.setUserId(user.getUserId());
@@ -141,16 +124,15 @@ public class UserService implements IUserService {
         return returnValue;
     }
 
-    private UserDto createUserRequestToDto(CreateUserRequest request) {
-        UserDto userDto = new UserDto(
-                request.username,
-                request.password,
-                request.email,
-                request.telephone);
+    private UserDto createUserRequestToDto(CreateUpdateUserRequest request) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(request.username);
+        userDto.setEmail(request.email);
+        userDto.setTelephone(request.telephone);
         userDto.setEnabled((byte) 1);
-        String salt = AuthenticationUtil.generateSalt(10);
+        String salt = PasswordUtils.getSalt(10);
         userDto.setSalt(salt);
-        userDto.setPassword(AuthenticationUtil.generateSecurePassword(request.password, salt));
+        userDto.setPassword(PasswordUtils.generateSecurePassword(userDto.getPassword(), salt));
 
         return userDto;
     }
