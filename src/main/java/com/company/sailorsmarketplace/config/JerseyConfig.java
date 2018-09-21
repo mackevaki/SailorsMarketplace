@@ -3,7 +3,7 @@ package com.company.sailorsmarketplace.config;
 import com.company.sailorsmarketplace.exceptions.AlreadyExistsExceptionHandler;
 import com.company.sailorsmarketplace.exceptions.AuthenticationExceptionHandler;
 import com.company.sailorsmarketplace.exceptions.ConstraintViolationHandler;
-import com.company.sailorsmarketplace.exceptions.NotFoundExceptionHandler;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundExceptionHandler;
 import com.company.sailorsmarketplace.rest.AuthenticationResource;
 import com.company.sailorsmarketplace.rest.UsersResource;
 import com.google.inject.Guice;
@@ -18,7 +18,7 @@ public class JerseyConfig extends ResourceConfig {
 
         // Exception handlers
         register(AlreadyExistsExceptionHandler.class);
-        register(NotFoundExceptionHandler.class);
+        register(UserNotFoundExceptionHandler.class);
         register(AuthenticationExceptionHandler.class);
         register(ConstraintViolationHandler.class);
 

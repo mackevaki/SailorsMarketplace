@@ -1,5 +1,6 @@
-package com.company.sailorsmarketplace;
+package sailorsmarketplace;
 
+import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.services.UserService;
@@ -15,20 +16,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 public class UserServiceTest {
-    private WebTarget target;
     private UserDAO database = new UserDAO();
-//    private UserService userService;
-    private Long userId;
-    private String findEmail;
-    private static User user;
 
     @Before
     public void startServer() throws Exception {
         Launcher.startServer();
-
-        Client client = ClientBuilder.newClient();
-        target = client.target("http://localhost:" + Launcher.SERVER_PORT);
-        setUp();
     }
 
     @After
@@ -38,6 +30,7 @@ public class UserServiceTest {
 
     @Test
     public void getByIdTest() {
+        Long userId = 10L;
         User user = database.getById(userId);
         assertNotNull(user);
         assertThat(user.getUserId(), equalTo(userId));
@@ -55,7 +48,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserByEmailTest() throws Throwable {
+    public void getUserByEmailTest() {
+        String findEmail = "test@test.com";
         User user = database.getByEmail(findEmail);
         assertNotNull(user);
         System.out.println(user.toString());
@@ -63,6 +57,7 @@ public class UserServiceTest {
 
     @Test
     public void deleteUserTest() {
+        Long userId = 1L;
         User user = database.getById(userId);
         System.out.println(user.toString());
         database.delete(user);
@@ -71,6 +66,7 @@ public class UserServiceTest {
 
     @Test
     public void updateUserTest() {
+        Long userId = 8L;
         User userUpdate = database.getById(userId);
         userUpdate.setPassword("fghdjjiks1");
         database.update(userUpdate);
@@ -79,21 +75,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void saveUserTest() throws Throwable {
+    public void saveUserTest() {
+        User user = new User(
+                "username1337",
+                "password1332",
+                "dg3dyu@dghs.ru",
+                "+79984536128"
+        );
+
         User createdUser = database.save(user);
         assertThat(database.getById(createdUser.getUserId()).getUserId(), equalTo(createdUser.getUserId()));
-    }
-
-    private void setUp() {
-        user = new User();
-        user.setUsername("p1337fvh");
-        user.setTelephone("78642352");
-        user.setPassword("hgj11ffsd");
-        user.setEmail("fff@fdh.yu");
-        user.setEnabled(true);
-        user.setSalt("ssssss");
-        userId = 6L;
-        findEmail = "ds@gb.uyu";
     }
 
 }

@@ -21,7 +21,6 @@ public class User {
     private UsersProfilesEntity usersProfilesByUserId;
 
 
-
     private Collection<EventsEntity> eventsByUserId;
 //    @OneToMany(mappedBy = "usersByOwnerId")
 //    private Collection<OrganizationsEntity> organizationsByUserId;
@@ -29,10 +28,15 @@ public class User {
 //    private Collection<EventsEntity> events;
 //    @OneToMany(mappedBy = "usersByUserId")
 //    private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
-//    @ManyToMany(mappedBy = "users")//cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    private Collection<Authority> authorities;
 
-//    public Collection<Authority> getAuthorities() {
+//    @ManyToMany//cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinTable(
+//            name = "users_roles",
+//            joinColumns = @JoinColumn(
+//                    name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "role_id", referencedColumnName = "id"))    public Collection<Authority> getAuthorities() {
 //        return authorities;
 //    }
 //

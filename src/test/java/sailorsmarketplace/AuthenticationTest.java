@@ -2,9 +2,9 @@ package sailorsmarketplace;
 
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
-import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.rest.AuthenticationDetails;
 import com.company.sailorsmarketplace.rest.AuthenticationRequest;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,17 +38,73 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        User existedUser = database.getById(8L);
-        String email = existedUser.getEmail();
-        String password = existedUser.getPassword();
+        String email = "test@test.com";
+        String password = "#TestUser1";
 
         AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
 
-
         Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
         AuthenticationDetails authenticationDetails = response.readEntity(AuthenticationDetails.class);
-        System.out.println(authenticationDetails.getId() + " - id; tokrn: " + authenticationDetails.getToken());
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+
+        System.out.println(authenticationDetails.getId() + " - id; token: " + authenticationDetails.getToken());
+
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    @Test
+    public void shouldNotLoginWhenUserWithThisEmailNotExists() {
+        WebTarget userWebTarget = target.path("/rest/authentication");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        String email = "notexists@not.exist";
+        String password = "#NotExists1";
+
+        AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
+
+        Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+    }
+
+    @Test
+    public void shouldNotLoginWhenUserWithThisEmailExistsButPasswordNotMatches() {
+        WebTarget userWebTarget = target.path("/rest/authentication");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        String email = database.getById(10L).getEmail();
+        String password = "#IllegalPass1";
+
+        AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
+
+        Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
+    }
+
+    @Test
+    public void shouldNotLoginWhenUserWithThisEmailExistsButPasswordNotWellFormed() {
+        WebTarget userWebTarget = target.path("/rest/authentication");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        String email = database.getById(10L).getEmail();
+        String password = "1";
+
+        AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
+
+        Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
+    }
+
+    @Test
+    public void shouldNotLoginWhenEmailNotWellFormed() {
+        WebTarget userWebTarget = target.path("/rest/authentication");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        String email = "badEmailrf";
+        String password = "#Password1";
+
+        AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
+
+        Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
     }
 
 }

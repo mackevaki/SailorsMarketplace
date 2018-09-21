@@ -128,6 +128,6 @@ public class AuthenticationService implements IAuthenticationService {
         user.setSalt(userDto.salt);
         user.setEnabled(userDto.enabled);
         // Store to database
-        this.database.update(user);
+        database.update(user);
     }
 }

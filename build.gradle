@@ -33,7 +33,6 @@ dependencies {
     compile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
     compile "org.eclipse.jetty:jetty-util:${jettyVersion}"
     compile "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
-    compile "org.eclipse.jetty:apache-jsp:${jettyVersion}"
 
     compile "org.ow2.asm:asm:6.2"
     compile group: 'com.google.inject', name: 'guice', version: '4.2.0'

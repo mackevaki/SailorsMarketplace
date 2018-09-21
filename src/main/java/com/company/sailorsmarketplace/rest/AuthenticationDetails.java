@@ -1,8 +1,22 @@
 package com.company.sailorsmarketplace.rest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AuthenticationDetails {
     private Long id;
     private String token;
+
+    public AuthenticationDetails() {}
+
+    @JsonCreator
+    public AuthenticationDetails(
+            @JsonProperty("id") Long id,
+            @JsonProperty("token") String token
+    ) {
+        this.id = id;
+        this.token = token;
+    }
 
     public Long getId() {
         return id;

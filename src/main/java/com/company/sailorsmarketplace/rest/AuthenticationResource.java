@@ -2,20 +2,18 @@ package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.dto.AllUserParamsDto;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
-import com.company.sailorsmarketplace.services.AuthenticationService;
 import com.company.sailorsmarketplace.services.IAuthenticationService;
+import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.ws.rs.core.Response;
 
 @Path("/authentication")
 public class AuthenticationResource {
@@ -28,30 +26,25 @@ public class AuthenticationResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationDetails userLogin(AuthenticationRequest loginCredentials) {
-        AuthenticationDetails returnValue = new AuthenticationDetails();
+    public Response userLogin(@Valid AuthenticationRequest loginCredentials) throws AuthenticationException, UserNotFoundException{
+        AuthenticationDetails authenticationDetails = new AuthenticationDetails();
 
         AllUserParamsDto userProfile = null;
 
         // Perform User Authentication
-        try {
-            userProfile = authenticationService.authenticate(
-                    loginCredentials.email,
-                    loginCredentials.password);
-        } catch (AuthenticationException | UserNotFoundException ex) {
-            Logger.getLogger(AuthenticationResource.class.getName()).log(Level.SEVERE, null, ex);
-            return returnValue;
-        }
+        userProfile = authenticationService.authenticate(
+                loginCredentials.email,
+                loginCredentials.password);
 
         // Reset Access Token
         authenticationService.resetSecurityCredentials(loginCredentials.password, userProfile);
         // Issue a new Access token
         String secureUserToken = authenticationService.issueSecureToken(userProfile);
 
-        returnValue.setToken(secureUserToken);
-        returnValue.setId(userProfile.id);
+        authenticationDetails.setToken(secureUserToken);
+        authenticationDetails.setId(userProfile.id);
 
-        return returnValue;
+        return Response.ok().status(HttpStatus.SC_OK).entity(authenticationDetails).build();
     }
 
 //    @POST

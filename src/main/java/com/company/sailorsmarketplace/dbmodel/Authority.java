@@ -17,8 +17,8 @@ public class Authority {
     @Enumerated(EnumType.STRING)
     private AuthorityName name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})//(mappedBy = "authorities", fetch = FetchType.LAZY)
-    private Collection<User> users;
+//    @ManyToMany(mappedBy = "authorities")//(cascade = {CascadeType.PERSIST, CascadeType.MERGE})//(mappedBy = "authorities", fetch = FetchType.LAZY)
+//    private Collection<User> users;
 
     public Long getId() {
         return id;
@@ -36,11 +36,11 @@ public class Authority {
         this.name = name;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
+//    public Collection<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Collection<User> users) {
+//        this.users = users;
+//    }
 }

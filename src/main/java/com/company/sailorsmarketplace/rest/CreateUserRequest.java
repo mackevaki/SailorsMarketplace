@@ -30,7 +30,7 @@ public class CreateUserRequest {
     public final String email;
 
 
-    @Size(max = 12, message = "Must be between less 12 characters")
+    @Size(max = 12, message = "Must be less 13 characters")
     @NotEmpty(message = "Phone must be in format +71234567890")
     public final String telephone;
 

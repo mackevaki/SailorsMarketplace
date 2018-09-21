@@ -36,8 +36,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
                 new DigitCharacterRule(1),
                 new SpecialCharacterRule(1),
                 new NumericalSequenceRule(3,false),
-                new AlphabeticalSequenceRule(3,false),
-                new QwertySequenceRule(3,false),
+                new AlphabeticalSequenceRule(5,false),
+                new QwertySequenceRule(4,false),
                 new WhitespaceRule()));
         final RuleResult result = validator.validate(new PasswordData(password));
         if (result.isValid()) {
