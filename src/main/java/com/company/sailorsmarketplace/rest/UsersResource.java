@@ -1,5 +1,6 @@
 package com.company.sailorsmarketplace.rest;
 
+import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.services.IUserService;
@@ -101,10 +102,10 @@ public class UsersResource {
     @Path("/reg")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response createUser(@Valid CreateUserRequest request) {
-        if (userService.userExists(request.email)) {
-            return Response.status(400).entity(new UserExistsException(request.email)).build();
-        }
+    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException {
+//        if (userService.userExists(request.email)) {
+//            return Response.status(400).entity(new UserExistsException(request.email)).build();
+//        }
 
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()
@@ -112,7 +113,8 @@ public class UsersResource {
                         .password(request.password)
                         .email(request.email)
                         .telephone(request.telephone)
-                        .build()
+                        .build(),
+                Authority.ROLE_USER
         );
 
         return Response.ok(createdUser.getUserId()).build();

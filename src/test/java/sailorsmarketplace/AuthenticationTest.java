@@ -85,7 +85,7 @@ public class AuthenticationTest {
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         String email = database.getById(10L).getEmail();
-        String password = "1";
+        String password = "fghjdfhj";
 
         AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
 

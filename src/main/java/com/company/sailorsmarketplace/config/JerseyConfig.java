@@ -1,9 +1,9 @@
 package com.company.sailorsmarketplace.config;
 
-import com.company.sailorsmarketplace.exceptions.AlreadyExistsExceptionHandler;
-import com.company.sailorsmarketplace.exceptions.AuthenticationExceptionHandler;
-import com.company.sailorsmarketplace.exceptions.ConstraintViolationHandler;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundExceptionHandler;
+import com.company.sailorsmarketplace.exceptions.AlreadyExistsExceptionMapper;
+import com.company.sailorsmarketplace.exceptions.AuthenticationExceptionMapper;
+import com.company.sailorsmarketplace.exceptions.ConstraintViolationMapper;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundExceptionMapper;
 import com.company.sailorsmarketplace.rest.AuthenticationResource;
 import com.company.sailorsmarketplace.rest.UsersResource;
 import com.google.inject.Guice;
@@ -17,10 +17,10 @@ public class JerseyConfig extends ResourceConfig {
         register(AuthenticationResource.class);
 
         // Exception handlers
-        register(AlreadyExistsExceptionHandler.class);
-        register(UserNotFoundExceptionHandler.class);
-        register(AuthenticationExceptionHandler.class);
-        register(ConstraintViolationHandler.class);
+        register(AlreadyExistsExceptionMapper.class);
+        register(UserNotFoundExceptionMapper.class);
+        register(AuthenticationExceptionMapper.class);
+        register(ConstraintViolationMapper.class);
 
         // Injectors
         Injector injector = Guice.createInjector(new Module());

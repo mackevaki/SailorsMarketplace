@@ -5,7 +5,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class AlreadyExistsExceptionHandler implements ExceptionMapper<UserExistsException> {
+public class AlreadyExistsExceptionMapper implements ExceptionMapper<UserExistsException> {
     public Response toResponse(UserExistsException ex) {
         return Response.status(Response.Status.CONFLICT.getStatusCode()).build();
     }

@@ -1,11 +1,13 @@
 package com.company.sailorsmarketplace.services;
+import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 
 import java.util.List;
 
 public interface IUserService {
-    User createNewUser(CreateUpdateUserParams params);
+    User createNewUser(CreateUpdateUserParams params, Authority authority) throws UserExistsException;
 
     User getUserById(Long id);
 

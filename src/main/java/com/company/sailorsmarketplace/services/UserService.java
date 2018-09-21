@@ -1,12 +1,15 @@
 package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +19,11 @@ public class UserService implements IUserService {
     private Database database;
 
     @Override
-    public User createNewUser(CreateUpdateUserParams params) {
+    public User createNewUser(CreateUpdateUserParams params, Authority authority) throws UserExistsException {
+        if (userExists(params.email)) {
+            throw new UserExistsException(params.email);
+        }
+
         String salt = AuthenticationUtil.generateSalt(20);
         String securePassword = AuthenticationUtil.generateSecurePassword(params.password, salt);
 
@@ -24,7 +31,8 @@ public class UserService implements IUserService {
                 params.username,
                 securePassword,
                 params.email,
-                params.telephone
+                params.telephone,
+                authority
         );
 
         userEntity.setSalt(salt);
