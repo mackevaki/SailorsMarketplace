@@ -14,11 +14,11 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private Byte enabled;
     private String telephone;
-    private UsersProfilesEntity usersProfilesByUserId;
     private String salt;
+    private Boolean enabled;
     private String token;
+    private UsersProfilesEntity usersProfilesByUserId;
 
 
 
@@ -93,11 +93,11 @@ public class User {
 
     @Basic
     @Column(name = "enabled", nullable = false)
-    public Byte getEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Byte enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 

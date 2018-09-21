@@ -2,14 +2,13 @@ package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
+import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Singleton
 public class UserService implements IUserService {
@@ -18,12 +17,18 @@ public class UserService implements IUserService {
 
     @Override
     public User createNewUser(CreateUpdateUserParams params) {
+        String salt = AuthenticationUtil.generateSalt(20);
+        String securePassword = AuthenticationUtil.generateSecurePassword(params.password, salt);
+
         final User userEntity = new User(
                 params.username,
-                params.password,
+                securePassword,
                 params.email,
                 params.telephone
         );
+
+        userEntity.setSalt(salt);
+        userEntity.setEnabled(false); // will be true after activation
 
         return database.save(userEntity);
     }

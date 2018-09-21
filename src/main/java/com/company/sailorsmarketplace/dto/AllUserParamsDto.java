@@ -7,7 +7,7 @@ public class AllUserParamsDto {
     public final String password;
     public final String telephone;
     public final String salt;
-    public final byte enabled;
+    public final Boolean enabled;
 
     private AllUserParamsDto(
             Builder builder) {
@@ -31,7 +31,7 @@ public class AllUserParamsDto {
         private String password;
         private String telephone;
         private String salt;
-        private byte enabled;
+        private Boolean enabled;
 
         private Builder() {}
 
@@ -67,7 +67,7 @@ public class AllUserParamsDto {
             return this;
         }
 
-        public Builder enabled(byte enabled) {
+        public Builder enabled(Boolean enabled) {
             this.enabled = enabled;
             return this;
         }

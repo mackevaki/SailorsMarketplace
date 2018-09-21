@@ -5,6 +5,7 @@ import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.services.AuthenticationService;
+import com.company.sailorsmarketplace.services.IAuthenticationService;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -16,14 +17,13 @@ import javax.ws.rs.core.MediaType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.util.Objects.requireNonNull;
-
 @Path("/authentication")
 public class AuthenticationResource {
+
 //    private AuthenticationService authenticationService = new AuthenticationService();
 
     @Inject
-    AuthenticationService authenticationService;
+    IAuthenticationService authenticationService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

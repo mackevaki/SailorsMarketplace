@@ -2,8 +2,12 @@ package sailorsmarketplace;
 
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
+import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.rest.AuthenticationDetails;
+import com.company.sailorsmarketplace.rest.AuthenticationRequest;
 import com.company.sailorsmarketplace.rest.CreateUserRequest;
 
+import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -39,6 +43,7 @@ public class UsersResourceTest {
     public void shouldCreateUserWhenAllInputsAreValid() {
         WebTarget userWebTarget = target.path("/rest/accounts/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
         String email = randomAlphanumeric(5) + "@mail.ru";
         String username = randomAlphanumeric(8);
         CreateUserRequest createUserRequest = new CreateUserRequest(
@@ -50,16 +55,56 @@ public class UsersResourceTest {
         );
 
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
-//        System.out.println("-----------  " + ((UserDto)response.getEntity()).getUsername());
+        Long createdUserId = Long.valueOf(response.readEntity(String.class));
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
-        String userDto = response.readEntity(String.class);
 
-//        assertNotNull(createdEntity.getUsername());
-//        assertNotNull(createdEntity.getId());
+        User createdUser = database.getByEmail(email);
+        assertThat(createdUserId, equalTo(createdUser.getUserId()));
+    }
+
+    @Test
+    public void shouldNotCreateUserWhenHeIsAlreadyRegistered() {
+        WebTarget userWebTarget = target.path("/rest/accounts/reg");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        User existedUser = database.getById(8L);
+        CreateUserRequest createUserRequest = new CreateUserRequest(
+                existedUser.getUsername(),
+                existedUser.getPassword(),
+                existedUser.getPassword(),
+                existedUser.getEmail(),
+                existedUser.getTelephone()
+        );
+
+        Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
+
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(400));
+    }
+
+    @Test
+    public void shouldNotCreateUserWhenEmailIsInvalid() {
+        WebTarget userWebTarget = target.path("/rest/accounts/reg");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        String email = randomAlphanumeric(5) + "@mail.ru";
+        String username = randomAlphanumeric(8);
+        CreateUserRequest createUserRequest = new CreateUserRequest(
+                username,
+                "pA1&ssword",
+                "pA1&sssword",
+                email,
+                "+79150368784"
+        );
+
+        Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
+        Long createdUserId = Long.valueOf(response.readEntity(String.class));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+
+        User createdUser = database.getByEmail(email);
+        assertThat(createdUserId, equalTo(createdUser.getUserId()));
     }
 
 
-    private void setUp() {
-    }
+
 }

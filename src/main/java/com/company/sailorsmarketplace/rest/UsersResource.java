@@ -3,6 +3,7 @@ package com.company.sailorsmarketplace.rest;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.services.IUserService;
+import com.company.sailorsmarketplace.utils.Secured;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -37,6 +38,7 @@ public class UsersResource {
 
 
     @GET
+    @Secured
     @Path("/all")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllUsers() {
@@ -51,6 +53,7 @@ public class UsersResource {
     }
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
@@ -64,6 +67,7 @@ public class UsersResource {
 
 
     @DELETE
+    @Secured
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
         if (userService.deleteUser(id)) {
@@ -74,6 +78,7 @@ public class UsersResource {
     }
 
     @PUT
+    @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(@Valid UpdateUserRequest request) {
 
@@ -113,6 +118,26 @@ public class UsersResource {
         return Response.ok(createdUser.getUserId()).build();
     }
 
+//    @POST
+//    @Path("/signin")
+//    @Consumes(APPLICATION_JSON)
+//    @Produces(APPLICATION_JSON)
+//    public Response signinUser(@Valid AuthenticationRequest request) {
+//        if (userService.userExists(request.email)) {
+//            return Response.status(400).entity(new UserExistsException(request.email)).build();
+//        }
+//
+//        final User createdUser = userService.createNewUser(
+//                createUpdateUserParams()
+//                        .username(request.username)
+//                        .password(request.password)
+//                        .email(request.email)
+//                        .telephone(request.telephone)
+//                        .build()
+//        );
+//
+//        return Response.ok(createdUser.getUserId()).build();
+//    }
 
 //
 //    @POST

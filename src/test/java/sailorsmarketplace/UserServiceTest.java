@@ -2,6 +2,7 @@ package com.company.sailorsmarketplace;
 
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.services.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +14,10 @@ import java.util.List;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
-public class UserDAOTest {
+public class UserServiceTest {
     private WebTarget target;
     private UserDAO database = new UserDAO();
-
+//    private UserService userService;
     private Long userId;
     private String findEmail;
     private static User user;
@@ -89,7 +90,7 @@ public class UserDAOTest {
         user.setTelephone("78642352");
         user.setPassword("hgj11ffsd");
         user.setEmail("fff@fdh.yu");
-        user.setEnabled((byte)1);
+        user.setEnabled(true);
         user.setSalt("ssssss");
         userId = 6L;
         findEmail = "ds@gb.uyu";

@@ -19,23 +19,26 @@ import static com.company.sailorsmarketplace.dto.AllUserParamsDto.Builder.allUse
 
 @Singleton
 public class AuthenticationService implements IAuthenticationService {
+    @Inject
     Database database;
-//    AuthenticationUtil authenticationUtil;
-
 
     @Inject
-    public AuthenticationService(Database database) {
-        this.database = database;
-//        this.authenticationUtil = authenticationUtil;
-    }
+    IUserService userService;
+
+//    @Inject
+//    public AuthenticationService(Database database) {
+//        this.database = database;
+////        this.authenticationUtil = authenticationUtil;
+//    }
 
 
     @Override
     public AllUserParamsDto authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
         AllUserParamsDto userDto;
+
         User user = null;
         try {
-            user = new UserService().getUserByEmail(email); // Email must be unique in our system
+            user = userService.getUserByEmail(email); // Email must be unique in our system
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException(email);
         }
@@ -54,6 +57,7 @@ public class AuthenticationService implements IAuthenticationService {
         if (!authenticated) {
             throw new AuthenticationException("Authentication failed");
         }
+
         userDto = allUserParamsDto()
                 .id(user.getUserId())
                 .username(user.getUsername())
