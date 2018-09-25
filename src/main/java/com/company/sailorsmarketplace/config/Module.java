@@ -10,12 +10,12 @@ public class Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        //bind the service to implementation class
-        //bind(MessageService.class).to(EmailService.class);
 
+        //bind the services to implementation class
         bind(IAuthenticationService.class).to(AuthenticationService.class);
         bind(IUserService.class).to(UserService.class);
         bind(Database.class).to(UserDAO.class);
         bind(IUserDetailsService.class).to(UserDetailsService.class);
+        bind(IUserProfileInfoService.class).to(UserProfileInfoService.class);
     }
 }

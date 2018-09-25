@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.services;
+package com.company.sailorsmarketplace.dto;
 
 public class CreateUpdateUserParams {
     public final String username;

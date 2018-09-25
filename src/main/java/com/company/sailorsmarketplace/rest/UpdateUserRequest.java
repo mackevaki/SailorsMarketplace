@@ -42,7 +42,7 @@ public class UpdateUserRequest {
             @JsonProperty("userId") Long userId,
             @JsonProperty("username") String username,
             @JsonProperty("password") String password,
-            @JsonProperty String matchingPassword,
+            @JsonProperty("matchingPassword") String matchingPassword,
             @JsonProperty("email") String email,
             @JsonProperty("telephone") String telephone) {
         this.userId = userId;

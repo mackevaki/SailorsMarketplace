@@ -17,7 +17,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,19 +29,18 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     IUserService usersService;
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        // Extract Authorization header details
+    public void filter(ContainerRequestContext requestContext) {
         String authorizationHeader
                 = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
             throw new NotAuthorizedException("Authorization header must be provided");
         }
-        // Extract the token
+
         String token = authorizationHeader.substring("Bearer".length()).trim();
-        // Extract user id
+
         Long userId = Long.valueOf(requestContext.getUriInfo().getPathParameters().getFirst("id"));
+
         try {
-            // Validate the token
             validateToken(token, userId);
         } catch (AuthenticationServiceException ex) {
             Logger.getLogger(AuthenticationFilter.class.getName()).log(Level.SEVERE, null, ex);
@@ -51,14 +49,16 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
     private void validateToken(String token, Long userId) throws AuthenticationServiceException {
-        // Get user profile details
         User userProfile = usersService.getUserById(userId);
+
         String completeToken = userProfile.getToken() + token;
         String securePassword = userProfile.getPassword();
         String salt = userProfile.getSalt();
         String accessTokenMaterial = userId + salt;
+
         byte[] encryptedAccessToken = null;
         encryptedAccessToken = AuthenticationUtil.encrypt(securePassword, accessTokenMaterial);
+
         String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
         if (!encryptedAccessTokenBase64Encoded.equalsIgnoreCase(completeToken)) {
             throw new AuthenticationServiceException("Authorization token did not match");

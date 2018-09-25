@@ -2,7 +2,9 @@ package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
+import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.utils.Secured;
 
@@ -10,17 +12,19 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-import static com.company.sailorsmarketplace.services.CreateUpdateUserParams.Builder.createUpdateUserParams;
+import static com.company.sailorsmarketplace.dto.CreateUpdateUserParams.Builder.createUpdateUserParams;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/accounts")
 public class UsersResource {
     @Inject
-    private IUserService userService;
+    IUserService userService;
+
+    @Inject
+    IUserProfileInfoService userProfileInfoService;
 //
 //    @POST
 //    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -41,7 +45,7 @@ public class UsersResource {
     @GET
     @Secured
     @Path("/all")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({APPLICATION_JSON})
     public Response getAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users != null) {
@@ -55,7 +59,7 @@ public class UsersResource {
 
     @GET
     @Secured
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
         User user = userService.getUserById(id);
@@ -80,7 +84,7 @@ public class UsersResource {
 
     @PUT
     @Secured
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     public Response updateUser(@Valid UpdateUserRequest request) {
 
         final User updUser = userService.updateUser(
@@ -117,58 +121,9 @@ public class UsersResource {
                 Authority.ROLE_USER
         );
 
+        userProfileInfoService.createUserProfileInfoForNewUser(createdUser.getUserId());
+
         return Response.ok(createdUser.getUserId()).build();
     }
-
-//    @POST
-//    @Path("/signin")
-//    @Consumes(APPLICATION_JSON)
-//    @Produces(APPLICATION_JSON)
-//    public Response signinUser(@Valid AuthenticationRequest request) {
-//        if (userService.userExists(request.email)) {
-//            return Response.status(400).entity(new UserExistsException(request.email)).build();
-//        }
-//
-//        final User createdUser = userService.createNewUser(
-//                createUpdateUserParams()
-//                        .username(request.username)
-//                        .password(request.password)
-//                        .email(request.email)
-//                        .telephone(request.telephone)
-//                        .build()
-//        );
-//
-//        return Response.ok(createdUser.getUserId()).build();
-//    }
-
-//
-//    @POST
-//    @Produces(MediaType.TEXT_HTML)
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    public void newAccount(@FormParam("username") String username,
-//                        @FormParam("password") String password,
-//                        @FormParam("email") String email,
-//                        @Context HttpServletResponse servletResponse) throws IOException {
-//        User account = new User(getCount()+1, username, email, password);
-//        IUserService.createAccount(account);
-//
-//        servletResponse.sendRedirect("/accountsinfo.html");
-//    }
-//
-//    @POST
-//    @Path("/accinfo")
-//    @Produces(MediaType.TEXT_HTML)
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    public void addAccountInfo(@FormParam("firstname") String firstmame,
-//                                   @FormParam("lastname") String lastname,
-//                                   @FormParam("birhdate") Date birthdate,
-//                                   @FormParam("sex") String sex,
-//                                   @FormParam("city") String city,
-//                                   @FormParam("organization") String organization,
-//                                   @Context HttpServletResponse servletResponse) throws IOException {
-//
-//        servletResponse.sendRedirect("/accountsinfo.html");
-//    }
-
 
 }

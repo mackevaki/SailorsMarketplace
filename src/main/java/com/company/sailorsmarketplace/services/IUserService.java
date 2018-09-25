@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.services;
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dto.CreateUpdateUserParams;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 

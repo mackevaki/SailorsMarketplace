@@ -1,5 +1,10 @@
 package com.company.sailorsmarketplace.dto;
 
+import com.company.sailorsmarketplace.dbmodel.Authority;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 public class AllUserParamsDto {
     public final Long id;
     public final String username;
@@ -8,9 +13,10 @@ public class AllUserParamsDto {
     public final String telephone;
     public final String salt;
     public final Boolean enabled;
+    public final List<Authority> authorities;
 
     private AllUserParamsDto(
-            Builder builder) {
+            @NotNull Builder builder, List<Authority> authorities) {
         this.id = builder.id;
         this.username = builder.username;
         this.email = builder.email;
@@ -18,11 +24,8 @@ public class AllUserParamsDto {
         this.telephone = builder.telephone;
         this.salt = builder.salt;
         this.enabled = builder.enabled;
+        this.authorities = authorities;
     }
-
-//    public static Builder getBuilder() {
-//        return new Builder();
-//    }
 
     public static class Builder {
         private Long id;
@@ -32,13 +35,13 @@ public class AllUserParamsDto {
         private String telephone;
         private String salt;
         private Boolean enabled;
+        private List<Authority> authorities;
 
         private Builder() {}
 
         public static Builder allUserParamsDto() {
             return new Builder();
         }
-
 
         public Builder id(Long id) {
             this.id = id;
@@ -72,8 +75,13 @@ public class AllUserParamsDto {
             return this;
         }
 
+        public Builder authorities(List<Authority> authorities) {
+            this.authorities = authorities;
+            return this;
+        }
+
         public AllUserParamsDto build() {
-            return new AllUserParamsDto(this);
+            return new AllUserParamsDto(this, authorities);
         }
     }
 }

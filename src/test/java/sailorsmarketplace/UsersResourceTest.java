@@ -3,8 +3,10 @@ package sailorsmarketplace;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.rest.CreateUserRequest;
 
+import com.company.sailorsmarketplace.services.UserProfileInfoService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +58,10 @@ public class UsersResourceTest {
 
         User createdUser = database.getByEmail(email);
         assertThat(createdUserId, equalTo(createdUser.getUserId()));
+
+//        UserProfileInfoService service = new UserProfileInfoService();
+//        UserProfileInfo info = service.createUserProfileInfoForNewUser(createdUser.getUserId());
+//        assertThat(info.getUserId(), equalTo(createdUser.getUserId()));
     }
 
     @Test
@@ -101,5 +107,16 @@ public class UsersResourceTest {
     }
 
 
+    @Test
+    public void shouldShowUserProfileInfoWhenAllInputsAreValid() {
+        WebTarget userWebTarget = target.path("/rest/profile_info/17");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.get();
+        String info = response.readEntity(String.class);
+        System.out.println(info);
+
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+    }
 
 }

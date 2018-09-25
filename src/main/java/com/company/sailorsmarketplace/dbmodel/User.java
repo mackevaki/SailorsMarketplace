@@ -3,8 +3,10 @@ package com.company.sailorsmarketplace.dbmodel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,9 +21,12 @@ public class User {
 
     @Basic
     @Column(name = "username", nullable = false, length = 25)
+    @Size(max = 25)
     private String username;
 
     @Basic
+    @Email(message = "Please provide a valid e-mail")
+    @NotEmpty(message = "Please provide an e-mail")
     @Column(name = "email", nullable = false, length = 45)
     private String email;
 
@@ -30,6 +35,7 @@ public class User {
     private String password;
 
     @Basic
+    @Size(max = 12)
     @Column(name = "telephone", nullable = true, length = 12)
     private String telephone;
 
@@ -45,17 +51,17 @@ public class User {
     @Column(name = "token", nullable = false, length = 60)
     private String token;
 
-//    @OneToOne(mappedBy = "usersByUserId")
-//    private UsersProfilesEntity usersProfilesByUserId;
+    @OneToOne(mappedBy = "userByUserId")
+    private UserProfileInfo userProfileInfoById;
 
 
-//    private Collection<EventsEntity> eventsByUserId;
+//    private Collection<Event> eventsByUserId;
 //    @OneToMany(mappedBy = "usersByOwnerId")
-//    private Collection<OrganizationsEntity> organizationsByUserId;
+//    private Collection<Organization> organizationsByUserId;
 //    @ManyToMany(mappedBy = "usersEntities")
-//    private Collection<EventsEntity> events;
+//    private Collection<Event> events;
 //    @OneToMany(mappedBy = "usersByUserId")
-//    private Collection<TelegramConnectionsEntity> telegramConnectionsByUserId;
+//    private Collection<TelegramConnections> telegramConnectionsByUserId;
 
 
     @ElementCollection(targetClass = Authority.class)
@@ -81,7 +87,6 @@ public class User {
 
         this.authorities = new ArrayList<>();
         this.authorities.add(authority);
-
     }
 
     public List<Authority> getAuthorities() {
@@ -156,55 +161,47 @@ public class User {
         this.salt = salt;
     }
 
-//    public UsersProfilesEntity getUsersProfilesByUserId() {
-//        return usersProfilesByUserId;
-//    }
-//
-//    public void setUsersProfilesByUserId(UsersProfilesEntity usersProfilesByUserId) {
-//        this.usersProfilesByUserId = usersProfilesByUserId;
-//    }
+    public UserProfileInfo getUserProfileInfo() {
+        return userProfileInfoById;
+    }
+
+    public void setUserProfileInfoById(UserProfileInfo userProfileInfo) {
+        this.userProfileInfoById = userProfileInfo;
+    }
 
 //
 //    @OneToMany(mappedBy = "usersByChargeUserId")
-//    public Collection<EventsEntity> getEventsByUserId() {
+//    public Collection<Event> getEventsByUserId() {
 //        return eventsByUserId;
 //    }
 
-//    public void setEventsByUserId(Collection<EventsEntity> eventsByUserId) {
+//    public void setEventsByUserId(Collection<Event> eventsByUserId) {
 //        this.eventsByUserId = eventsByUserId;
 //    }
 //
-//    public Collection<OrganizationsEntity> getOrganizationsByUserId() {
+//    public Collection<Organization> getOrganizationsByUserId() {
 //        return organizationsByUserId;
 //    }
 //
-//    public void setOrganizationsByUserId(Collection<OrganizationsEntity> organizationsByUserId) {
+//    public void setOrganizationsByUserId(Collection<Organization> organizationsByUserId) {
 //        this.organizationsByUserId = organizationsByUserId;
 //    }
 
 //    @OneToMany(mappedBy = "usersByUserId")
-//    public Collection<ParticipationsEntity> getParticipationsByUserId() {
+//    public Collection<Participations> getParticipationsByUserId() {
 //        return participationsByUserId;
 //    }
 //
-//    public void setParticipationsByUserId(Collection<ParticipationsEntity> participationsByUserId) {
+//    public void setParticipationsByUserId(Collection<Participations> participationsByUserId) {
 //        this.participationsByUserId = participationsByUserId;
 //    }
 
-//    public Collection<TelegramConnectionsEntity> getTelegramConnectionsByUserId() {
+//    public Collection<TelegramConnections> getTelegramConnectionsByUserId() {
 //        return telegramConnectionsByUserId;
 //    }
 //
-//    public void setTelegramConnectionsByUserId(Collection<TelegramConnectionsEntity> telegramConnectionsByUserId) {
+//    public void setTelegramConnectionsByUserId(Collection<TelegramConnections> telegramConnectionsByUserId) {
 //        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
-//    }
-
-//    public Collection<Authorityy> getAuthorities() {
-//        return authorities;
-//    }
-//
-//    public void setAuthorities(Collection<Authorityy> authorities) {
-//        this.authorities = authorities;
 //    }
 
     @Override

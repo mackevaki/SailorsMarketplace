@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "telegram_connections", schema = "smarket")
 @IdClass(TelegramConnectionsEntityPK.class)
-public class TelegramConnectionsEntity {
+public class TelegramConnections {
     private Long userId;
     private Integer telegramId;
     private Byte verified;
@@ -46,7 +46,7 @@ public class TelegramConnectionsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TelegramConnectionsEntity that = (TelegramConnectionsEntity) o;
+        TelegramConnections that = (TelegramConnections) o;
         return Objects.equals(userId, that.userId) &&
                 Objects.equals(telegramId, that.telegramId) &&
                 Objects.equals(verified, that.verified);

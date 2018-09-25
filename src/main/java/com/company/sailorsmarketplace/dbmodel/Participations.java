@@ -7,20 +7,20 @@ import javax.persistence.ManyToOne;
 
 @Entity
 //@Table(name = "participations", schema = "smarket", catalog = "")
-public class ParticipationsEntity {
-    private EventsEntity eventsByEventId;
+public class Participations {
+    private Event eventsByEventId;
     private User usersByUserId;
 
     @Id
     private long id;
 
-    @ManyToOne(targetEntity = EventsEntity.class)
+    @ManyToOne(targetEntity = Event.class)
     @JoinColumn(name = "event_id", nullable = false)
-    public EventsEntity getEventsByEventId() {
+    public Event getEventsByEventId() {
         return eventsByEventId;
     }
 
-    public void setEventsByEventId(EventsEntity eventsByEventId) {
+    public void setEventsByEventId(Event eventsByEventId) {
         this.eventsByEventId = eventsByEventId;
     }
 

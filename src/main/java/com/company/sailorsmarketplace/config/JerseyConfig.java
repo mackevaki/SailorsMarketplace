@@ -5,6 +5,7 @@ import com.company.sailorsmarketplace.exceptions.AuthenticationExceptionMapper;
 import com.company.sailorsmarketplace.exceptions.ConstraintViolationMapper;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundExceptionMapper;
 import com.company.sailorsmarketplace.rest.AuthenticationResource;
+import com.company.sailorsmarketplace.rest.UserProfileInfoResource;
 import com.company.sailorsmarketplace.rest.UsersResource;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -15,6 +16,7 @@ public class JerseyConfig extends ResourceConfig {
         // Resources
         register(UsersResource.class);
         register(AuthenticationResource.class);
+        register(UserProfileInfoResource.class);
 
         // Exception handlers
         register(AlreadyExistsExceptionMapper.class);

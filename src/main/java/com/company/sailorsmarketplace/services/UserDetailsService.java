@@ -11,7 +11,7 @@ public class UserDetailsService implements IUserDetailsService {
     @Inject
     private Database database;
 //
-//    public UserDetails loadUserByLogin(String email)throws UserNotFoundException {
+//    public UserDetailsss loadUserByLogin(String email)throws UserNotFoundException {
 //        User user;
 //        if ((user = database.getByEmail(email)) == null) {
 //            throw new UserNotFoundException("No user found with email: "+ email);

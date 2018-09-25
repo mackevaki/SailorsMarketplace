@@ -7,32 +7,61 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users_profiles", schema = "smarket")
-public class UsersProfilesEntity {
-    private long userId;
-    private String firstname;
-    private String lastname;
-    private Date birthdate;
-    private Enum gender;
-    private String city;
-    private String organization;
-    private byte[] avatar;
-    private Integer telegramId;
-    private User usersByUserId;
-
-    public UsersProfilesEntity() {}
-
+public class UserProfileInfo {
     @Id
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+    private Long userId;
 
     @Basic
     @Column(name = "firstname", nullable = true, length = 45)
+    private String firstname;
+
+    @Basic
+    @Column(name = "lastname", nullable = true, length = 45)
+    private String lastname;
+
+    @Basic
+    @Column(name = "birthdate", nullable = true)
+    private Date birthdate;
+
+    @Basic
+    @Column(name = "gender", nullable = true)
+    private Enum gender;
+
+    @Basic
+    @Column(name = "city", nullable = true, length = 45)
+    private String city;
+
+    @Basic
+    @Column(name = "organization", nullable = true, length = 45)
+    private String organization;
+
+    @Basic
+    @Column(name = "avatar", nullable = true)
+    private byte[] avatar;
+
+    @Basic
+    @Column(name = "telegram_id", nullable = true)
+    private Integer telegramId;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User userByUserId;
+
+    public UserProfileInfo() {}
+
+    public UserProfileInfo(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public String getFirstname() {
         return firstname;
     }
@@ -41,8 +70,6 @@ public class UsersProfilesEntity {
         this.firstname = firstname;
     }
 
-    @Basic
-    @Column(name = "lastname", nullable = true, length = 45)
     public String getLastname() {
         return lastname;
     }
@@ -51,8 +78,6 @@ public class UsersProfilesEntity {
         this.lastname = lastname;
     }
 
-    @Basic
-    @Column(name = "birthdate", nullable = true)
     public Date getBirthdate() {
         return birthdate;
     }
@@ -61,8 +86,6 @@ public class UsersProfilesEntity {
         this.birthdate = birthdate;
     }
 
-    @Basic
-    @Column(name = "gender", nullable = true)
     public Enum getGender() {
         return gender;
     }
@@ -71,8 +94,6 @@ public class UsersProfilesEntity {
         this.gender = gender;
     }
 
-    @Basic
-    @Column(name = "city", nullable = true, length = 45)
     public String getCity() {
         return city;
     }
@@ -81,8 +102,6 @@ public class UsersProfilesEntity {
         this.city = city;
     }
 
-    @Basic
-    @Column(name = "organization", nullable = true, length = 45)
     public String getOrganization() {
         return organization;
     }
@@ -91,8 +110,6 @@ public class UsersProfilesEntity {
         this.organization = organization;
     }
 
-    @Basic
-    @Column(name = "avatar", nullable = true)
     public byte[] getAvatar() {
         return avatar;
     }
@@ -101,8 +118,6 @@ public class UsersProfilesEntity {
         this.avatar = avatar;
     }
 
-    @Basic
-    @Column(name = "telegram_id", nullable = true)
     public Integer getTelegramId() {
         return telegramId;
     }
@@ -111,11 +126,19 @@ public class UsersProfilesEntity {
         this.telegramId = telegramId;
     }
 
+    public User getUserByUserId() {
+        return userByUserId;
+    }
+
+    public void setUserByUserId(User usersByUserId) {
+        this.userByUserId = usersByUserId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsersProfilesEntity that = (UsersProfilesEntity) o;
+        UserProfileInfo that = (UserProfileInfo) o;
         return Objects.equals(userId, that.userId) &&
                 Objects.equals(firstname, that.firstname) &&
                 Objects.equals(lastname, that.lastname) &&
@@ -129,19 +152,23 @@ public class UsersProfilesEntity {
 
     @Override
     public int hashCode() {
-
         int result = Objects.hash(userId, firstname, lastname, birthdate, gender, city, organization, telegramId);
         result = 31 * result + Arrays.hashCode(avatar);
         return result;
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    public User getUsersByUserId() {
-        return usersByUserId;
+    @Override
+    public String toString() {
+        return "User Profile:\n" +
+                "user id: " + userId + "\n" +
+                "firstname: " + firstname + "\n" +
+                "lastname" + lastname + "\n" +
+                "birthdate" + birthdate + "\n" +
+                "gender" + gender + "\n" +
+                "city" + city + "\n" +
+                "organization" + organization + "\n" +
+                "avatar" + Arrays.toString(avatar) + "\n" +
+                "telegram id" + telegramId + "\n";
     }
 
-    public void setUsersByUserId(User usersByUserId) {
-        this.usersByUserId = usersByUserId;
-    }
 }

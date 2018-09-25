@@ -6,7 +6,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "events", schema = "smarket")
-public class EventsEntity {
+public class Event {
     private Integer eventId;
     private String name;
     private String description;
@@ -83,7 +83,7 @@ public class EventsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EventsEntity that = (EventsEntity) o;
+        Event that = (Event) o;
         return Objects.equals(eventId, that.eventId) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
@@ -109,12 +109,12 @@ public class EventsEntity {
         this.usersByChargeUserId = usersByChargeUserId;
     }
 
-//    @OneToMany(mappedBy = "eventsByEventId", targetEntity = ParticipationsEntity.class)
-//    public Collection<ParticipationsEntity> getParticipationsByEventId() {
+//    @OneToMany(mappedBy = "eventsByEventId", targetEntity = Participations.class)
+//    public Collection<Participations> getParticipationsByEventId() {
 //        return participationsByEventId;
 //    }
 //
-//    public void setParticipationsByEventId(Collection<ParticipationsEntity> participationsByEventId) {
+//    public void setParticipationsByEventId(Collection<Participations> participationsByEventId) {
 //        this.participationsByEventId = participationsByEventId;
 //    }
 }

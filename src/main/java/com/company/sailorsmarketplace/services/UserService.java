@@ -3,13 +3,14 @@ package com.company.sailorsmarketplace.services;
 import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
+import com.company.sailorsmarketplace.dto.CreateUpdateUserParams;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,15 +58,9 @@ public class UserService implements IUserService {
         if (!old.getTelephone().equals(user.telephone)) {
             old.setTelephone(user.telephone);
         }
-//        if (!old.getEnabled().equals(user.getEnabled())) {
-//            old.setEnabled(user.getEnabled());
-//        }
 
-//        if ((old.getUsername() != null) && (user.getUserId() != 0)) {
-//            database.update(old);
-//            return database.getById(user.getUserId());
-//        }
-        return null;
+        database.update(old);
+        return database.getById(userId);
     }
 
     @Override

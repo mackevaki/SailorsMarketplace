@@ -2,7 +2,7 @@ package com.company.sailorsmarketplace.security;
 
 import com.company.sailorsmarketplace.security.GrantedAuthority;
 
-public class UserDetails {
+public class UserDetailsss {
 
     private String email;
     private String password;
@@ -12,8 +12,8 @@ public class UserDetails {
     private boolean accountNonLocked;
     private GrantedAuthority authority;
 
-    public UserDetails(String email, String password, boolean enabled, boolean accountNonExpired,
-                       boolean credentialsNonExpired, boolean accountNonLocked, GrantedAuthority authority) {
+    public UserDetailsss(String email, String password, boolean enabled, boolean accountNonExpired,
+                         boolean credentialsNonExpired, boolean accountNonLocked, GrantedAuthority authority) {
 
     }
 }

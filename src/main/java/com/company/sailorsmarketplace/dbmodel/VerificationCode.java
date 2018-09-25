@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "verification_codes", schema = "smarket", catalog = "")
-public class VerificationCodesEntity implements Serializable {
+public class VerificationCode implements Serializable {
     private EnumType sourceSystem;
     private String verificationCode;
     private Date validTill;
@@ -68,7 +68,7 @@ public class VerificationCodesEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VerificationCodesEntity that = (VerificationCodesEntity) o;
+        VerificationCode that = (VerificationCode) o;
         return Objects.equals(sourceSystem, that.sourceSystem) &&
                 Objects.equals(verificationCode, that.verificationCode) &&
                 Objects.equals(validTill, that.validTill) &&

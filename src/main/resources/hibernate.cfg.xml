@@ -17,12 +17,12 @@
 
         <property name="hibernate.id.new_generator_mappings">true</property>
         <mapping class="com.company.sailorsmarketplace.dbmodel.User"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.UsersProfilesEntity"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.VerificationCodesEntity"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.UserProfileInfo"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.VerificationCode"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRolesEntity"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.EventsEntity"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.OrganizationsEntity"/>
-        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.ParticipationsEntity"/>-->
-        <mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnectionsEntity"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.Event"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.Organization"/>
+        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.Participations-->
+        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnections"/>-->
     </session-factory>
 </hibernate-configuration>

@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.transaction.Transaction;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,7 +36,7 @@ public class AuthenticationTest {
 
     @Test
     public void shouldLoginWhenAllInputsAreValid() {
-        WebTarget userWebTarget = target.path("/rest/authentication");
+        WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         String email = "test@test.com";
@@ -46,14 +47,14 @@ public class AuthenticationTest {
         Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
         AuthenticationDetails authenticationDetails = response.readEntity(AuthenticationDetails.class);
 
-        System.out.println(authenticationDetails.getId() + " - id; token: " + authenticationDetails.getToken());
+        System.out.println(authenticationDetails.id + " - id; token: " + authenticationDetails.token);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
     public void shouldNotLoginWhenUserWithThisEmailNotExists() {
-        WebTarget userWebTarget = target.path("/rest/authentication");
+        WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         String email = "notexists@not.exist";
@@ -67,7 +68,7 @@ public class AuthenticationTest {
 
     @Test
     public void shouldNotLoginWhenUserWithThisEmailExistsButPasswordNotMatches() {
-        WebTarget userWebTarget = target.path("/rest/authentication");
+        WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         String email = database.getById(10L).getEmail();
@@ -80,22 +81,8 @@ public class AuthenticationTest {
     }
 
     @Test
-    public void shouldNotLoginWhenUserWithThisEmailExistsButPasswordNotWellFormed() {
-        WebTarget userWebTarget = target.path("/rest/authentication");
-        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
-
-        String email = database.getById(10L).getEmail();
-        String password = "fghjdfhj";
-
-        AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
-
-        Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
-    }
-
-    @Test
     public void shouldNotLoginWhenEmailNotWellFormed() {
-        WebTarget userWebTarget = target.path("/rest/authentication");
+        WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         String email = "badEmailrf";
