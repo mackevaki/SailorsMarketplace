@@ -7,30 +7,61 @@ import java.util.*;
 @Entity
 @Table(name = "events", schema = "smarket")
 public class Event {
-    private Integer eventId;
-    private String name;
-    private String description;
-    private Date dateStart;
-    private Date dateEnd;
-    private byte[] place;
-    private User usersByChargeUserId;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Collection<User> usersEntities;
-//    private Collection<User> participants;
 
     @Id
     @Column(name = "event_id", nullable = false)
-    public Integer getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Integer eventId) {
-        this.eventId = eventId;
-    }
+    private Long eventId;
 
     @Basic
     @Column(name = "name", nullable = false, length = 45)
+    private String name;
+
+    @Basic
+    @Column(name = "description", nullable = true, length = 45)
+    private String description;
+
+    @Basic
+    @Column(name = "date_start", nullable = true)
+    private Date dateStart;
+
+    @Basic
+    @Column(name = "date_end", nullable = true)
+    private Date dateEnd;
+
+    @Basic
+    @Column(name = "place", nullable = true)
+    private byte[] place;
+
+    @ManyToOne
+    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
+    private User userByChargeUserId;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<User> eventParticipations;
+
+    public Event() {}
+
+    public Event(User chargeUser, String name) {
+        userByChargeUserId = chargeUser;
+    }
+
+    public Event(String name, String description, byte[] place, Date dateStart, Date dateEnd, User userByChargeUserId) {
+        this.name = name;
+        this.description = description;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.place = place;
+        this.userByChargeUserId = userByChargeUserId;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
     public String getName() {
         return name;
     }
@@ -39,8 +70,6 @@ public class Event {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description", nullable = true, length = 45)
     public String getDescription() {
         return description;
     }
@@ -49,8 +78,6 @@ public class Event {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "date_start", nullable = true)
     public Date getDateStart() {
         return dateStart;
     }
@@ -59,8 +86,6 @@ public class Event {
         this.dateStart = dateStart;
     }
 
-    @Basic
-    @Column(name = "date_end", nullable = true)
     public Date getDateEnd() {
         return dateEnd;
     }
@@ -69,14 +94,20 @@ public class Event {
         this.dateEnd = dateEnd;
     }
 
-    @Basic
-    @Column(name = "place", nullable = true)
     public byte[] getPlace() {
         return place;
     }
 
     public void setPlace(byte[] place) {
         this.place = place;
+    }
+
+    public List<User> getEventParticipations() {
+        return eventParticipations;
+    }
+
+    public void setEventParticipations(List<User> eventParticipations) {
+        this.eventParticipations = eventParticipations;
     }
 
     @Override
@@ -99,14 +130,12 @@ public class Event {
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
-    public User getUsersByChargeUserId() {
-        return usersByChargeUserId;
+    public User getUserByChargeUserId() {
+        return userByChargeUserId;
     }
 
-    public void setUsersByChargeUserId(User usersByChargeUserId) {
-        this.usersByChargeUserId = usersByChargeUserId;
+    public void setUserByChargeUserId(User usersByChargeUserId) {
+        this.userByChargeUserId = usersByChargeUserId;
     }
 
 //    @OneToMany(mappedBy = "eventsByEventId", targetEntity = Participations.class)

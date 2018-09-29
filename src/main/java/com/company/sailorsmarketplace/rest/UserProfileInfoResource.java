@@ -2,6 +2,7 @@ package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.dto.UserProfileInfoParams;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
+import com.company.sailorsmarketplace.requests.UpdateUserProfileInfoRequest;
 import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 
 import javax.inject.Inject;

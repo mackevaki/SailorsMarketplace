@@ -1,31 +1,28 @@
-package com.company.sailorsmarketplace.rest;
+package com.company.sailorsmarketplace.requests;
 
+import com.company.sailorsmarketplace.validators.PasswordMatches;
 import com.company.sailorsmarketplace.validators.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class UpdateUserRequest {
-
-    @NotNull
-    public final Long userId;
-
-    @Size(max = 20, min = 3, message = "Invalid Username")
+@PasswordMatches
+public class CreateUserRequest {
+    @Size(min = 3, max = 20, message = "Invalid Username")
     @NotEmpty(message = "Please enter username")
     public final String username;
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String password;
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String matchingPassword;
 
     @Email(message = "Invalid Email")
@@ -33,19 +30,17 @@ public class UpdateUserRequest {
     public final String email;
 
 
-    @Size(max = 12, message = "Must be between less 12 characters")
-    @NotEmpty(message = "Please enter password")
+    @Size(max = 12, message = "Must be less 13 characters")
+    @NotEmpty(message = "Phone must be in format +71234567890")
     public final String telephone;
 
     @JsonCreator
-    public UpdateUserRequest(
-            @JsonProperty("userId") Long userId,
+    public CreateUserRequest(
             @JsonProperty("username") String username,
             @JsonProperty("password") String password,
             @JsonProperty("matchingPassword") String matchingPassword,
             @JsonProperty("email") String email,
             @JsonProperty("telephone") String telephone) {
-        this.userId = userId;
         this.username = username;
         this.password = password;
         this.matchingPassword = matchingPassword;

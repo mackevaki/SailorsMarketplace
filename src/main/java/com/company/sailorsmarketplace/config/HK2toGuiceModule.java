@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.config;
 
 import com.company.sailorsmarketplace.services.IAuthenticationService;
+import com.company.sailorsmarketplace.services.IEventService;
 import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 import com.company.sailorsmarketplace.services.IUserService;
 import com.google.inject.Injector;
@@ -19,6 +20,7 @@ public class HK2toGuiceModule extends AbstractBinder {
         bindFactory(new ServiceFactory<IUserService>(guiceInjector, IUserService.class)).to(IUserService.class);
         bindFactory(new ServiceFactory<IAuthenticationService>(guiceInjector, IAuthenticationService.class)).to(IAuthenticationService.class);
         bindFactory(new ServiceFactory<IUserProfileInfoService>(guiceInjector, IUserProfileInfoService.class)).to(IUserProfileInfoService.class);
+        bindFactory(new ServiceFactory<IEventService>(guiceInjector, IEventService.class));
     }
 
     private static class ServiceFactory<T> implements Factory<T> {

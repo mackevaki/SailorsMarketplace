@@ -2,14 +2,13 @@ package sailorsmarketplace;
 
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
-import com.company.sailorsmarketplace.rest.AuthenticationDetails;
-import com.company.sailorsmarketplace.rest.AuthenticationRequest;
+import com.company.sailorsmarketplace.requests.AuthenticationDetails;
+import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.transaction.Transaction;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.rest;
+package com.company.sailorsmarketplace.requests;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "users", schema = "smarket")
 public class User {
+
     @Id
     @GenericGenerator(name = "user_gen", strategy = "increment")
     @GeneratedValue(generator = "user_gen")
@@ -54,15 +55,15 @@ public class User {
     @OneToOne(mappedBy = "userByUserId")
     private UserProfileInfo userProfileInfoById;
 
-
 //    private Collection<Event> eventsByUserId;
 //    @OneToMany(mappedBy = "usersByOwnerId")
 //    private Collection<Organization> organizationsByUserId;
-//    @ManyToMany(mappedBy = "usersEntities")
-//    private Collection<Event> events;
+
+    @ManyToMany(mappedBy = "eventParticipations")
+    private List<Event> events;
+
 //    @OneToMany(mappedBy = "usersByUserId")
 //    private Collection<TelegramConnections> telegramConnectionsByUserId;
-
 
     @ElementCollection(targetClass = Authority.class)
     @Enumerated(EnumType.STRING)
@@ -169,7 +170,19 @@ public class User {
         this.userProfileInfoById = userProfileInfo;
     }
 
-//
+    public UserProfileInfo getUserProfileInfoById() {
+        return userProfileInfoById;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    //
 //    @OneToMany(mappedBy = "usersByChargeUserId")
 //    public Collection<Event> getEventsByUserId() {
 //        return eventsByUserId;

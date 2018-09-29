@@ -2,8 +2,9 @@ package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
+import com.company.sailorsmarketplace.requests.CreateUserRequest;
+import com.company.sailorsmarketplace.requests.UpdateUserRequest;
 import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.utils.Secured;

@@ -3,6 +3,8 @@ package com.company.sailorsmarketplace.rest;
 import com.company.sailorsmarketplace.dto.AllUserParamsDto;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
+import com.company.sailorsmarketplace.requests.AuthenticationDetails;
+import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.services.IAuthenticationService;
 import org.apache.http.HttpStatus;
 

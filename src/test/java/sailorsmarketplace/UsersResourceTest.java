@@ -3,10 +3,8 @@ package sailorsmarketplace;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
-import com.company.sailorsmarketplace.rest.CreateUserRequest;
+import com.company.sailorsmarketplace.requests.CreateUserRequest;
 
-import com.company.sailorsmarketplace.services.UserProfileInfoService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
