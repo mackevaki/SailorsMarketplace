@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,11 +58,9 @@ public class User {
 
 //    private Collection<Event> eventsByUserId;
 //    @OneToMany(mappedBy = "usersByOwnerId")
-//    private Collection<Organization> organizationsByUserId;
-
-    @ManyToMany(mappedBy = "eventParticipations")
-    private List<Event> events = new ArrayList<>();
-
+//    private Collection<OrganizationsEntity> organizationsByUserId;
+@ManyToMany(mappedBy = "users")
+private Collection<Event> events;
 //    @OneToMany(mappedBy = "usersByUserId")
 //    private Collection<TelegramConnections> telegramConnectionsByUserId;
 
@@ -174,7 +173,7 @@ public class User {
         return userProfileInfoById;
     }
 
-    public List<Event> getEvents() {
+    public Collection<Event> getEvents() {
         return events;
     }
 

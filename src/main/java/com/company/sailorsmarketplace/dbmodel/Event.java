@@ -2,7 +2,9 @@ package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "events", schema = "smarket")
@@ -37,7 +39,9 @@ public class Event {
     private User userByChargeUserId;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> eventParticipations = new ArrayList<>();
+    @JoinTable(name = "user_events")
+    private List<User> users;
+//    private Collection<User> participants;
 
     public Event() {}
 
@@ -103,11 +107,11 @@ public class Event {
     }
 
     public List<User> getEventParticipations() {
-        return eventParticipations;
+        return users;
     }
 
     public void setEventParticipations(List<User> eventParticipations) {
-        this.eventParticipations = eventParticipations;
+        this.users = eventParticipations;
     }
 
     @Override
