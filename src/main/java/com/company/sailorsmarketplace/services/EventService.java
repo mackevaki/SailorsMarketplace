@@ -6,7 +6,6 @@ import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllEventParamsDto;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
-import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -72,13 +71,13 @@ public class EventService implements IEventService {
                 .users(createdEvent.getEventParticipations())
                 .build();
 
-        if (owner.getEvents() == null) {
-            List<Event> events = new ArrayList<>();
-            events.add(createdEvent);
-            owner.setEvents(events);
-        } else {
+//        if (owner.getEvents() == null) {
+//            List<Event> events = new ArrayList<>();
+//            events.add(createdEvent);
+//            owner.setEvents(events);
+//        } else {
             owner.getEvents().add(createdEvent);
-        }
+//        }
 
         database.update(owner);
 
@@ -99,6 +98,4 @@ public class EventService implements IEventService {
     public void deleteUserFromEvent(Long userId, Long eventId) {
 
     }
-
-
 }

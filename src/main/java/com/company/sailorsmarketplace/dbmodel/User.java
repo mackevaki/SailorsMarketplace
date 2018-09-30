@@ -60,7 +60,7 @@ public class User {
 //    private Collection<Organization> organizationsByUserId;
 
     @ManyToMany(mappedBy = "eventParticipations")
-    private List<Event> events;
+    private List<Event> events = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "usersByUserId")
 //    private Collection<TelegramConnections> telegramConnectionsByUserId;

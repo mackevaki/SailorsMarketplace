@@ -37,7 +37,7 @@ public class Event {
     private User userByChargeUserId;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> eventParticipations;
+    private List<User> eventParticipations = new ArrayList<>();
 
     public Event() {}
 
