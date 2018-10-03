@@ -21,7 +21,7 @@ public class Event {
     private String name;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 45)
+    @Column(name = "description", nullable = false, length = 45)
     private String description;
 
     @Basic
@@ -38,7 +38,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
-    private User userByChargeUserId;
+    private User chargeUser;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_events")
@@ -46,17 +46,19 @@ public class Event {
 
     public Event() {}
 
-    public Event(User chargeUser, String name) {
-        userByChargeUserId = chargeUser;
+    public Event(User chargeUser, String name, String description) {
+        this.chargeUser = chargeUser;
+        this.name = name;
+        this.description = description;
     }
 
-    public Event(String name, String description, byte[] place, Date dateStart, Date dateEnd, User userByChargeUserId) {
+    public Event(String name, String description, byte[] place, Date dateStart, Date dateEnd, User chargeUser) {
         this.name = name;
         this.description = description;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.place = place;
-        this.userByChargeUserId = userByChargeUserId;
+        this.chargeUser = chargeUser;
     }
 
     public Long getEventId() {
@@ -135,12 +137,12 @@ public class Event {
         return result;
     }
 
-    public User getUserByChargeUserId() {
-        return userByChargeUserId;
+    public User getChargeUser() {
+        return chargeUser;
     }
 
-    public void setUserByChargeUserId(User usersByChargeUserId) {
-        this.userByChargeUserId = usersByChargeUserId;
+    public void setChargeUser(User usersByChargeUserId) {
+        this.chargeUser = usersByChargeUserId;
     }
 
 //    @OneToMany(mappedBy = "eventsByEventId", targetEntity = Participations.class)

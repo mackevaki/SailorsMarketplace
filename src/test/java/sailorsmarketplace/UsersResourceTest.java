@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.client.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -111,13 +112,13 @@ public class UsersResourceTest {
 
     @Test
     public void shouldRemoveUserProfileInfoWhenAllInputsAreValid() {
-        WebTarget userWebTarget = target.path("/rest/users/2");
+        WebTarget userWebTarget = target.path("/rest/users/3");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        String token = database.getById(4L).getToken();
+        String token = "UxUM/emSbqv3qSZmHWOlY=";
 
         Response response = invocationBuilder
-                .header("Authorization", "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .delete();
 
         String info = response.readEntity(String.class);
@@ -140,6 +141,6 @@ public class UsersResourceTest {
         String info = response.readEntity(String.class);
         System.out.println(info);
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(Response.Status.UNAUTHORIZED));
     }
 }

@@ -1,17 +1,35 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "organizations", schema = "smarket")
 public class Organization {
-    private Integer orgId;
-    private String name;
-    private User usersByOwnerId;
 
     @Id
+    @GenericGenerator(name = "org_gen", strategy = "increment")
+    @GeneratedValue(generator = "org_gen")
     @Column(name = "org_id", nullable = false)
+    private Integer orgId;
+
+    @Basic
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
+    private User owner;
+
+    public Organization() {}
+
+    public Organization(String name, User owner) {
+        this.name = name;
+        this.owner = owner;
+    }
+
     public Integer getOrgId() {
         return orgId;
     }
@@ -20,8 +38,6 @@ public class Organization {
         this.orgId = orgId;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false, length = 45)
     public String getName() {
         return name;
     }
@@ -44,13 +60,11 @@ public class Organization {
         return Objects.hash(orgId, name);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
-    public User getUsersByOwnerId() {
-        return usersByOwnerId;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUsersByOwnerId(User usersByOwnerId) {
-        this.usersByOwnerId = usersByOwnerId;
+    public void setOwner(User usersByOwnerId) {
+        this.owner = usersByOwnerId;
     }
 }

@@ -15,8 +15,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
-        register(AuthenticationFilter.class);
-
         // Resources
         register(UsersResource.class);
         register(AuthenticationResource.class);
@@ -28,6 +26,9 @@ public class JerseyConfig extends ResourceConfig {
         register(UserNotFoundExceptionMapper.class);
         register(AuthenticationExceptionMapper.class);
         register(ConstraintViolationMapper.class);
+
+        // Filters
+        register(AuthenticationFilter.class);
 
         // Injectors
         Injector injector = Guice.createInjector(new Module());

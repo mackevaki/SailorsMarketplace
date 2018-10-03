@@ -81,17 +81,20 @@ public class AuthenticationService implements IAuthenticationService {
         int tokenLength = encryptedAccessTokenBase64Encoded.length();
         String tokenToSaveToDatabase = encryptedAccessTokenBase64Encoded.substring(0, tokenLength / 2);
         returnValue = encryptedAccessTokenBase64Encoded.substring(tokenLength / 2, tokenLength);
-        //userDto.setToken(tokenToSaveToDatabase);
+
         storeAccessToken(userDto, tokenToSaveToDatabase);
+
         return returnValue;
     }
 
     @Override
     public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
+
         String salt = AuthenticationUtil.generateSalt(30);
          String secureUserPassword = null;
         secureUserPassword = AuthenticationUtil.
                 generateSecurePassword(password, salt);
+
         userDto = allUserParamsDto()
                 .id(userDto.id)
                 .username(userDto.username)
@@ -112,9 +115,25 @@ public class AuthenticationService implements IAuthenticationService {
         return userDto;
     }
 
+    @Override
+    public User removeSecureCredentials(Long userId) {
+
+        User user = database.getById(userId);
+        user.setToken(null);
+        user.setSalt(null);
+
+        database.update(user);
+
+        return user;
+    }
+
     private void storeAccessToken(@NotNull AllUserParams userDto, String tokenToSaveToDatabase) {
+
         User user = database.getByEmail(userDto.email);
         user.setToken(tokenToSaveToDatabase);
+
         database.update(user);
     }
+
+
 }

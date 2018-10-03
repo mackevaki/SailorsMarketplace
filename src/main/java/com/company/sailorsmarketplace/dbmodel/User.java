@@ -55,7 +55,7 @@ public class User {
     @OneToOne(mappedBy = "userByUserId")
     private UserProfileInfo userProfileInfoById;
 
-//    private Collection<Event> eventsByUserId;
+
 //    @OneToMany(mappedBy = "usersByOwnerId")
 //    private Collection<Organization> organizationsByUserId;
 
@@ -182,31 +182,13 @@ public class User {
         this.events = events;
     }
 
-    //
-//    @OneToMany(mappedBy = "usersByChargeUserId")
-//    public Collection<Event> getEventsByUserId() {
-//        return eventsByUserId;
-//    }
 
-//    public void setEventsByUserId(Collection<Event> eventsByUserId) {
-//        this.eventsByUserId = eventsByUserId;
-//    }
-//
 //    public Collection<Organization> getOrganizationsByUserId() {
 //        return organizationsByUserId;
 //    }
 //
 //    public void setOrganizationsByUserId(Collection<Organization> organizationsByUserId) {
 //        this.organizationsByUserId = organizationsByUserId;
-//    }
-
-//    @OneToMany(mappedBy = "usersByUserId")
-//    public Collection<Participations> getParticipationsByUserId() {
-//        return participationsByUserId;
-//    }
-//
-//    public void setParticipationsByUserId(Collection<Participations> participationsByUserId) {
-//        this.participationsByUserId = participationsByUserId;
 //    }
 
 //    public Collection<TelegramConnections> getTelegramConnectionsByUserId() {

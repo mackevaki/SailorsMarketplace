@@ -19,7 +19,7 @@
         <mapping class="com.company.sailorsmarketplace.dbmodel.User"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.UserProfileInfo"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.VerificationCode"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRolesEntity"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRoles"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.Event"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.Organization"/>
         <!--<mapping class="com.company.sailorsmarketplace.dbmodel.Participations-->

@@ -1,21 +1,47 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "verification_codes", schema = "smarket", catalog = "")
+@Table(name = "verification_codes", schema = "smarket")
 public class VerificationCode implements Serializable {
-    private EnumType sourceSystem;
-    private String verificationCode;
-    private Date validTill;
-    private String targetId;
-    private String targetUserId;
 
     @Id
+//    @GenericGenerator(name = "verif_gen", strategy = "increment")
+//    @GeneratedValue(generator = "verif_gen")
     @Column(name = "source_system", nullable = false)
+    private EnumType sourceSystem;
+
+    @Basic
+    @Column(name = "verification_code", nullable = false, length = 7)
+    private String verificationCode;
+
+    @Basic
+    @Column(name = "valid_till", nullable = false)
+    private Date validTill;
+
+    @Basic
+    @Column(name = "target_id", nullable = false, length = 45)
+    private String targetId;
+
+    @Basic
+    @Column(name = "target_user_id", nullable = false, length = 45)
+    private String targetUserId;
+
+    public VerificationCode() {}
+
+    public VerificationCode(String verificationCode, Date validTill, String targetId, String targetUserId) {
+        this.verificationCode = verificationCode;
+        this.validTill = validTill;
+        this.targetId = targetId;
+        this.targetUserId = targetUserId;
+    }
+
     public EnumType getSourceSystem() {
         return sourceSystem;
     }
@@ -24,8 +50,6 @@ public class VerificationCode implements Serializable {
         this.sourceSystem = sourceSystem;
     }
 
-    @Basic
-    @Column(name = "verification_code", nullable = false, length = 7)
     public String getVerificationCode() {
         return verificationCode;
     }
@@ -34,8 +58,6 @@ public class VerificationCode implements Serializable {
         this.verificationCode = verificationCode;
     }
 
-    @Basic
-    @Column(name = "valid_till", nullable = false)
     public Date getValidTill() {
         return validTill;
     }
@@ -44,8 +66,6 @@ public class VerificationCode implements Serializable {
         this.validTill = validTill;
     }
 
-    @Basic
-    @Column(name = "target_id", nullable = false, length = 45)
     public String getTargetId() {
         return targetId;
     }
@@ -54,8 +74,6 @@ public class VerificationCode implements Serializable {
         this.targetId = targetId;
     }
 
-    @Basic
-    @Column(name = "target_user_id", nullable = false, length = 45)
     public String getTargetUserId() {
         return targetUserId;
     }

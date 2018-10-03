@@ -6,11 +6,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class TelegramConnectionsEntityPK implements Serializable {
-    private Long userId;
-    private Integer telegramId;
 
     @Column(name = "user_id", nullable = false)
     @Id
+    private Long userId;
+
+    @Column(name = "telegram_id", nullable = false)
+    @Id
+    private Integer telegramId;
+
     public Long getUserId() {
         return userId;
     }
@@ -19,8 +23,6 @@ public class TelegramConnectionsEntityPK implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "telegram_id", nullable = false)
-    @Id
     public Integer getTelegramId() {
         return telegramId;
     }

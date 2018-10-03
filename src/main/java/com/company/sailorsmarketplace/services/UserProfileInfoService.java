@@ -12,11 +12,13 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class UserProfileInfoService implements IUserProfileInfoService {
+
     @Inject
     Database database;
 
     @Override
     public UserProfileInfo createUserProfileInfoForNewUser(Long userId) {
+
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
 
         User user = database.getById(userId);
@@ -33,15 +35,18 @@ public class UserProfileInfoService implements IUserProfileInfoService {
 
     @Override
     public String showUserProfileInfo(Long userId) throws UserNotFoundException {
+
         User user = database.getById(userId);
         if (user == null) {
-            throw new  UserNotFoundException();
+            throw new UserNotFoundException();
         }
+
         return user.getUserProfileInfo().toString();
     }
 
     @Override
     public void updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
+
         User user;
         if ((user = database.getById(userId)) == null) {
             throw new UserNotFoundException();

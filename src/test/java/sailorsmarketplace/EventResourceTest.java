@@ -51,7 +51,7 @@ public class EventResourceTest {
                 new Date(3L),
                 new Date(3L),
                 place,
-                1L);
+                2L);
 
         Response response = invocationBuilder.post(Entity.entity(createEventRequest, MediaType.APPLICATION_JSON));
         //Long createdEventId = Long.valueOf(response.readEntity(String.class));

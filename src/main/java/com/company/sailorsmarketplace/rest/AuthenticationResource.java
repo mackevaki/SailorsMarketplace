@@ -1,19 +1,19 @@
 package com.company.sailorsmarketplace.rest;
 
+import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.services.IAuthenticationService;
+import com.company.sailorsmarketplace.utils.Secured;
 import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -39,6 +39,18 @@ public class AuthenticationResource {
         String secureUserToken = authenticationService.issueSecureToken(userProfile);
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(userProfile.id, secureUserToken);
 
-        return Response.ok().status(HttpStatus.SC_OK).entity(authenticationDetails).build();
+        return Response.ok().status(HttpStatus.SC_OK).entity(authenticationDetails).header(HttpHeaders.AUTHORIZATION, "Bearer " + secureUserToken).build();
+    }
+
+    @POST
+    @Path("/{id}/logout")
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userLogout(@PathParam("id") Long userId) throws UserNotFoundException{
+
+        User user = authenticationService.removeSecureCredentials(userId);
+
+        return Response.ok().status(HttpStatus.SC_OK).entity(user.getUserId()).build();
     }
 }

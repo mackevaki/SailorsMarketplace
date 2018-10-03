@@ -26,21 +26,6 @@ public class UsersResource {
 
     @Inject
     IUserProfileInfoService userProfileInfoService;
-//
-//    @POST
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces({APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    public Response createUserProfile(@DefaultValue("") @FormParam("username") String username,
-//                                      @DefaultValue("") @FormParam("email") String email,
-//                                      @DefaultValue("") @FormParam("password") String password,
-//                                      @DefaultValue("") @FormParam("telephone") String telephone,
-//                                      @Context HttpServletResponse servletResponse) {
-
-//               servletResponse.sendRedirect("/accountsinfo.html");
-//
-//        // And when we are done, we can return user profile back
-//        return Response.ok(returnValue).build();//userProfile;
-//    }
 
 
     @GET

@@ -20,12 +20,14 @@ public class EventService implements IEventService {
     @Inject
     Database database;
 
+    @Inject
+    EventDAO eventDAO;
+
     @Override
     public User addUserToEvent(Long userId, Long eventId) {
         User user = database.getById(userId);
 
-        EventDAO eventDao = new EventDAO();
-        Event event = eventDao.getById(eventId);
+        Event event = eventDAO.getById(eventId);
 
         event.getUsers().add(user);
         if (user.getEvents() == null) {
@@ -36,7 +38,7 @@ public class EventService implements IEventService {
             user.getEvents().add(event);
         }
 
-        eventDao.update(event);
+        eventDAO.update(event);
         database.update(user);
 
         return user;
@@ -57,9 +59,7 @@ public class EventService implements IEventService {
         eventUsers.add(owner);
         event.setUsers(eventUsers);
 
-        EventDAO eventDao = new EventDAO();
-
-        Event createdEvent = eventDao.save(event);
+        Event createdEvent = eventDAO.save(event);
         AllEventParams eventParams = allEventParamsDto()
                 .eventId(createdEvent.getEventId())
                 .name(createdEvent.getName())
@@ -67,17 +67,11 @@ public class EventService implements IEventService {
                 .place(createdEvent.getPlace())
                 .dateStart(createdEvent.getDateStart())
                 .dateEnd(createdEvent.getDateEnd())
-                .chargeUser(createdEvent.getUserByChargeUserId())
+                .chargeUser(createdEvent.getChargeUser())
                 .users(createdEvent.getUsers())
                 .build();
 
-//        if (owner.getEvents() == null) {
-//            List<Event> events = new ArrayList<>();
-//            events.add(createdEvent);
-//            owner.setEvents(events);
-//        } else {
             owner.getEvents().add(createdEvent);
-//        }
 
         database.update(owner);
 
@@ -97,5 +91,13 @@ public class EventService implements IEventService {
     @Override
     public void deleteUserFromEvent(Long userId, Long eventId) {
 
+        User user = database.getById(userId);
+        Event event = eventDAO.getById(eventId);
+
+        event.getUsers().remove(user);
+        eventDAO.update(event);
+
+
     }
+
 }

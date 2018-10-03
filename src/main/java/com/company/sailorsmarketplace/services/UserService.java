@@ -16,6 +16,7 @@ import java.util.List;
 
 @Singleton
 public class UserService implements IUserService {
+
     @Inject
     private Database database;
 
@@ -91,7 +92,6 @@ public class UserService implements IUserService {
         }
         return user;
     }
-
 
     @Override
     public boolean deleteUser(Long id) {
