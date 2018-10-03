@@ -41,15 +41,15 @@ public class User {
     private String telephone;
 
     @Basic
-    @Column(name = "salt", nullable = false, length = 45)
+    @Column(name = "salt", nullable = true, length = 45)
     private String salt;
 
     @Basic
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = true)
     private Boolean enabled;
 
     @Basic
-    @Column(name = "token", nullable = false, length = 60)
+    @Column(name = "token", nullable = true, length = 60)
     private String token;
 
     @OneToOne(mappedBy = "userByUserId")
@@ -59,7 +59,7 @@ public class User {
 //    @OneToMany(mappedBy = "usersByOwnerId")
 //    private Collection<Organization> organizationsByUserId;
 
-    @ManyToMany(mappedBy = "eventParticipations")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Event> events = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "usersByUserId")

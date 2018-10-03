@@ -1,10 +1,10 @@
 package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.EventDao;
+import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dto.AllEventParamsDto;
+import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -12,7 +12,7 @@ import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.company.sailorsmarketplace.dto.AllEventParamsDto.Builder.allEventParamsDto;
+import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEventParamsDto;
 
 @Singleton
 public class EventService implements IEventService {
@@ -20,16 +20,14 @@ public class EventService implements IEventService {
     @Inject
     Database database;
 
-    EventDao eventDao;
-
     @Override
     public User addUserToEvent(Long userId, Long eventId) {
         User user = database.getById(userId);
 
-        eventDao = new EventDao();
+        EventDAO eventDao = new EventDAO();
         Event event = eventDao.getById(eventId);
 
-        event.getEventParticipations().add(user);
+        event.getUsers().add(user);
         if (user.getEvents() == null) {
             List<Event> events = new ArrayList<>();
             events.add(event);
@@ -45,7 +43,7 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public AllEventParamsDto createEvent(CreateUpdateEventParams params) {
+    public AllEventParams createEvent(CreateUpdateEventParams params) {
         User owner = database.getById(params.chargeUserId);
         Event event = new Event(
                 params.name,
@@ -57,10 +55,12 @@ public class EventService implements IEventService {
 
         List<User> eventUsers = new ArrayList<>();
         eventUsers.add(owner);
-        event.setEventParticipations(eventUsers);
+        event.setUsers(eventUsers);
+
+        EventDAO eventDao = new EventDAO();
 
         Event createdEvent = eventDao.save(event);
-        AllEventParamsDto eventParams = allEventParamsDto()
+        AllEventParams eventParams = allEventParamsDto()
                 .eventId(createdEvent.getEventId())
                 .name(createdEvent.getName())
                 .description(createdEvent.getDescription())
@@ -68,7 +68,7 @@ public class EventService implements IEventService {
                 .dateStart(createdEvent.getDateStart())
                 .dateEnd(createdEvent.getDateEnd())
                 .chargeUser(createdEvent.getUserByChargeUserId())
-                .users(createdEvent.getEventParticipations())
+                .users(createdEvent.getUsers())
                 .build();
 
 //        if (owner.getEvents() == null) {

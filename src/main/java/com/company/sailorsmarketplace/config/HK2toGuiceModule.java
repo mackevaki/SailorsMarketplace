@@ -20,7 +20,7 @@ public class HK2toGuiceModule extends AbstractBinder {
         bindFactory(new ServiceFactory<IUserService>(guiceInjector, IUserService.class)).to(IUserService.class);
         bindFactory(new ServiceFactory<IAuthenticationService>(guiceInjector, IAuthenticationService.class)).to(IAuthenticationService.class);
         bindFactory(new ServiceFactory<IUserProfileInfoService>(guiceInjector, IUserProfileInfoService.class)).to(IUserProfileInfoService.class);
-        bindFactory(new ServiceFactory<IEventService>(guiceInjector, IEventService.class));
+        bindFactory(new ServiceFactory<IEventService>(guiceInjector, IEventService.class)).to(IEventService.class);
     }
 
     private static class ServiceFactory<T> implements Factory<T> {

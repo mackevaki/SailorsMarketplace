@@ -1,6 +1,6 @@
 package com.company.sailorsmarketplace.rest;
 
-import com.company.sailorsmarketplace.dto.AllUserParamsDto;
+import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
@@ -29,12 +29,12 @@ public class AuthenticationResource {
     public Response userLogin(@Valid AuthenticationRequest loginCredentials) throws AuthenticationException, UserNotFoundException{
 
         // Perform User Authentication
-        AllUserParamsDto userProfile = authenticationService.authenticate(
+        AllUserParams userProfile = authenticationService.authenticate(
                 loginCredentials.email,
                 loginCredentials.password);
 
         // Reset Access Token
-        authenticationService.resetSecurityCredentials(loginCredentials.password, userProfile);
+        userProfile = authenticationService.resetSecurityCredentials(loginCredentials.password, userProfile);
         // Issue a new Access token
         String secureUserToken = authenticationService.issueSecureToken(userProfile);
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(userProfile.id, secureUserToken);

@@ -38,8 +38,8 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        String email = "test@test.com";
-        String password = "#TestUser1";
+        String email = database.getById(3L).getEmail(); //"test@test.com";
+        String password = "Pass#word1"; //"#TestUser1";
 
         AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
 

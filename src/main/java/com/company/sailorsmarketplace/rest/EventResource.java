@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.rest;
 
-import com.company.sailorsmarketplace.dbmodel.Event;
-import com.company.sailorsmarketplace.dto.AllEventParamsDto;
+import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.company.sailorsmarketplace.services.IEventService;
@@ -36,7 +35,7 @@ public class EventResource {
                 .chargeUser(request.userByChargeUserId)
                 .build();
 
-        AllEventParamsDto allEventParams = eventService.createEvent(createEventParams);
+        AllEventParams allEventParams = eventService.createEvent(createEventParams);
 
         return Response.ok().entity(allEventParams.eventId).build();
     }

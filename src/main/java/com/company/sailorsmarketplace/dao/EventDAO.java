@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 
 import javax.swing.*;
 
-public class EventDao {
+public class EventDAO {
 
     public Event save(Event event) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {

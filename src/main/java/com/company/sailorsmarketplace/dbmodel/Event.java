@@ -1,5 +1,7 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.*;
@@ -9,6 +11,8 @@ import java.util.*;
 public class Event {
 
     @Id
+    @GenericGenerator(name = "event_gen", strategy = "increment")
+    @GeneratedValue(generator = "event_gen")
     @Column(name = "event_id", nullable = false)
     private Long eventId;
 
@@ -37,7 +41,8 @@ public class Event {
     private User userByChargeUserId;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> eventParticipations = new ArrayList<>();
+    @JoinTable(name = "user_events")
+    private List<User> users = new ArrayList<>();
 
     public Event() {}
 
@@ -102,12 +107,12 @@ public class Event {
         this.place = place;
     }
 
-    public List<User> getEventParticipations() {
-        return eventParticipations;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setEventParticipations(List<User> eventParticipations) {
-        this.eventParticipations = eventParticipations;
+    public void setUsers(List<User> eventParticipations) {
+        this.users = eventParticipations;
     }
 
     @Override

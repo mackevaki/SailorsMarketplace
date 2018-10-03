@@ -2,7 +2,7 @@ package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dto.AllUserParamsDto;
+import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
@@ -10,12 +10,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.company.sailorsmarketplace.dto.AllUserParamsDto.Builder.allUserParamsDto;
+import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
 
 @Singleton
 public class AuthenticationService implements IAuthenticationService {
@@ -25,16 +24,9 @@ public class AuthenticationService implements IAuthenticationService {
     @Inject
     IUserService userService;
 
-//    @Inject
-//    public AuthenticationService(Database database) {
-//        this.database = database;
-////        this.authenticationUtil = authenticationUtil;
-//    }
-
-
     @Override
-    public AllUserParamsDto authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
-        AllUserParamsDto userDto;
+    public AllUserParams authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
+        AllUserParams userDto;
 
         User user = null;
         try {
@@ -72,7 +64,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String issueSecureToken(AllUserParamsDto userDto) throws AuthenticationException {
+    public String issueSecureToken(AllUserParams userDto) throws AuthenticationException {
         String returnValue = null;
         // Get salt but only part of it
         String newSaltAsPostfix = userDto.salt;
@@ -95,11 +87,9 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public AllUserParamsDto resetSecurityCredentials(String password, AllUserParamsDto userDto) {
-        // Generate salt
+    public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
         String salt = AuthenticationUtil.generateSalt(30);
-        // Generate secure user password
-        String secureUserPassword = null;
+         String secureUserPassword = null;
         secureUserPassword = AuthenticationUtil.
                 generateSecurePassword(password, salt);
         userDto = allUserParamsDto()
@@ -122,12 +112,9 @@ public class AuthenticationService implements IAuthenticationService {
         return userDto;
     }
 
-    private void storeAccessToken(@NotNull AllUserParamsDto userDto, String tokenTosaveToDatabase) {
-        User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
-        user.setUserId(userDto.id);
-        user.setSalt(userDto.salt);
-        user.setEnabled(userDto.enabled);
-        // Store to database
+    private void storeAccessToken(@NotNull AllUserParams userDto, String tokenToSaveToDatabase) {
+        User user = database.getByEmail(userDto.email);
+        user.setToken(tokenToSaveToDatabase);
         database.update(user);
     }
 }

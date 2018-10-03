@@ -19,7 +19,7 @@ import java.util.List;
 import static com.company.sailorsmarketplace.dto.CreateUpdateUserParams.Builder.createUpdateUserParams;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Path("/accounts")
+@Path("/users")
 public class UsersResource {
     @Inject
     IUserService userService;
@@ -86,7 +86,8 @@ public class UsersResource {
     @PUT
     @Secured
     @Consumes(APPLICATION_JSON)
-    public Response updateUser(@Valid UpdateUserRequest request) {
+    @Path("/update/{id}")
+    public Response updateUser(@Valid UpdateUserRequest request, @PathParam("id") Long userId) {
 
         final User updUser = userService.updateUser(
                 createUpdateUserParams()
@@ -108,9 +109,6 @@ public class UsersResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public Response createUser(@Valid CreateUserRequest request) throws UserExistsException {
-//        if (userService.userExists(request.email)) {
-//            return Response.status(400).entity(new UserExistsException(request.email)).build();
-//        }
 
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()

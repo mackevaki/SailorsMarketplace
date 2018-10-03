@@ -1,12 +1,8 @@
 package sailorsmarketplace;
 
 import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.dao.EventDao;
-import com.company.sailorsmarketplace.dbmodel.Event;
-import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
-import com.company.sailorsmarketplace.requests.CreateUserRequest;
-import javassist.bytecode.ByteArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.Arrays;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -26,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 public class EventResourceTest {
     private WebTarget target;
-    private EventDao database = new EventDao();
+    private EventDAO database = new EventDAO();
 
     @Before
     public void startServer() throws Exception {
@@ -56,7 +51,7 @@ public class EventResourceTest {
                 new Date(3L),
                 new Date(3L),
                 place,
-                17L);
+                1L);
 
         Response response = invocationBuilder.post(Entity.entity(createEventRequest, MediaType.APPLICATION_JSON));
         //Long createdEventId = Long.valueOf(response.readEntity(String.class));
