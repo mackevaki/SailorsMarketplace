@@ -46,6 +46,7 @@ public class EventService implements IEventService {
 
     @Override
     public AllEventParams createEvent(CreateUpdateEventParams params) {
+
         User owner = database.getById(params.chargeUserId);
         Event event = new Event(
                 params.name,
@@ -55,9 +56,7 @@ public class EventService implements IEventService {
                 params.dateEnd,
                 owner);
 
-        List<User> eventUsers = new ArrayList<>();
-        eventUsers.add(owner);
-        event.setUsers(eventUsers);
+        event.getUsers().add(owner);
 
         Event createdEvent = eventDAO.save(event);
         AllEventParams eventParams = allEventParamsDto()
@@ -81,6 +80,15 @@ public class EventService implements IEventService {
     @Override
     public void deleteEvent(Long eventId) {
 
+        Event event = eventDAO.getById(eventId);
+        // во всех юхерах сделать null что такое каскад??
+        event.setChargeUser(null);
+        event.setUsers(null);
+
+//        Event transEvent = new Event();
+//        transEvent.setEventId(eventId);
+
+        eventDAO.delete(event);
     }
 
     @Override

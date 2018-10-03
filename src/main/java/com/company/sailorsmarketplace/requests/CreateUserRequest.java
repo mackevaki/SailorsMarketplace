@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
@@ -25,7 +26,9 @@ public class CreateUserRequest {
     @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String matchingPassword;
 
-    @Email(message = "Invalid Email")
+    @Pattern(message = "Invalid Email Address->" +
+        "Valid emails:user@gmail.com or my.user@domain.com etc.",
+        regexp = "^[a-zA-Z0-9_!#$%&�*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @NotEmpty(message = "Please enter email")
     public final String email;
 

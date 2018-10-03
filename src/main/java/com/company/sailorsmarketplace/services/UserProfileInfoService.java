@@ -22,12 +22,12 @@ public class UserProfileInfoService implements IUserProfileInfoService {
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
 
         User user = database.getById(userId);
-        userProfileInfo.setUserByUserId(user);
+        userProfileInfo.setUser(user);
 
         UserProfileInfoDAO dao = new UserProfileInfoDAO();
         dao.save(userProfileInfo);
 
-        user.setUserProfileInfoById(userProfileInfo);
+        user.setUserProfileInfo(userProfileInfo);
         database.update(user);
 
         return userProfileInfo;
@@ -63,8 +63,8 @@ public class UserProfileInfoService implements IUserProfileInfoService {
         userProfileInfo.setAvatar(params.avatar);
         userProfileInfo.setOrganization(params.organization);
 
-        user.setUserProfileInfoById(userProfileInfo);
-        userProfileInfo.setUserByUserId(user);
+        user.setUserProfileInfo(userProfileInfo);
+        userProfileInfo.setUser(user);
         dao.update(userProfileInfo);
         database.update(user);
     }

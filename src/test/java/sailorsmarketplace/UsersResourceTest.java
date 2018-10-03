@@ -5,6 +5,7 @@ import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateUserRequest;
 
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +65,7 @@ public class UsersResourceTest {
         WebTarget userWebTarget = target.path("/rest/users/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        User existedUser = database.getById(1L);
+        User existedUser = database.getById(2L);
         CreateUserRequest createUserRequest = new CreateUserRequest(
                 existedUser.getUsername(),
                 existedUser.getPassword(),
@@ -75,7 +76,7 @@ public class UsersResourceTest {
 
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(400));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
     @Test
@@ -94,13 +95,13 @@ public class UsersResourceTest {
         );
 
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
 
     @Test
     public void shouldShowUserProfileInfoWhenAllInputsAreValid() {
-        WebTarget userWebTarget = target.path("/rest/profile_info/1");
+        WebTarget userWebTarget = target.path("/rest/profile_info/2");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
         Response response = invocationBuilder.get();

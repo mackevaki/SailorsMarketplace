@@ -10,7 +10,9 @@ import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.utils.Secured;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
@@ -93,7 +95,7 @@ public class UsersResource {
     @Path("/reg")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException {
+    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException, ConstraintViolationException {
 
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()

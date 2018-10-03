@@ -19,8 +19,9 @@ public class Organization {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false,
+                foreignKey = @ForeignKey(name = "organizations_owner_id_user_id_fk"))
     private User owner;
 
     public Organization() {}

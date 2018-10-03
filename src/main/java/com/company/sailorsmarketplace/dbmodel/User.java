@@ -52,22 +52,23 @@ public class User {
     @Column(name = "token", nullable = true, length = 60)
     private String token;
 
-    @OneToOne(mappedBy = "userByUserId")
-    private UserProfileInfo userProfileInfoById;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = true)
+    private UserProfileInfo userProfileInfo;
 
-
-//    @OneToMany(mappedBy = "usersByOwnerId")
-//    private Collection<Organization> organizationsByUserId;
+//    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+//    private List<Organization> organizations = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Event> events = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "usersByUserId")
-//    private Collection<TelegramConnections> telegramConnectionsByUserId;
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private List<TelegramConnection> telegramConnections = new ArrayList<>();
 
     @ElementCollection(targetClass = Authority.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = Authority.TABLE, joinColumns = @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
+    @CollectionTable(name = Authority.TABLE, joinColumns =
+                            @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
     @Column(name = Authority.COLUMN_AUTHORITY)
     private List<Authority> authorities;
 
@@ -163,15 +164,11 @@ public class User {
     }
 
     public UserProfileInfo getUserProfileInfo() {
-        return userProfileInfoById;
+        return userProfileInfo;
     }
 
-    public void setUserProfileInfoById(UserProfileInfo userProfileInfo) {
-        this.userProfileInfoById = userProfileInfo;
-    }
-
-    public UserProfileInfo getUserProfileInfoById() {
-        return userProfileInfoById;
+    public void setUserProfileInfo(UserProfileInfo userProfileInfo) {
+        this.userProfileInfo = userProfileInfo;
     }
 
     public List<Event> getEvents() {
@@ -182,21 +179,20 @@ public class User {
         this.events = events;
     }
 
-
-//    public Collection<Organization> getOrganizationsByUserId() {
-//        return organizationsByUserId;
+//    public List<Organization> getOrganizations() {
+//        return organizations;
 //    }
 //
-//    public void setOrganizationsByUserId(Collection<Organization> organizationsByUserId) {
-//        this.organizationsByUserId = organizationsByUserId;
+//    public void setOrganizations(List<Organization> organizations) {
+//        this.organizations = organizations;
 //    }
 
-//    public Collection<TelegramConnections> getTelegramConnectionsByUserId() {
-//        return telegramConnectionsByUserId;
+//    public List<TelegramConnection> getTelegramConnections() {
+//        return telegramConnections;
 //    }
 //
-//    public void setTelegramConnectionsByUserId(Collection<TelegramConnections> telegramConnectionsByUserId) {
-//        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
+//    public void setTelegramConnections(List<TelegramConnection> telegramConnectionsByUserId) {
+//        this.telegramConnections = telegramConnectionsByUserId;
 //    }
 
     @Override

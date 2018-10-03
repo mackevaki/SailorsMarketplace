@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class TelegramConnectionsEntityPK implements Serializable {
+public class TelegramConnectionPK implements Serializable {
 
     @Column(name = "user_id", nullable = false)
     @Id
@@ -35,7 +35,7 @@ public class TelegramConnectionsEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TelegramConnectionsEntityPK that = (TelegramConnectionsEntityPK) o;
+        TelegramConnectionPK that = (TelegramConnectionPK) o;
         return Objects.equals(userId, that.userId) &&
                 Objects.equals(telegramId, that.telegramId);
     }

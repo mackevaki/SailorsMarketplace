@@ -36,8 +36,9 @@ public class Event {
     @Column(name = "place", nullable = true)
     private byte[] place;
 
-    @ManyToOne
-    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
+            foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
     private User chargeUser;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
