@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 @Path("/authentication")
 public class AuthenticationResource {
     @Inject
-    IAuthenticationService authenticationService;
+    private IAuthenticationService authenticationService;
 
     @POST
     @Path("/login")

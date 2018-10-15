@@ -16,13 +16,12 @@ import java.util.logging.Logger;
 
 import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
 
-@Singleton
 public class AuthenticationService implements IAuthenticationService {
     @Inject
-    Database database;
+    private Database database;
 
     @Inject
-    IUserService userService;
+    private IUserService userService;
 
     @Override
     public AllUserParams authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
@@ -110,7 +109,7 @@ public class AuthenticationService implements IAuthenticationService {
         user.setSalt(userDto.salt);
         user.setEnabled(userDto.enabled);
 
-        this.database.update(user);
+        database.update(user);
 
         return userDto;
     }

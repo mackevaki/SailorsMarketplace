@@ -6,6 +6,7 @@ import com.company.sailorsmarketplace.dao.UserProfileInfoDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.services.*;
+import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
@@ -20,5 +21,6 @@ public class Module extends AbstractModule {
         bind(Database.class).to(UserDAO.class);
         bind(IUserProfileInfoService.class).to(UserProfileInfoService.class);
         bind(IEventService.class).to(EventService.class);
+        bind(TestValues.class);
     }
 }

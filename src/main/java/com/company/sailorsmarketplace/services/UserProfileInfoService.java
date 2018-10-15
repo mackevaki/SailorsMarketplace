@@ -9,8 +9,6 @@ import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
-@Singleton
 public class UserProfileInfoService implements IUserProfileInfoService {
 
     @Inject

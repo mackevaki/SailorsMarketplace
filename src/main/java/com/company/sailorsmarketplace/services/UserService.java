@@ -14,7 +14,6 @@ import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-@Singleton
 public class UserService implements IUserService {
 
     @Inject

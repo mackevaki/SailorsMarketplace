@@ -12,7 +12,6 @@ import com.company.sailorsmarketplace.utils.Secured;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
@@ -28,7 +27,6 @@ public class UsersResource {
 
     @Inject
     IUserProfileInfoService userProfileInfoService;
-
 
     @GET
     @Secured
@@ -50,9 +48,11 @@ public class UsersResource {
     @Produces(APPLICATION_JSON)
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
+
         User user = userService.getUserById(id);
+
         if(user != null) {
-            return Response.ok(user.getUserId()).build();
+            return Response.ok(user.toString()).build();
         } else {
             return Response.status(404).build();
         }
@@ -63,6 +63,7 @@ public class UsersResource {
     @Secured
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
+
         if (userService.deleteUser(id)) {
             return Response.ok("removed").build();
         } else {
@@ -84,6 +85,7 @@ public class UsersResource {
                         .telephone(request.telephone)
                         .build(), request.userId
         );
+
         if (updUser != null) {
             return Response.ok(updUser.getUserId()).build();
         } else {

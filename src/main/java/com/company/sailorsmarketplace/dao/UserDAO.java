@@ -16,16 +16,19 @@ public class UserDAO implements Database {
 
     @Override
     public User save(User user) {
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.save(user);
             tx.commit();
+
             return user;
         }
     }
 
     @Override
     public User getById(Long id) {
+
         User user;
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             user = session.get(User.class, id);
@@ -38,6 +41,7 @@ public class UserDAO implements Database {
 
     @Override
     public User getByUsername(String username) throws UserNotFoundException{
+
         User user;
         try(Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
@@ -53,6 +57,7 @@ public class UserDAO implements Database {
 
     @Override
     public User getByEmail(String findEmail) {
+
         User user;
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
@@ -62,6 +67,7 @@ public class UserDAO implements Database {
             user = (User) query.getSingleResult();
             tx.commit();
             session.clear();
+
             return user;
         } catch (NoResultException ne) {
             return null;
@@ -70,6 +76,7 @@ public class UserDAO implements Database {
 
     @Override
     public void update(User user) {
+
         if (user == null) {
             throw new IllegalArgumentException("User is null");
         }
@@ -86,6 +93,7 @@ public class UserDAO implements Database {
 
     @Override
     public void delete(User user) {
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.delete(user);
@@ -97,11 +105,15 @@ public class UserDAO implements Database {
 
     @Override
     public List<User> findAll() {
+
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
+
         List<User> list = session.createQuery("select DISTINCT u from User u", User.class).getResultList();
+
         tx.commit();
         session.close();
+
         return list;//(List<User>) HibernateUtils.getSessionFactory().openSession().createQuery("From User").list();
     }
 }
