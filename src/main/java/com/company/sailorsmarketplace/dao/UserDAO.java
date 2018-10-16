@@ -11,12 +11,10 @@ import javax.persistence.Query;
 import javax.swing.*;
 import java.util.List;
 
-//@Singleton
 public class UserDAO implements Database {
 
     @Override
     public User save(User user) {
-
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.save(user);
@@ -28,8 +26,8 @@ public class UserDAO implements Database {
 
     @Override
     public User getById(Long id) {
-
         User user;
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             user = session.get(User.class, id);
             return user;
@@ -57,8 +55,8 @@ public class UserDAO implements Database {
 
     @Override
     public User getByEmail(String findEmail) {
-
         User user;
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 
@@ -76,7 +74,6 @@ public class UserDAO implements Database {
 
     @Override
     public void update(User user) {
-
         if (user == null) {
             throw new IllegalArgumentException("User is null");
         }
@@ -93,7 +90,6 @@ public class UserDAO implements Database {
 
     @Override
     public void delete(User user) {
-
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.delete(user);
@@ -105,7 +101,6 @@ public class UserDAO implements Database {
 
     @Override
     public List<User> findAll() {
-
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 

@@ -14,6 +14,7 @@ public class EventDAO {
             Transaction tx = session.beginTransaction();
             session.save(event);
             tx.commit();
+
             return event;
         }
     }
@@ -25,7 +26,7 @@ public class EventDAO {
             event = session.get(Event.class, id);
             return event;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка при getbyid", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error in getById EventDAO method", JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }

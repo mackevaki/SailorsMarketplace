@@ -16,6 +16,7 @@ public class UserProfileInfoDAO {
             Transaction tx = session.beginTransaction();
             session.save(profileInfo);
             tx.commit();
+
             return profileInfo;
         }
     }
@@ -27,7 +28,7 @@ public class UserProfileInfoDAO {
             userProfileInfo = session.get(UserProfileInfo.class, id);
             return userProfileInfo;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка при getbyid", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error in getById UserProfileInfo method", JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }

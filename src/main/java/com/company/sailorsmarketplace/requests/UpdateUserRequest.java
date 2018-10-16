@@ -26,7 +26,7 @@ public class UpdateUserRequest {
     @NotEmpty
     @ValidPassword
     @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
-    public final String matchingPassword;
+    private final String matchingPassword;
 
     @Email(message = "Invalid Email")
     @NotEmpty(message = "Please enter email")

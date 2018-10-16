@@ -49,12 +49,15 @@ public class UserService implements IUserService {
         if (!old.getEmail().equals(user.email)) {
             old.setEmail(user.email);
         }
+
         if (!old.getUsername().equals(user.username)) {
             old.setUsername(user.username);
         }
+
         if (!old.getPassword().equals(user.password)) {
             old.setPassword(user.password);
         }
+
         if (!old.getTelephone().equals(user.telephone)) {
             old.setTelephone(user.telephone);
         }

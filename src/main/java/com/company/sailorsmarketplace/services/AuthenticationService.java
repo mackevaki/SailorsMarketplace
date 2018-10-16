@@ -7,7 +7,6 @@ import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 import java.util.Base64;
@@ -33,18 +32,19 @@ public class AuthenticationService implements IAuthenticationService {
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException(email);
         }
-        // Here we perform authentication business logic
-        // If authentication fails, we throw new AuthenticationException
-        // other wise we return User Profile Details
+
+        // perform authentication business logic
         String secureUserPassword = null;
-        secureUserPassword = AuthenticationUtil.
-                generateSecurePassword(userPassword, user.getSalt());
+        secureUserPassword = AuthenticationUtil.generateSecurePassword(userPassword, user.getSalt());
+
         boolean authenticated = false;
+
         if (secureUserPassword != null && secureUserPassword.equalsIgnoreCase(user.getPassword())) {
             if (email != null && email.equalsIgnoreCase(user.getEmail())) {
                 authenticated = true;
             }
         }
+
         if (!authenticated) {
             throw new AuthenticationException("Authentication failed");
         }
@@ -65,18 +65,20 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public String issueSecureToken(AllUserParams userDto) throws AuthenticationException {
         String returnValue = null;
-        // Get salt but only part of it
+
         String newSaltAsPostfix = userDto.salt;
         String accessTokenMaterial = userDto.id + newSaltAsPostfix;
         byte[] encryptedAccessToken = null;
+
         try {
             encryptedAccessToken = AuthenticationUtil.encrypt(userDto.password, accessTokenMaterial);
         } catch (Exception ex) {
             Logger.getLogger(AuthenticationService.class.getName()).log(Level.SEVERE, null, ex);
             throw new AuthenticationException("Faled to issue secure access token");
         }
+
         String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
-        // Split token into equal parts
+
         int tokenLength = encryptedAccessTokenBase64Encoded.length();
         String tokenToSaveToDatabase = encryptedAccessTokenBase64Encoded.substring(0, tokenLength / 2);
         returnValue = encryptedAccessTokenBase64Encoded.substring(tokenLength / 2, tokenLength);
@@ -88,11 +90,8 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
-
         String salt = AuthenticationUtil.generateSalt(30);
-         String secureUserPassword = null;
-        secureUserPassword = AuthenticationUtil.
-                generateSecurePassword(password, salt);
+        String secureUserPassword = AuthenticationUtil.generateSecurePassword(password, salt);
 
         userDto = allUserParamsDto()
                 .id(userDto.id)
@@ -105,6 +104,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .build();
 
         User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
+
         user.setUserId(userDto.id);
         user.setSalt(userDto.salt);
         user.setEnabled(userDto.enabled);
@@ -116,8 +116,8 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public User removeSecureCredentials(Long userId) {
-
         User user = database.getById(userId);
+
         user.setToken(null);
         user.setSalt(null);
 
@@ -127,10 +127,9 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     private void storeAccessToken(@NotNull AllUserParams userDto, String tokenToSaveToDatabase) {
-
         User user = database.getByEmail(userDto.email);
-        user.setToken(tokenToSaveToDatabase);
 
+        user.setToken(tokenToSaveToDatabase);
         database.update(user);
     }
 

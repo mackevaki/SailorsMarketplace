@@ -10,6 +10,7 @@ import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +33,6 @@ import static org.junit.Assert.assertThat;
 @GuiceModules(Module.class)
 public class EventResourceTest {
     private WebTarget target;
-
-    @Inject
-    private Database database;
 
     @Inject
     private TestValues testValues;
@@ -73,11 +71,7 @@ public class EventResourceTest {
                 createdUser.getUserId());
 
         Response response = invocationBuilder.post(Entity.entity(createEventRequest, MediaType.APPLICATION_JSON));
-        Long createdEventId = Long.valueOf(response.readEntity(String.class));
-
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
-
-        System.out.println("--------------------------" + createdEventId);
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 }

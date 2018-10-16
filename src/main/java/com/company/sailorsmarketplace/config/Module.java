@@ -15,7 +15,6 @@ public class Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        //bind the services to implementation class
         bind(IAuthenticationService.class).to(AuthenticationService.class);
         bind(IUserService.class).to(UserService.class);
         bind(Database.class).to(UserDAO.class);

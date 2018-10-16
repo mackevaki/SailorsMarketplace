@@ -7,14 +7,12 @@ import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEventParamsDto;
 
-@Singleton
 public class EventService implements IEventService {
 
     @Inject
@@ -26,10 +24,10 @@ public class EventService implements IEventService {
     @Override
     public User addUserToEvent(Long userId, Long eventId) {
         User user = database.getById(userId);
-
         Event event = eventDAO.getById(eventId);
 
         event.getUsers().add(user);
+
         if (user.getEvents() == null) {
             List<Event> events = new ArrayList<>();
             events.add(event);
@@ -46,7 +44,6 @@ public class EventService implements IEventService {
 
     @Override
     public AllEventParams createEvent(CreateUpdateEventParams params) {
-
         User owner = database.getById(params.chargeUserId);
         Event event = new Event(
                 params.name,
@@ -59,6 +56,7 @@ public class EventService implements IEventService {
         event.getUsers().add(owner);
 
         Event createdEvent = eventDAO.save(event);
+
         AllEventParams eventParams = allEventParamsDto()
                 .eventId(createdEvent.getEventId())
                 .name(createdEvent.getName())
@@ -70,8 +68,7 @@ public class EventService implements IEventService {
                 .users(createdEvent.getUsers())
                 .build();
 
-            owner.getEvents().add(createdEvent);
-
+        owner.getEvents().add(createdEvent);
         database.update(owner);
 
         return eventParams;
@@ -79,14 +76,10 @@ public class EventService implements IEventService {
 
     @Override
     public void deleteEvent(Long eventId) {
-
         Event event = eventDAO.getById(eventId);
-        // во всех юхерах сделать null что такое каскад??
+
         event.setChargeUser(null);
         event.setUsers(null);
-
-//        Event transEvent = new Event();
-//        transEvent.setEventId(eventId);
 
         eventDAO.delete(event);
     }
@@ -98,14 +91,10 @@ public class EventService implements IEventService {
 
     @Override
     public void deleteUserFromEvent(Long userId, Long eventId) {
-
         User user = database.getById(userId);
         Event event = eventDAO.getById(eventId);
 
         event.getUsers().remove(user);
         eventDAO.update(event);
-
-
     }
-
 }

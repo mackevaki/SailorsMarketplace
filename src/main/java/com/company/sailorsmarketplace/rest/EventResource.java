@@ -37,6 +37,6 @@ public class EventResource {
 
         AllEventParams allEventParams = eventService.createEvent(createEventParams);
 
-        return Response.ok().entity(allEventParams.eventId).build();
+        return Response.ok(String.format("%d", allEventParams.eventId)).build();
     }
 }

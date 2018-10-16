@@ -21,8 +21,6 @@ public class JerseyConfig extends ResourceConfig {
         register(UserProfileInfoResource.class);
         register(EventResource.class);
 
-
-
         // Exception handlers
         register(AlreadyExistsExceptionMapper.class);
         register(UserNotFoundExceptionMapper.class);

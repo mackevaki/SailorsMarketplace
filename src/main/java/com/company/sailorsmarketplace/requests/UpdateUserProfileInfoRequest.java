@@ -20,7 +20,7 @@ public class UpdateUserProfileInfoRequest {
 
     @JsonCreator
     public UpdateUserProfileInfoRequest(
-            @JsonProperty("userId") Long userId,
+            @NotNull @JsonProperty("userId") Long userId,
             @JsonProperty("firstname") String firstname,
             @JsonProperty("lastname") String lastname,
             @JsonProperty("birthdate") Date birthdate,

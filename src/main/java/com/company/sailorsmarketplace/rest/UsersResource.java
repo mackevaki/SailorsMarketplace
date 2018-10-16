@@ -8,6 +8,7 @@ import com.company.sailorsmarketplace.requests.UpdateUserRequest;
 import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.utils.Secured;
+import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -39,7 +40,7 @@ public class UsersResource {
             };
             return Response.ok(entity.getEntity().toString()).build();
         } else {
-            return Response.status(404).build();
+            return Response.status(HttpStatus.SC_NOT_FOUND).build();
         }
     }
 
@@ -54,7 +55,7 @@ public class UsersResource {
         if(user != null) {
             return Response.ok(user.toString()).build();
         } else {
-            return Response.status(404).build();
+            return Response.status(HttpStatus.SC_NOT_FOUND).build();
         }
     }
 
@@ -89,7 +90,7 @@ public class UsersResource {
         if (updUser != null) {
             return Response.ok(updUser.getUserId()).build();
         } else {
-            return Response.status(500).build();
+            return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
         }
     }
 
