@@ -1,10 +1,11 @@
 package sailorsmarketplace;
 
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.config.JerseyConfig;
+import com.company.sailorsmarketplace.config.Module;
+import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dao.UserDAO;
-import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.utils.TestValues;
@@ -13,6 +14,7 @@ import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -24,13 +26,16 @@ import static org.junit.Assert.assertThat;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
+@RunWith(GuiceTestRunner.class)
+@GuiceModules(Module.class)
 public class AuthenticationTest {
     private WebTarget target;
-    private UserDAO database = new UserDAO();
+
+    @Inject
+    private Database database;
 
     @Inject
     private TestValues testValues;
-
 
     @Before
     public void startServer() throws Exception {

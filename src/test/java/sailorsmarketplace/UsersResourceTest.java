@@ -5,6 +5,7 @@ import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.HK2toGuiceModule;
 import com.company.sailorsmarketplace.config.Module;
+import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
@@ -35,7 +36,9 @@ import static org.junit.Assert.assertThat;
 @GuiceModules(Module.class)
 public class UsersResourceTest {
     private WebTarget target;
-    private UserDAO database = new UserDAO();
+
+    @Inject
+    private Database database;
 
     @Inject
     private TestValues testValues;

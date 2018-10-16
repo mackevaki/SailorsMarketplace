@@ -7,19 +7,16 @@ import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.AllUserParams;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
-import com.company.sailorsmarketplace.services.AuthenticationService;
 import com.company.sailorsmarketplace.services.IAuthenticationService;
-import com.company.sailorsmarketplace.services.IUserService;
-import com.company.sailorsmarketplace.services.UserService;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -34,29 +31,24 @@ public class TestValues {
 
     @Inject
     private Database userDAO;
-//    public final static User anonymousUser = new User(
-//            "anonymousGuest",
-//            "#guestPass1",
-//            "guest@guest.com",
-//            "+79876543210",
-//            Authority.ROLE_ANONYMOUS
-//    );
 
 
-//    public static void setValues() {
-//        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-//            Transaction tx = session.beginTransaction();
-//            Query query = session.createQuery("DELETE FROM User WHERE id IS NOT NULL");
-//            session.save(administrator);
-//            session.save(testUser);
-//            tx.commit();
-//        }
-//    }
+    public Map initialTableWithNTestUsers(int number) {
+        Map<Long, User> testUsers = new HashMap<>();
 
+        User admin = createAdministrator();
+        testUsers.put(admin.getUserId(), admin);
+
+        for (int i = 0; i < number; i++) {
+            User tmp = createTestUser();
+            testUsers.put(tmp.getUserId(), tmp);
+        }
+
+        return testUsers;
+    }
 
     @NotNull
     public User createTestUser() {
-
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
         String username = randomAlphanumeric(8);
         String password = "#testPass1";
@@ -95,24 +87,51 @@ public class TestValues {
         return user;
     }
 
-    @NotNull
-    public User createAdministrator() {
 
+    public User createTestUserByAuthority(Authority authority, String prefix) {
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        String username = "admin_" + randomAlphanumeric(4);
+        String username = prefix + randomAlphanumeric(8);
+        String password = prefix + "#Pass1" + randomAlphanumeric(5);
         String telephone = "+" + randomNumeric(11);
-        String password = "#Admin1337";
 
-        return new User(
+        String salt = AuthenticationUtil.generateSalt(20);
+        String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
+
+        while (userDAO.getByEmail(email) != null) {
+            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
+        }
+
+        User testUser = new User(
                 username,
-                password,
+                securePassword,
                 email,
                 telephone,
-                Authority.ROLE_ADMIN
+                authority
         );
 
-//        return userDAO.save(administrator);
+        testUser.setSalt(salt);
+        testUser.setEnabled(false);
+        userDAO.save(testUser);
+
+        User user = userDAO.getByEmail(testUser.getEmail());
+        UserProfileInfo userProfileInfo = new UserProfileInfo(user.getUserId());
+        userProfileInfo.setUser(user);
+
+        UserProfileInfoDAO dao = new UserProfileInfoDAO();
+        dao.save(userProfileInfo);
+
+        user.setUserProfileInfo(userProfileInfo);
+        userDAO.update(user);
+
+        return user;
     }
+
+
+    @NotNull
+    public User createAdministrator() {
+        return createTestUserByAuthority(Authority.ROLE_ADMIN, "Admin_");
+    }
+
 
     public boolean removeTestUser(@NotNull User testUser) {
 
@@ -177,7 +196,6 @@ public class TestValues {
                 .salt(createdUser.getSalt())
                 .authorities(createdUser.getAuthorities()).build();
 
-//        AuthenticationService authenticationService = new AuthenticationService();
         userDto = authenticationService.resetSecurityCredentials(loginDetails.password, userDto);
 
         String secureUserToken = authenticationService.issueSecureToken(userDto);

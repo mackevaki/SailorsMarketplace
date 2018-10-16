@@ -1,11 +1,19 @@
 package sailorsmarketplace;
 
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
+import com.company.sailorsmarketplace.config.Module;
+import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dao.EventDAO;
+import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
+import com.company.sailorsmarketplace.utils.TestValues;
+import com.google.inject.Inject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -16,12 +24,20 @@ import java.sql.Date;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
+@RunWith(GuiceTestRunner.class)
+@GuiceModules(Module.class)
 public class EventResourceTest {
     private WebTarget target;
-    private EventDAO database = new EventDAO();
+
+    @Inject
+    private Database database;
+
+    @Inject
+    private TestValues testValues;
 
     @Before
     public void startServer() throws Exception {
@@ -41,9 +57,12 @@ public class EventResourceTest {
         WebTarget userWebTarget = target.path("/rest/events/create");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        String eventName = "Event: " + randomAlphabetic(15);
-        String description = randomAlphabetic(20);
-        byte[] place = "Pervomayskaya street 34".getBytes(StandardCharsets.UTF_8);
+        User createdUser = testValues.createTestUser();
+
+        String eventName = "Event: " + randomAlphabetic(15, 50);
+        String description = randomAlphabetic(20, 100);
+        String  address = randomAlphabetic(15) + "street, " + randomNumeric(2);
+        byte[] place = address.getBytes(StandardCharsets.UTF_8);
 
         CreateEventRequest createEventRequest = new CreateEventRequest(
                 eventName,
@@ -51,17 +70,14 @@ public class EventResourceTest {
                 new Date(3L),
                 new Date(3L),
                 place,
-                2L);
+                createdUser.getUserId());
 
         Response response = invocationBuilder.post(Entity.entity(createEventRequest, MediaType.APPLICATION_JSON));
-        //Long createdEventId = Long.valueOf(response.readEntity(String.class));
+        Long createdEventId = Long.valueOf(response.readEntity(String.class));
+
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
 
-//        System.out.println("--------------------------" + createdEventId);
-
-//        UserProfileInfoService service = new UserProfileInfoService();
-//        UserProfileInfo info = service.createUserProfileInfoForNewUser(createdUser.getUserId());
-//        assertThat(info.getUserId(), equalTo(createdUser.getUserId()));
+        System.out.println("--------------------------" + createdEventId);
     }
 
 }
