@@ -1,5 +1,6 @@
 package com.company.sailorsmarketplace.services;
 
+import com.company.sailorsmarketplace.dao.DAO;
 import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.dbmodel.Event;
@@ -16,10 +17,10 @@ import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEvent
 public class EventService implements IEventService {
 
     @Inject
-    Database database;
+    private Database database;
 
     @Inject
-    EventDAO eventDAO;
+    private DAO<Event> eventDAO;
 
     @Override
     public User addUserToEvent(Long userId, Long eventId) {
@@ -75,13 +76,14 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public void deleteEvent(Long eventId) {
+    public boolean deleteEvent(Long eventId) {
         Event event = eventDAO.getById(eventId);
 
         event.setChargeUser(null);
         event.setUsers(null);
 
         eventDAO.delete(event);
+        return eventDAO.getById(eventId) == null;
     }
 
     @Override

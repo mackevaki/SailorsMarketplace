@@ -4,24 +4,27 @@ import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
-import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
+import com.company.sailorsmarketplace.utils.HibernateUtils;
 import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.persistence.Query;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -74,4 +77,30 @@ public class EventResourceTest {
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
+    @Test
+    public void shouldRemoveEventWhenThereAreAllCredentials() {
+        WebTarget userWebTarget = target.path("/rest/events/" + getLastEventId());
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.delete();
+
+        String info = response.readEntity(String.class);
+        System.out.println(info);
+
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    private Long getLastEventId() {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+
+            Query query = session.createQuery("select e.eventId from Event e where e.eventId is not null");
+            List result = query.getResultList();
+            Long id = (Long) result.get(result.size()-1);
+
+            tx.commit();
+            session.clear();
+            return id;
+        }
+    }
 }

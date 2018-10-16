@@ -11,7 +11,7 @@ public interface IEventService {
 
     AllEventParams createEvent(CreateUpdateEventParams params);
 
-    void deleteEvent(Long eventId);
+    boolean deleteEvent(Long eventId);
 
     Event updateEvent(Long eventId);
 

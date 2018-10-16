@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.utils;
 
 import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dao.UserProfileInfoDAO;
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
@@ -133,17 +132,15 @@ public class TestValues {
     }
 
 
-    public boolean removeTestUser(@NotNull User testUser) {
-
+    public void removeTestUser(@NotNull User testUser) {
         User entity = userDAO.getById(testUser.getUserId());
-        userDAO.delete(entity);
 
-        return userDAO.getById(testUser.getUserId()) == null;
+        userDAO.delete(entity);
+        userDAO.getById(testUser.getUserId());
     }
 
     @NotNull
     public AuthenticationRequest createTestUserForAutorization()  {
-
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
 
         String username = randomAlphanumeric(8);
