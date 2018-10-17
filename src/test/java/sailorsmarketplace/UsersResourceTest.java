@@ -3,18 +3,14 @@ package sailorsmarketplace;
 import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.config.HK2toGuiceModule;
 import com.company.sailorsmarketplace.config.Module;
 import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserDAO;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.CreateUserRequest;
 
 import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -77,7 +73,7 @@ public class UsersResourceTest {
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
         Long createdUserId = Long.valueOf(response.readEntity(String.class));
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         User createdUser = database.getByEmail(email);
         assertThat(createdUserId, equalTo(createdUser.getUserId()));
@@ -123,7 +119,6 @@ public class UsersResourceTest {
         );
 
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
-
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
@@ -142,7 +137,7 @@ public class UsersResourceTest {
 
         testValues.removeTestUser(testUser);
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -161,7 +156,7 @@ public class UsersResourceTest {
         String info = response.readEntity(String.class);
         System.out.println(info);
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -202,6 +197,6 @@ public class UsersResourceTest {
 
         testValues.removeTestUser(database.getById(details.id));
 
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 }

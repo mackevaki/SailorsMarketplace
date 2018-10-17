@@ -1,26 +1,23 @@
 package com.company.sailorsmarketplace.dao;
 
-import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import javax.swing.*;
+public class UserProfileInfoDAO implements DAO<UserProfileInfo>{
 
-public class UserProfileInfoDAO {
-
+    @Override
     public UserProfileInfo save(UserProfileInfo profileInfo) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.save(profileInfo);
             tx.commit();
-
             return profileInfo;
         }
     }
 
+    @Override
     public UserProfileInfo getById(Long id) {
         UserProfileInfo userProfileInfo;
 
@@ -28,11 +25,11 @@ public class UserProfileInfoDAO {
             userProfileInfo = session.get(UserProfileInfo.class, id);
             return userProfileInfo;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error in getById UserProfileInfo method", JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }
 
+    @Override
     public void update(UserProfileInfo profileInfo) {
         if (profileInfo == null) {
             throw new IllegalArgumentException("UserProfileInfo is null");
@@ -44,10 +41,11 @@ public class UserProfileInfoDAO {
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    @Override
     public void delete(UserProfileInfo profileInfo) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();

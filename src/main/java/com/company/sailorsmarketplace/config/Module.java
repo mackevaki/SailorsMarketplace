@@ -3,6 +3,7 @@ package com.company.sailorsmarketplace.config;
 import com.company.sailorsmarketplace.dao.*;
 import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
+import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.services.*;
 import com.company.sailorsmarketplace.utils.TestValues;
@@ -20,6 +21,7 @@ public class Module extends AbstractModule {
         bind(IUserProfileInfoService.class).to(UserProfileInfoService.class);
         bind(IEventService.class).to(EventService.class);
         bind(new TypeLiteral<DAO<Event>>(){}).to(EventDAO.class);
+        bind(new TypeLiteral<DAO<UserProfileInfo>>(){}).to(UserProfileInfoDAO.class);
         bind(TestValues.class);
     }
 }
