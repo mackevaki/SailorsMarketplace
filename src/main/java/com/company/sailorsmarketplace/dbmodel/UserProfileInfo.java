@@ -8,6 +8,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "users_profiles", schema = "smarket")
 public class UserProfileInfo {
+
     @Id
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -44,9 +45,8 @@ public class UserProfileInfo {
     @Column(name = "telegram_id", nullable = true)
     private Integer telegramId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User userByUserId;
+    @OneToOne(mappedBy = "userProfileInfo")
+    private User user;
 
     public UserProfileInfo() {}
 
@@ -126,12 +126,12 @@ public class UserProfileInfo {
         this.telegramId = telegramId;
     }
 
-    public User getUserByUserId() {
-        return userByUserId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserByUserId(User usersByUserId) {
-        this.userByUserId = usersByUserId;
+    public void setUser(User usersByUserId) {
+        this.user = usersByUserId;
     }
 
     @Override

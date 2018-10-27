@@ -5,7 +5,7 @@ import com.company.sailorsmarketplace.dbmodel.Authority;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class AllUserParamsDto {
+public class AllUserParams {
     public final Long id;
     public final String username;
     public final String email;
@@ -15,7 +15,7 @@ public class AllUserParamsDto {
     public final Boolean enabled;
     public final List<Authority> authorities;
 
-    private AllUserParamsDto(
+    private AllUserParams(
             @NotNull Builder builder, List<Authority> authorities) {
         this.id = builder.id;
         this.username = builder.username;
@@ -80,8 +80,8 @@ public class AllUserParamsDto {
             return this;
         }
 
-        public AllUserParamsDto build() {
-            return new AllUserParamsDto(this, authorities);
+        public AllUserParams build() {
+            return new AllUserParams(this, authorities);
         }
     }
 }

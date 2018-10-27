@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.List;
 
-public class AllEventParamsDto {
+public class AllEventParams {
     public final Long eventId;
     public final String name;
     public final String description;
@@ -16,7 +16,7 @@ public class AllEventParamsDto {
     public final User userByChargeUserId;
     public final List<User> users;
 
-    private AllEventParamsDto(@NotNull Builder builder) {
+    private AllEventParams(@NotNull Builder builder) {
         this.eventId = builder.eventId;
         this.name = builder.name;
         this.description = builder.description;
@@ -84,8 +84,8 @@ public class AllEventParamsDto {
             return this;
         }
 
-        public AllEventParamsDto build() {
-            return new AllEventParamsDto(this);
+        public AllEventParams build() {
+            return new AllEventParams(this);
         }
     }
 }

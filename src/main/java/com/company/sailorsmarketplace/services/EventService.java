@@ -1,35 +1,34 @@
 package com.company.sailorsmarketplace.services;
 
+import com.company.sailorsmarketplace.dao.DAO;
 import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.EventDao;
+import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dto.AllEventParamsDto;
+import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.company.sailorsmarketplace.dto.AllEventParamsDto.Builder.allEventParamsDto;
+import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEventParamsDto;
 
-@Singleton
 public class EventService implements IEventService {
 
     @Inject
-    Database database;
+    private Database database;
 
-    EventDao eventDao;
+    @Inject
+    private DAO<Event> eventDAO;
 
     @Override
     public User addUserToEvent(Long userId, Long eventId) {
         User user = database.getById(userId);
+        Event event = eventDAO.getById(eventId);
 
-        eventDao = new EventDao();
-        Event event = eventDao.getById(eventId);
+        event.getUsers().add(user);
 
-        event.getEventParticipations().add(user);
         if (user.getEvents() == null) {
             List<Event> events = new ArrayList<>();
             events.add(event);
@@ -38,14 +37,14 @@ public class EventService implements IEventService {
             user.getEvents().add(event);
         }
 
-        eventDao.update(event);
+        eventDAO.update(event);
         database.update(user);
 
         return user;
     }
 
     @Override
-    public AllEventParamsDto createEvent(CreateUpdateEventParams params) {
+    public AllEventParams createEvent(CreateUpdateEventParams params) {
         User owner = database.getById(params.chargeUserId);
         Event event = new Event(
                 params.name,
@@ -55,38 +54,36 @@ public class EventService implements IEventService {
                 params.dateEnd,
                 owner);
 
-        List<User> eventUsers = new ArrayList<>();
-        eventUsers.add(owner);
-        event.setEventParticipations(eventUsers);
+        event.getUsers().add(owner);
 
-        Event createdEvent = eventDao.save(event);
-        AllEventParamsDto eventParams = allEventParamsDto()
+        Event createdEvent = eventDAO.save(event);
+
+        AllEventParams eventParams = allEventParamsDto()
                 .eventId(createdEvent.getEventId())
                 .name(createdEvent.getName())
                 .description(createdEvent.getDescription())
                 .place(createdEvent.getPlace())
                 .dateStart(createdEvent.getDateStart())
                 .dateEnd(createdEvent.getDateEnd())
-                .chargeUser(createdEvent.getUserByChargeUserId())
-                .users(createdEvent.getEventParticipations())
+                .chargeUser(createdEvent.getChargeUser())
+                .users(createdEvent.getUsers())
                 .build();
 
-//        if (owner.getEvents() == null) {
-//            List<Event> events = new ArrayList<>();
-//            events.add(createdEvent);
-//            owner.setEvents(events);
-//        } else {
-            owner.getEvents().add(createdEvent);
-//        }
-
+        owner.getEvents().add(createdEvent);
         database.update(owner);
 
         return eventParams;
     }
 
     @Override
-    public void deleteEvent(Long eventId) {
+    public boolean deleteEvent(Long eventId) {
+        Event event = eventDAO.getById(eventId);
 
+        event.setChargeUser(null);
+        event.setUsers(null);
+
+        eventDAO.delete(event);
+        return eventDAO.getById(eventId) == null;
     }
 
     @Override
@@ -96,6 +93,10 @@ public class EventService implements IEventService {
 
     @Override
     public void deleteUserFromEvent(Long userId, Long eventId) {
+        User user = database.getById(userId);
+        Event event = eventDAO.getById(eventId);
 
+        event.getUsers().remove(user);
+        eventDAO.update(event);
     }
 }

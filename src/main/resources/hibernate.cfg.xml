@@ -16,13 +16,13 @@
         <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
 
         <property name="hibernate.id.new_generator_mappings">true</property>
+
         <mapping class="com.company.sailorsmarketplace.dbmodel.User"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.UserProfileInfo"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.VerificationCode"/>
-        <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRolesEntity"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRoles"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.Event"/>
         <mapping class="com.company.sailorsmarketplace.dbmodel.Organization"/>
-        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.Participations-->
-        <!--<mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnections"/>-->
+        <mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnection"/>
     </session-factory>
 </hibernate-configuration>

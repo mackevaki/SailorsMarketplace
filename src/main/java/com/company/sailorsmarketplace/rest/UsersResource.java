@@ -8,8 +8,10 @@ import com.company.sailorsmarketplace.requests.UpdateUserRequest;
 import com.company.sailorsmarketplace.services.IUserProfileInfoService;
 import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.utils.Secured;
+import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
@@ -19,29 +21,13 @@ import java.util.List;
 import static com.company.sailorsmarketplace.dto.CreateUpdateUserParams.Builder.createUpdateUserParams;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Path("/accounts")
+@Path("/users")
 public class UsersResource {
     @Inject
     IUserService userService;
 
     @Inject
     IUserProfileInfoService userProfileInfoService;
-//
-//    @POST
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces({APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    public Response createUserProfile(@DefaultValue("") @FormParam("username") String username,
-//                                      @DefaultValue("") @FormParam("email") String email,
-//                                      @DefaultValue("") @FormParam("password") String password,
-//                                      @DefaultValue("") @FormParam("telephone") String telephone,
-//                                      @Context HttpServletResponse servletResponse) {
-
-//               servletResponse.sendRedirect("/accountsinfo.html");
-//
-//        // And when we are done, we can return user profile back
-//        return Response.ok(returnValue).build();//userProfile;
-//    }
-
 
     @GET
     @Secured
@@ -54,7 +40,7 @@ public class UsersResource {
             };
             return Response.ok(entity.getEntity().toString()).build();
         } else {
-            return Response.status(404).build();
+            return Response.status(HttpStatus.SC_NOT_FOUND).build();
         }
     }
 
@@ -63,11 +49,13 @@ public class UsersResource {
     @Produces(APPLICATION_JSON)
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
+
         User user = userService.getUserById(id);
+
         if(user != null) {
-            return Response.ok(user.getUserId()).build();
+            return Response.ok(user.toString()).build();
         } else {
-            return Response.status(404).build();
+            return Response.status(HttpStatus.SC_NOT_FOUND).build();
         }
     }
 
@@ -76,6 +64,7 @@ public class UsersResource {
     @Secured
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
+
         if (userService.deleteUser(id)) {
             return Response.ok("removed").build();
         } else {
@@ -86,7 +75,8 @@ public class UsersResource {
     @PUT
     @Secured
     @Consumes(APPLICATION_JSON)
-    public Response updateUser(@Valid UpdateUserRequest request) {
+    @Path("/update/{id}")
+    public Response updateUser(@Valid UpdateUserRequest request, @PathParam("id") Long userId) {
 
         final User updUser = userService.updateUser(
                 createUpdateUserParams()
@@ -96,10 +86,11 @@ public class UsersResource {
                         .telephone(request.telephone)
                         .build(), request.userId
         );
+
         if (updUser != null) {
             return Response.ok(updUser.getUserId()).build();
         } else {
-            return Response.status(500).build();
+            return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -107,10 +98,7 @@ public class UsersResource {
     @Path("/reg")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException {
-//        if (userService.userExists(request.email)) {
-//            return Response.status(400).entity(new UserExistsException(request.email)).build();
-//        }
+    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException, ConstraintViolationException {
 
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()

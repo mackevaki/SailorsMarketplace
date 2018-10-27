@@ -1,19 +1,20 @@
 package com.company.sailorsmarketplace.config;
 
-import com.company.sailorsmarketplace.exceptions.AlreadyExistsExceptionMapper;
-import com.company.sailorsmarketplace.exceptions.AuthenticationExceptionMapper;
-import com.company.sailorsmarketplace.exceptions.ConstraintViolationMapper;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundExceptionMapper;
+import com.company.sailorsmarketplace.exceptions.*;
 import com.company.sailorsmarketplace.rest.AuthenticationResource;
 import com.company.sailorsmarketplace.rest.EventResource;
 import com.company.sailorsmarketplace.rest.UserProfileInfoResource;
 import com.company.sailorsmarketplace.rest.UsersResource;
+import com.company.sailorsmarketplace.services.AuthenticationService;
+import com.company.sailorsmarketplace.utils.AuthenticationFilter;
+import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
+
         // Resources
         register(UsersResource.class);
         register(AuthenticationResource.class);
@@ -25,6 +26,10 @@ public class JerseyConfig extends ResourceConfig {
         register(UserNotFoundExceptionMapper.class);
         register(AuthenticationExceptionMapper.class);
         register(ConstraintViolationMapper.class);
+        register(ApplicationExceptionMapper.class);
+
+        // Filters
+        register(AuthenticationFilter.class);
 
         // Injectors
         Injector injector = Guice.createInjector(new Module());

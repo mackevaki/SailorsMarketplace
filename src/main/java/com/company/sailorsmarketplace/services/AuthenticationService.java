@@ -2,39 +2,29 @@ package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.Database;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dto.AllUserParamsDto;
+import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.company.sailorsmarketplace.dto.AllUserParamsDto.Builder.allUserParamsDto;
+import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
 
-@Singleton
 public class AuthenticationService implements IAuthenticationService {
     @Inject
-    Database database;
+    private Database database;
 
     @Inject
-    IUserService userService;
-
-//    @Inject
-//    public AuthenticationService(Database database) {
-//        this.database = database;
-////        this.authenticationUtil = authenticationUtil;
-//    }
-
+    private IUserService userService;
 
     @Override
-    public AllUserParamsDto authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
-        AllUserParamsDto userDto;
+    public AllUserParams authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
+        AllUserParams userDto;
 
         User user = null;
         try {
@@ -42,18 +32,19 @@ public class AuthenticationService implements IAuthenticationService {
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException(email);
         }
-        // Here we perform authentication business logic
-        // If authentication fails, we throw new AuthenticationException
-        // other wise we return User Profile Details
+
+        // perform authentication business logic
         String secureUserPassword = null;
-        secureUserPassword = AuthenticationUtil.
-                generateSecurePassword(userPassword, user.getSalt());
+        secureUserPassword = AuthenticationUtil.generateSecurePassword(userPassword, user.getSalt());
+
         boolean authenticated = false;
+
         if (secureUserPassword != null && secureUserPassword.equalsIgnoreCase(user.getPassword())) {
             if (email != null && email.equalsIgnoreCase(user.getEmail())) {
                 authenticated = true;
             }
         }
+
         if (!authenticated) {
             throw new AuthenticationException("Authentication failed");
         }
@@ -72,36 +63,36 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String issueSecureToken(AllUserParamsDto userDto) throws AuthenticationException {
+    public String issueSecureToken(AllUserParams userDto) throws AuthenticationException {
         String returnValue = null;
-        // Get salt but only part of it
+
         String newSaltAsPostfix = userDto.salt;
         String accessTokenMaterial = userDto.id + newSaltAsPostfix;
         byte[] encryptedAccessToken = null;
+
         try {
             encryptedAccessToken = AuthenticationUtil.encrypt(userDto.password, accessTokenMaterial);
         } catch (Exception ex) {
             Logger.getLogger(AuthenticationService.class.getName()).log(Level.SEVERE, null, ex);
             throw new AuthenticationException("Faled to issue secure access token");
         }
+
         String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
-        // Split token into equal parts
+
         int tokenLength = encryptedAccessTokenBase64Encoded.length();
         String tokenToSaveToDatabase = encryptedAccessTokenBase64Encoded.substring(0, tokenLength / 2);
         returnValue = encryptedAccessTokenBase64Encoded.substring(tokenLength / 2, tokenLength);
-        //userDto.setToken(tokenToSaveToDatabase);
+
         storeAccessToken(userDto, tokenToSaveToDatabase);
+
         return returnValue;
     }
 
     @Override
-    public AllUserParamsDto resetSecurityCredentials(String password, AllUserParamsDto userDto) {
-        // Generate salt
+    public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
         String salt = AuthenticationUtil.generateSalt(30);
-        // Generate secure user password
-        String secureUserPassword = null;
-        secureUserPassword = AuthenticationUtil.
-                generateSecurePassword(password, salt);
+        String secureUserPassword = AuthenticationUtil.generateSecurePassword(password, salt);
+
         userDto = allUserParamsDto()
                 .id(userDto.id)
                 .username(userDto.username)
@@ -113,21 +104,34 @@ public class AuthenticationService implements IAuthenticationService {
                 .build();
 
         User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
+
         user.setUserId(userDto.id);
         user.setSalt(userDto.salt);
         user.setEnabled(userDto.enabled);
 
-        this.database.update(user);
+        database.update(user);
 
         return userDto;
     }
 
-    private void storeAccessToken(@NotNull AllUserParamsDto userDto, String tokenTosaveToDatabase) {
-        User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
-        user.setUserId(userDto.id);
-        user.setSalt(userDto.salt);
-        user.setEnabled(userDto.enabled);
-        // Store to database
+    @Override
+    public User removeSecureCredentials(Long userId) {
+        User user = database.getById(userId);
+
+        user.setToken(null);
+        user.setSalt(null);
+
+        database.update(user);
+
+        return user;
+    }
+
+    private void storeAccessToken(@NotNull AllUserParams userDto, String tokenToSaveToDatabase) {
+        User user = database.getByEmail(userDto.email);
+
+        user.setToken(tokenToSaveToDatabase);
         database.update(user);
     }
+
+
 }

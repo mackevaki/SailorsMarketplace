@@ -48,6 +48,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     Response.status(Response.Status.UNAUTHORIZED).build());
         }
     }
+
     private void validateToken(String token, Long userId) throws AuthenticationServiceException {
         User userProfile = usersService.getUserById(userId);
 

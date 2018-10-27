@@ -7,7 +7,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,31 +41,34 @@ public class User {
     private String telephone;
 
     @Basic
-    @Column(name = "salt", nullable = false, length = 45)
+    @Column(name = "salt", nullable = true, length = 45)
     private String salt;
 
     @Basic
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = true)
     private Boolean enabled;
 
     @Basic
-    @Column(name = "token", nullable = false, length = 60)
+    @Column(name = "token", nullable = true, length = 60)
     private String token;
 
-    @OneToOne(mappedBy = "userByUserId")
-    private UserProfileInfo userProfileInfoById;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = true)
+    private UserProfileInfo userProfileInfo;
 
-//    private Collection<Event> eventsByUserId;
-//    @OneToMany(mappedBy = "usersByOwnerId")
-//    private Collection<OrganizationsEntity> organizationsByUserId;
-@ManyToMany(mappedBy = "users")
-private Collection<Event> events;
-//    @OneToMany(mappedBy = "usersByUserId")
-//    private Collection<TelegramConnections> telegramConnectionsByUserId;
+//    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+//    private List<Organization> organizations = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private List<Event> events = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private List<TelegramConnection> telegramConnections = new ArrayList<>();
 
     @ElementCollection(targetClass = Authority.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = Authority.TABLE, joinColumns = @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
+    @CollectionTable(name = Authority.TABLE, joinColumns =
+                            @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
     @Column(name = Authority.COLUMN_AUTHORITY)
     private List<Authority> authorities;
 
@@ -162,18 +164,14 @@ private Collection<Event> events;
     }
 
     public UserProfileInfo getUserProfileInfo() {
-        return userProfileInfoById;
+        return userProfileInfo;
     }
 
-    public void setUserProfileInfoById(UserProfileInfo userProfileInfo) {
-        this.userProfileInfoById = userProfileInfo;
+    public void setUserProfileInfo(UserProfileInfo userProfileInfo) {
+        this.userProfileInfo = userProfileInfo;
     }
 
-    public UserProfileInfo getUserProfileInfoById() {
-        return userProfileInfoById;
-    }
-
-    public Collection<Event> getEvents() {
+    public List<Event> getEvents() {
         return events;
     }
 
@@ -181,39 +179,20 @@ private Collection<Event> events;
         this.events = events;
     }
 
-    //
-//    @OneToMany(mappedBy = "usersByChargeUserId")
-//    public Collection<Event> getEventsByUserId() {
-//        return eventsByUserId;
+//    public List<Organization> getOrganizations() {
+//        return organizations;
+//    }
+//
+//    public void setOrganizations(List<Organization> organizations) {
+//        this.organizations = organizations;
 //    }
 
-//    public void setEventsByUserId(Collection<Event> eventsByUserId) {
-//        this.eventsByUserId = eventsByUserId;
+//    public List<TelegramConnection> getTelegramConnections() {
+//        return telegramConnections;
 //    }
 //
-//    public Collection<Organization> getOrganizationsByUserId() {
-//        return organizationsByUserId;
-//    }
-//
-//    public void setOrganizationsByUserId(Collection<Organization> organizationsByUserId) {
-//        this.organizationsByUserId = organizationsByUserId;
-//    }
-
-//    @OneToMany(mappedBy = "usersByUserId")
-//    public Collection<Participations> getParticipationsByUserId() {
-//        return participationsByUserId;
-//    }
-//
-//    public void setParticipationsByUserId(Collection<Participations> participationsByUserId) {
-//        this.participationsByUserId = participationsByUserId;
-//    }
-
-//    public Collection<TelegramConnections> getTelegramConnectionsByUserId() {
-//        return telegramConnectionsByUserId;
-//    }
-//
-//    public void setTelegramConnectionsByUserId(Collection<TelegramConnections> telegramConnectionsByUserId) {
-//        this.telegramConnectionsByUserId = telegramConnectionsByUserId;
+//    public void setTelegramConnections(List<TelegramConnection> telegramConnectionsByUserId) {
+//        this.telegramConnections = telegramConnectionsByUserId;
 //    }
 
     @Override

@@ -1,16 +1,18 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "events", schema = "smarket")
 public class Event {
 
     @Id
+    @GenericGenerator(name = "event_gen", strategy = "increment")
+    @GeneratedValue(generator = "event_gen")
     @Column(name = "event_id", nullable = false)
     private Long eventId;
 
@@ -19,7 +21,7 @@ public class Event {
     private String name;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 45)
+    @Column(name = "description", nullable = false, length = 45)
     private String description;
 
     @Basic
@@ -34,28 +36,30 @@ public class Event {
     @Column(name = "place", nullable = true)
     private byte[] place;
 
-    @ManyToOne
-    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false)
-    private User userByChargeUserId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
+            foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
+    private User chargeUser;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_events")
-    private List<User> users;
-//    private Collection<User> participants;
+    private List<User> users = new ArrayList<>();
 
     public Event() {}
 
-    public Event(User chargeUser, String name) {
-        userByChargeUserId = chargeUser;
+    public Event(User chargeUser, String name, String description) {
+        this.chargeUser = chargeUser;
+        this.name = name;
+        this.description = description;
     }
 
-    public Event(String name, String description, byte[] place, Date dateStart, Date dateEnd, User userByChargeUserId) {
+    public Event(String name, String description, byte[] place, Date dateStart, Date dateEnd, User chargeUser) {
         this.name = name;
         this.description = description;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.place = place;
-        this.userByChargeUserId = userByChargeUserId;
+        this.chargeUser = chargeUser;
     }
 
     public Long getEventId() {
@@ -106,11 +110,11 @@ public class Event {
         this.place = place;
     }
 
-    public List<User> getEventParticipations() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setEventParticipations(List<User> eventParticipations) {
+    public void setUsers(List<User> eventParticipations) {
         this.users = eventParticipations;
     }
 
@@ -134,12 +138,12 @@ public class Event {
         return result;
     }
 
-    public User getUserByChargeUserId() {
-        return userByChargeUserId;
+    public User getChargeUser() {
+        return chargeUser;
     }
 
-    public void setUserByChargeUserId(User usersByChargeUserId) {
-        this.userByChargeUserId = usersByChargeUserId;
+    public void setChargeUser(User usersByChargeUserId) {
+        this.chargeUser = usersByChargeUserId;
     }
 
 //    @OneToMany(mappedBy = "eventsByEventId", targetEntity = Participations.class)

@@ -9,23 +9,20 @@ import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
-@Singleton
 public class UserProfileInfoService implements IUserProfileInfoService {
+
     @Inject
     Database database;
 
     @Override
     public UserProfileInfo createUserProfileInfoForNewUser(Long userId) {
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
-
         User user = database.getById(userId);
-        userProfileInfo.setUserByUserId(user);
-
         UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        dao.save(userProfileInfo);
 
-        user.setUserProfileInfoById(userProfileInfo);
+        userProfileInfo.setUser(user);
+        dao.save(userProfileInfo);
+        user.setUserProfileInfo(userProfileInfo);
         database.update(user);
 
         return userProfileInfo;
@@ -34,15 +31,18 @@ public class UserProfileInfoService implements IUserProfileInfoService {
     @Override
     public String showUserProfileInfo(Long userId) throws UserNotFoundException {
         User user = database.getById(userId);
+
         if (user == null) {
-            throw new  UserNotFoundException();
+            throw new UserNotFoundException();
         }
+
         return user.getUserProfileInfo().toString();
     }
 
     @Override
     public void updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
         User user;
+
         if ((user = database.getById(userId)) == null) {
             throw new UserNotFoundException();
         }
@@ -58,15 +58,15 @@ public class UserProfileInfoService implements IUserProfileInfoService {
         userProfileInfo.setAvatar(params.avatar);
         userProfileInfo.setOrganization(params.organization);
 
-        user.setUserProfileInfoById(userProfileInfo);
-        userProfileInfo.setUserByUserId(user);
+        user.setUserProfileInfo(userProfileInfo);
+        userProfileInfo.setUser(user);
         dao.update(userProfileInfo);
+
         database.update(user);
     }
 
     @Override
     public UserProfileInfo getUserProfileInfoById(Long id) throws UserNotFoundException {
-
         UserProfileInfoDAO dao = new UserProfileInfoDAO();
         UserProfileInfo userProfileInfo = dao.getById(id);
 

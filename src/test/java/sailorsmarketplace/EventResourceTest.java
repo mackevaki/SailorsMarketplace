@@ -1,32 +1,44 @@
 package sailorsmarketplace;
 
+import com.carlosbecker.guice.GuiceModules;
+import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
-import com.company.sailorsmarketplace.dao.EventDao;
-import com.company.sailorsmarketplace.dbmodel.Event;
+import com.company.sailorsmarketplace.config.Module;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
-import com.company.sailorsmarketplace.requests.CreateUserRequest;
-import javassist.bytecode.ByteArray;
+import com.company.sailorsmarketplace.utils.HibernateUtils;
+import com.company.sailorsmarketplace.utils.TestValues;
+import com.google.inject.Inject;
+import org.apache.http.HttpStatus;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import javax.persistence.Query;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.Arrays;
+import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
+@RunWith(GuiceTestRunner.class)
+@GuiceModules(Module.class)
 public class EventResourceTest {
     private WebTarget target;
-    private EventDao database = new EventDao();
+
+    @Inject
+    private TestValues testValues;
 
     @Before
     public void startServer() throws Exception {
@@ -46,9 +58,12 @@ public class EventResourceTest {
         WebTarget userWebTarget = target.path("/rest/events/create");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        String eventName = "Event: " + randomAlphabetic(15);
-        String description = randomAlphabetic(20);
-        byte[] place = "Pervomayskaya street 34".getBytes(StandardCharsets.UTF_8);
+        User createdUser = testValues.createTestUser();
+
+        String eventName = "Event: " + randomAlphabetic(15, 50);
+        String description = randomAlphabetic(20, 100);
+        String  address = randomAlphabetic(15) + "street, " + randomNumeric(2);
+        byte[] place = address.getBytes(StandardCharsets.UTF_8);
 
         CreateEventRequest createEventRequest = new CreateEventRequest(
                 eventName,
@@ -56,17 +71,36 @@ public class EventResourceTest {
                 new Date(3L),
                 new Date(3L),
                 place,
-                17L);
+                createdUser.getUserId());
 
         Response response = invocationBuilder.post(Entity.entity(createEventRequest, MediaType.APPLICATION_JSON));
-        //Long createdEventId = Long.valueOf(response.readEntity(String.class));
-        assertThat(response.getStatusInfo().getStatusCode(), equalTo(200));
-
-//        System.out.println("--------------------------" + createdEventId);
-
-//        UserProfileInfoService service = new UserProfileInfoService();
-//        UserProfileInfo info = service.createUserProfileInfoForNewUser(createdUser.getUserId());
-//        assertThat(info.getUserId(), equalTo(createdUser.getUserId()));
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
+    @Test
+    public void shouldRemoveEventWhenThereAreAllCredentials() {
+        WebTarget userWebTarget = target.path("/rest/events/" + getLastEventId());
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.delete();
+
+        String info = response.readEntity(String.class);
+        System.out.println(info);
+
+        assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    private Long getLastEventId() {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+
+            Query query = session.createQuery("select e.eventId from Event e where e.eventId is not null");
+            List result = query.getResultList();
+            Long id = (Long) result.get(result.size()-1);
+
+            tx.commit();
+            session.clear();
+            return id;
+        }
+    }
 }

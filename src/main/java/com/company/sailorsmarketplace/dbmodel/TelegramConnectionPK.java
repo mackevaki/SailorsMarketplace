@@ -5,12 +5,16 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class TelegramConnectionsEntityPK implements Serializable {
-    private Long userId;
-    private Integer telegramId;
+public class TelegramConnectionPK implements Serializable {
 
     @Column(name = "user_id", nullable = false)
     @Id
+    private Long userId;
+
+    @Column(name = "telegram_id", nullable = false)
+    @Id
+    private Integer telegramId;
+
     public Long getUserId() {
         return userId;
     }
@@ -19,8 +23,6 @@ public class TelegramConnectionsEntityPK implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "telegram_id", nullable = false)
-    @Id
     public Integer getTelegramId() {
         return telegramId;
     }
@@ -33,7 +35,7 @@ public class TelegramConnectionsEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TelegramConnectionsEntityPK that = (TelegramConnectionsEntityPK) o;
+        TelegramConnectionPK that = (TelegramConnectionPK) o;
         return Objects.equals(userId, that.userId) &&
                 Objects.equals(telegramId, that.telegramId);
     }

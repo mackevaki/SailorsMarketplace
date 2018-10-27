@@ -1,16 +1,13 @@
 package com.company.sailorsmarketplace.rest;
 
-import com.company.sailorsmarketplace.dbmodel.Event;
-import com.company.sailorsmarketplace.dto.AllEventParamsDto;
+import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.company.sailorsmarketplace.services.IEventService;
+import com.company.sailorsmarketplace.utils.Secured;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import static com.company.sailorsmarketplace.dto.CreateUpdateEventParams.Builder.createUpdateEventParams;
@@ -20,7 +17,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 public class EventResource {
 
     @Inject
-    IEventService eventService;
+    private IEventService eventService;
 
     @POST
     @Produces(APPLICATION_JSON)
@@ -36,8 +33,22 @@ public class EventResource {
                 .chargeUser(request.userByChargeUserId)
                 .build();
 
-        AllEventParamsDto allEventParams = eventService.createEvent(createEventParams);
+        AllEventParams allEventParams = eventService.createEvent(createEventParams);
 
-        return Response.ok().entity(allEventParams.eventId).build();
+        return Response.ok(String.format("%d", allEventParams.eventId)).build();
     }
+
+//    @Secured
+    @DELETE
+    @Path("/{id}")
+    public Response removeEvent(@PathParam("id") Long id) {
+
+        if (eventService.deleteEvent(id)) {
+            return Response.ok("removed").build();
+        } else {
+            return Response.status(404).entity(String.format("Event with id %d does not exist\n", id)).build();
+        }
+    }
+
+
 }

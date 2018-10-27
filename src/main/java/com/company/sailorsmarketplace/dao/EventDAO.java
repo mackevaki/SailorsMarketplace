@@ -7,13 +7,14 @@ import org.hibernate.Transaction;
 
 import javax.swing.*;
 
-public class EventDao {
+public class EventDAO implements DAO<Event> {
 
     public Event save(Event event) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             session.save(event);
             tx.commit();
+
             return event;
         }
     }
@@ -25,7 +26,7 @@ public class EventDao {
             event = session.get(Event.class, id);
             return event;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка при getbyid", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error in getById EventDAO method", JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }

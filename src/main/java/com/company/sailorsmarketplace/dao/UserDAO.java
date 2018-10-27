@@ -11,7 +11,6 @@ import javax.persistence.Query;
 import javax.swing.*;
 import java.util.List;
 
-//@Singleton
 public class UserDAO implements Database {
 
     @Override
@@ -20,6 +19,7 @@ public class UserDAO implements Database {
             Transaction tx = session.beginTransaction();
             session.save(user);
             tx.commit();
+
             return user;
         }
     }
@@ -27,6 +27,7 @@ public class UserDAO implements Database {
     @Override
     public User getById(Long id) {
         User user;
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             user = session.get(User.class, id);
             return user;
@@ -38,6 +39,7 @@ public class UserDAO implements Database {
 
     @Override
     public User getByUsername(String username) throws UserNotFoundException{
+
         User user;
         try(Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
@@ -54,6 +56,7 @@ public class UserDAO implements Database {
     @Override
     public User getByEmail(String findEmail) {
         User user;
+
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 
@@ -62,6 +65,7 @@ public class UserDAO implements Database {
             user = (User) query.getSingleResult();
             tx.commit();
             session.clear();
+
             return user;
         } catch (NoResultException ne) {
             return null;
@@ -99,9 +103,12 @@ public class UserDAO implements Database {
     public List<User> findAll() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
+
         List<User> list = session.createQuery("select DISTINCT u from User u", User.class).getResultList();
+
         tx.commit();
         session.close();
+
         return list;//(List<User>) HibernateUtils.getSessionFactory().openSession().createQuery("From User").list();
     }
 }

@@ -14,8 +14,8 @@ import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-@Singleton
 public class UserService implements IUserService {
+
     @Inject
     private Database database;
 
@@ -49,12 +49,15 @@ public class UserService implements IUserService {
         if (!old.getEmail().equals(user.email)) {
             old.setEmail(user.email);
         }
+
         if (!old.getUsername().equals(user.username)) {
             old.setUsername(user.username);
         }
+
         if (!old.getPassword().equals(user.password)) {
             old.setPassword(user.password);
         }
+
         if (!old.getTelephone().equals(user.telephone)) {
             old.setTelephone(user.telephone);
         }
@@ -91,7 +94,6 @@ public class UserService implements IUserService {
         }
         return user;
     }
-
 
     @Override
     public boolean deleteUser(Long id) {
