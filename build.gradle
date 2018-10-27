@@ -4,48 +4,52 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.1'
+        classpath "io.github.ezequielb:gradle-dependency-enforcer:1.0.1"
     }
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "io.github.ezequielb.gradle-dependency-enforcer"
 apply plugin: 'java'
 
 group 'com.company.sailorsmarketplace'
 version '1.0-SNAPSHOT'
 
-jar {
-    manifest {
-        attributes 'Main-Class': '/libs/a.jar'
-    }
-}
 
 repositories {
     mavenCentral()
 }
 
-//jar {
-//    manifest {
-//        attributes(
-//                'Main-Class': 'com.company.sailorsmarketplace.Launcher'
-//        )
-//    }
-//}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.company.sailorsmarketplace.Launcher'
+        )
+    }
+}
 
 ext {
-    jettyVersion = "9.4.11.v20180605"
+    jettyVersion = "9.4.12.v20180830"
     jerseyVersion = "2.27"
+    jacksonVersion = "2.8.10"
 }
 
 dependencies {
 //    compile "javax.xml.bind:jaxb-api:2.3.0"
 //    compile "javax.activation:activation:1.1.1"
     compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}"
+    compile("org.glassfish.jersey.ext:jersey-entity-filtering:${jacksonVersion}")
 
     compile "org.glassfish.jersey.core:jersey-server:${jerseyVersion}"
     compile("org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}") {
         exclude group: "com.fasterxml.jackson.core", module: "jackson-annotations"
     }
-    compile("com.fasterxml.jackson.core:jackson-annotations:2.8.10")
+    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+    compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:${jacksonVersion}")
+    compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}")
+
     compile("org.glassfish.jersey.ext:jersey-bean-validation:${jerseyVersion}") {
         exclude group: "org.jboss.logging", module: "jboss-logging"
         exclude group: "com.fasterxml", module: "classmate"
