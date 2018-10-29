@@ -71,12 +71,7 @@ public class UsersResourceTest {
         );
 
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
-        Long createdUserId = Long.valueOf(response.readEntity(String.class));
-
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
-
-        User createdUser = database.getByEmail(email);
-        assertThat(createdUserId, equalTo(createdUser.getUserId()));
     }
 
     @Test
