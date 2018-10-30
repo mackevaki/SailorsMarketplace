@@ -4,11 +4,11 @@ import com.company.sailorsmarketplace.dto.SourceSystem;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class VerificationRequest {
     public final Date date;
-    public final Enum<SourceSystem> sourceSystem;
+    public final SourceSystem sourceSystem;
     public final String targetId;
     public final String targetUserId;
 
@@ -16,7 +16,7 @@ public class VerificationRequest {
     @JsonCreator
     public VerificationRequest(
             @JsonProperty("date") Date date,
-            @JsonProperty("sourceSystem") Enum<SourceSystem> sourceSystem,
+            @JsonProperty("sourceSystem") SourceSystem sourceSystem,
             @JsonProperty("targetId") String targetId,
             @JsonProperty("targetUserId") String targetUserId) {
         this.date = date;

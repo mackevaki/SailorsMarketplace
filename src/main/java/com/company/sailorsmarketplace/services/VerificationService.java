@@ -21,7 +21,7 @@ public class VerificationService {
 
         VerificationCode verificationCode = new VerificationCode(
                 params.sourceSystem,
-                params.date,
+                params.date.toString(),
                 params.targetId,
                 params.targetUserId
         );
@@ -29,7 +29,7 @@ public class VerificationService {
         String code = randomNumeric(8);
 
         if (database.getById(Long.valueOf(params.targetUserId)) != null) {
-            verificationCode.setVerificationCode(code);
+            verificationCode.setCode(code);
 
             try (final Session session = HibernateUtils.getSessionFactory().openSession()) {
                 final Transaction tx = session.beginTransaction();

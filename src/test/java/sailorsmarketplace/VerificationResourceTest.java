@@ -6,8 +6,8 @@ import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.SourceSystem;
-import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.company.sailorsmarketplace.requests.VerificationRequest;
+import com.company.sailorsmarketplace.services.VerificationService;
 import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
@@ -19,11 +19,9 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.time.LocalDate;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import java.util.Date;
+
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -35,6 +33,9 @@ public class VerificationResourceTest {
 
     @Inject
     private TestValues testValues;
+
+    @Inject
+    private VerificationService serv;
 
     @Before
     public void startServer() throws Exception {
@@ -56,10 +57,10 @@ public class VerificationResourceTest {
 
         User createdUser = testValues.createTestUser();
 
-        Date date = Date.valueOf(LocalDate.now().toString());
+        Date date = new Date();//Date.valueOf(LocalDate.now().toString());
         String targetId = randomNumeric(11);
         String targetUserId = String.valueOf(createdUser.getUserId());
-        Enum<SourceSystem> sourceSystem = SourceSystem.MOBILE_PHONE;
+        SourceSystem sourceSystem = SourceSystem.MOBILE_PHONE;
 
         VerificationRequest request = new VerificationRequest(
                 date,
@@ -69,6 +70,8 @@ public class VerificationResourceTest {
 
         Response response = invocationBuilder.post(Entity.entity(request, MediaType.APPLICATION_JSON));
         System.out.println(response.readEntity(String.class));
+
+        testValues.removeTestUser(createdUser);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }

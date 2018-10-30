@@ -65,9 +65,9 @@ dependencies {
     compile group: 'com.carlosbecker', name: 'guice-junit-test-runner', version: '1.1'
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    provided group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+//    provided('org.projectlombok:lombok:1.18.2')
 
-//    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compileOnly 'org.projectlombok:lombok:1.18.2'
 //    apt "org.projectlombok:lombok:1.18.2"
 
 

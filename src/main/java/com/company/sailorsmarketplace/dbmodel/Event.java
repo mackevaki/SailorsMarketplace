@@ -1,5 +1,6 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,8 +12,7 @@ import java.util.*;
 public class Event {
 
     @Id
-    @GenericGenerator(name = "event_gen", strategy = "increment")
-    @GeneratedValue(generator = "event_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     private Long eventId;
 
@@ -25,23 +25,24 @@ public class Event {
     private String description;
 
     @Basic
-    @Column(name = "date_start", nullable = true)
+    @Column(name = "date_start")
     private Date dateStart;
 
     @Basic
-    @Column(name = "date_end", nullable = true)
+    @Column(name = "date_end")
     private Date dateEnd;
 
     @Basic
-    @Column(name = "place", nullable = true)
+    @Column(name = "place")
     private byte[] place;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
             foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private User chargeUser;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "user_events")
     private List<User> users = new ArrayList<>();
 

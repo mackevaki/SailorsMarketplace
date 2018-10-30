@@ -4,25 +4,25 @@ import com.company.sailorsmarketplace.dto.SourceSystem;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "verification_codes", schema = "smarket")
 public class VerificationCode implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Enumerated(javax.persistence.EnumType.STRING)
     @Column(name = "source_system", nullable = false)
-    private Enum<SourceSystem> sourceSystem;
+    private SourceSystem sourceSystem;
 
     @Basic
     @Column(name = "verification_code", nullable = false, length = 7)
-    private String verificationCode;
+    private String code;
 
-    @Basic
+    @Id
     @Column(name = "valid_till", nullable = false)
-    private Date validTill;
+    private String validTill;
 
     @Basic
     @Column(name = "target_id", nullable = false, length = 45)
@@ -34,8 +34,8 @@ public class VerificationCode implements Serializable {
 
 
     public VerificationCode(
-            Enum<SourceSystem> system,
-            Date validTill,
+            SourceSystem system,
+            String validTill,
             String targetId,
             String targetUserId) {
         this.sourceSystem = system;
@@ -47,27 +47,27 @@ public class VerificationCode implements Serializable {
     public VerificationCode() {
     }
 
-    public Enum<SourceSystem> getSourceSystem() {
+    public SourceSystem getSourceSystem() {
         return sourceSystem;
     }
 
-    public void setSourceSystem(Enum<SourceSystem> sourceSystem) {
+    public void setSourceSystem(SourceSystem sourceSystem) {
         this.sourceSystem = sourceSystem;
     }
 
-    public String getVerificationCode() {
-        return verificationCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
+    public void setCode(String verificationCode) {
+        this.code = verificationCode;
     }
 
-    public Date getValidTill() {
+    public String getValidTill() {
         return validTill;
     }
 
-    public void setValidTill(Date validTill) {
+    public void setValidTill(String validTill) {
         this.validTill = validTill;
     }
 
@@ -94,7 +94,7 @@ public class VerificationCode implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         VerificationCode that = (VerificationCode) o;
         return Objects.equals(sourceSystem, that.sourceSystem) &&
-                Objects.equals(verificationCode, that.verificationCode) &&
+                Objects.equals(code, that.code) &&
                 Objects.equals(validTill, that.validTill) &&
                 Objects.equals(targetId, that.targetId) &&
                 Objects.equals(targetUserId, that.targetUserId);
@@ -103,6 +103,6 @@ public class VerificationCode implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(sourceSystem, verificationCode, validTill, targetId, targetUserId);
+        return Objects.hash(sourceSystem, code, validTill, targetId, targetUserId);
     }
 }
