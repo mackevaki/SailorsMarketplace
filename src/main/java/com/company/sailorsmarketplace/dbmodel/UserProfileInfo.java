@@ -162,13 +162,13 @@ public class UserProfileInfo {
         return "User Profile:\n" +
                 "user id: " + userId + "\n" +
                 "firstname: " + firstname + "\n" +
-                "lastname" + lastname + "\n" +
-                "birthdate" + birthdate + "\n" +
-                "gender" + gender + "\n" +
-                "city" + city + "\n" +
-                "organization" + organization + "\n" +
-                "avatar" + Arrays.toString(avatar) + "\n" +
-                "telegram id" + telegramId + "\n";
+                "lastname: " + lastname + "\n" +
+                "birthdate: " + birthdate + "\n" +
+                "gender: " + gender + "\n" +
+                "city: " + city + "\n" +
+                "organization: " + organization + "\n" +
+                "avatar: " + Arrays.toString(avatar) + "\n" +
+                "telegram id: " + telegramId + "\n";
     }
 
 }
