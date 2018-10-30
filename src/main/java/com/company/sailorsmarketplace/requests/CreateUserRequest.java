@@ -4,9 +4,8 @@ import com.company.sailorsmarketplace.validators.PasswordMatches;
 import com.company.sailorsmarketplace.validators.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
