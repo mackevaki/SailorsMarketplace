@@ -56,9 +56,9 @@ public class TestValues {
         String salt = AuthenticationUtil.generateSalt(20);
         String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
 
-        while (userDAO.getByEmail(email) != null) {
-            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        }
+//        while (userDAO.getByEmail(email) != null) {
+//            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
+//        }
 
         User testUser = new User(
                 username,

@@ -2,7 +2,6 @@ package com.company.sailorsmarketplace.services;
 
 import com.company.sailorsmarketplace.dao.DAO;
 import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.EventDAO;
 import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllEventParams;

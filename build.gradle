@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.akhikhl.gretty' version "1.2.4"
+    id 'net.ltgt.apt' version '0.10'
 }
 
 group 'sailors.marketplace'
@@ -62,4 +63,17 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/com.carlosbecker/guice-junit-test-runner
     compile group: 'com.carlosbecker', name: 'guice-junit-test-runner', version: '1.1'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    provided group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+
+//    compileOnly 'org.projectlombok:lombok:1.18.2'
+//    apt "org.projectlombok:lombok:1.18.2"
+
+
+}
+
+configurations {
+    provided
+    compile.extendsFrom provided
 }

@@ -15,8 +15,8 @@ import java.util.Objects;
 public class User {
 
     @Id
-    @GenericGenerator(name = "user_gen", strategy = "increment")
-    @GeneratedValue(generator = "user_gen")
+//    @GenericGenerator(name = "user_gen", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//generator = "user_gen")
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -37,23 +37,23 @@ public class User {
 
     @Basic
     @Size(max = 12)
-    @Column(name = "telephone", nullable = true, length = 12)
+    @Column(name = "telephone", length = 12)
     private String telephone;
 
     @Basic
-    @Column(name = "salt", nullable = true, length = 45)
+    @Column(name = "salt", length = 45)
     private String salt;
 
     @Basic
-    @Column(name = "enabled", nullable = true)
+    @Column(name = "enabled")
     private Boolean enabled;
 
     @Basic
-    @Column(name = "token", nullable = true, length = 60)
+    @Column(name = "token", length = 60)
     private String token;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserProfileInfo userProfileInfo;
 
 //    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)

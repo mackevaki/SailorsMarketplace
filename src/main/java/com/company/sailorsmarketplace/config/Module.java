@@ -23,5 +23,6 @@ public class Module extends AbstractModule {
         bind(new TypeLiteral<DAO<Event>>(){}).to(EventDAO.class);
         bind(new TypeLiteral<DAO<UserProfileInfo>>(){}).to(UserProfileInfoDAO.class);
         bind(TestValues.class);
+        bind(VerificationService.class);
     }
 }

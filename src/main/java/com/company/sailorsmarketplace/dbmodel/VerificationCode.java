@@ -1,6 +1,6 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.company.sailorsmarketplace.dto.SourceSystem;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,10 +12,9 @@ import java.util.Objects;
 public class VerificationCode implements Serializable {
 
     @Id
-//    @GenericGenerator(name = "verif_gen", strategy = "increment")
-//    @GeneratedValue(generator = "verif_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "source_system", nullable = false)
-    private EnumType sourceSystem;
+    private Enum<SourceSystem> sourceSystem;
 
     @Basic
     @Column(name = "verification_code", nullable = false, length = 7)
@@ -33,20 +32,26 @@ public class VerificationCode implements Serializable {
     @Column(name = "target_user_id", nullable = false, length = 45)
     private String targetUserId;
 
-    public VerificationCode() {}
 
-    public VerificationCode(String verificationCode, Date validTill, String targetId, String targetUserId) {
-        this.verificationCode = verificationCode;
+    public VerificationCode(
+            Enum<SourceSystem> system,
+            Date validTill,
+            String targetId,
+            String targetUserId) {
+        this.sourceSystem = system;
         this.validTill = validTill;
         this.targetId = targetId;
         this.targetUserId = targetUserId;
     }
 
-    public EnumType getSourceSystem() {
+    public VerificationCode() {
+    }
+
+    public Enum<SourceSystem> getSourceSystem() {
         return sourceSystem;
     }
 
-    public void setSourceSystem(EnumType sourceSystem) {
+    public void setSourceSystem(Enum<SourceSystem> sourceSystem) {
         this.sourceSystem = sourceSystem;
     }
 
@@ -81,6 +86,7 @@ public class VerificationCode implements Serializable {
     public void setTargetUserId(String targetUserId) {
         this.targetUserId = targetUserId;
     }
+
 
     @Override
     public boolean equals(Object o) {
