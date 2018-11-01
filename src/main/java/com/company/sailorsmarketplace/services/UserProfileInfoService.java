@@ -1,54 +1,47 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserProfileInfoDAO;
+import com.company.sailorsmarketplace.dao.UserProfileInfoRepository;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.UserProfileInfoParams;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-public class UserProfileInfoService implements IUserProfileInfoService {
+import javax.inject.Inject;
+
+public class UserProfileInfoService {
+
+    private UserRepository userRepo;
 
     @Inject
-    Database database;
+    public UserProfileInfoService(final UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
-    @Override
     public UserProfileInfo createUserProfileInfoForNewUser(Long userId) {
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
-        User user = database.getById(userId);
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
+        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        UserProfileInfoRepository dao = new UserProfileInfoRepository();
 
         userProfileInfo.setUser(user);
         dao.save(userProfileInfo);
         user.setUserProfileInfo(userProfileInfo);
-        database.update(user);
+        userRepo.update(user);
 
         return userProfileInfo;
     }
 
-    @Override
     public String showUserProfileInfo(Long userId) throws UserNotFoundException {
-        User user = database.getById(userId);
-
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         return user.getUserProfileInfo().toString();
     }
 
-    @Override
     public void updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
-        User user;
+        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        if ((user = database.getById(userId)) == null) {
-            throw new UserNotFoundException();
-        }
-
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        UserProfileInfo userProfileInfo = dao.getById(userId);
+        UserProfileInfoRepository dao = new UserProfileInfoRepository();
+        UserProfileInfo userProfileInfo = dao.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         userProfileInfo.setFirstname(params.firstname);
         userProfileInfo.setLastname(params.lastname);
@@ -62,19 +55,13 @@ public class UserProfileInfoService implements IUserProfileInfoService {
         userProfileInfo.setUser(user);
         dao.update(userProfileInfo);
 
-        database.update(user);
+        userRepo.update(user);
     }
 
-    @Override
-    public UserProfileInfo getUserProfileInfoById(Long id) throws UserNotFoundException {
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        UserProfileInfo userProfileInfo = dao.getById(id);
+    public UserProfileInfo getUserProfileInfoById(Long userId) throws UserNotFoundException {
+        UserProfileInfoRepository dao = new UserProfileInfoRepository();
 
-        if (userProfileInfo == null) {
-            throw new UserNotFoundException();
-        }
-
-        return userProfileInfo;
+        return dao.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
 }

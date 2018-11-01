@@ -1,36 +1,35 @@
 package com.company.sailorsmarketplace.utils;
 
-import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserProfileInfoDAO;
+import com.company.sailorsmarketplace.dao.UserProfileInfoRepository;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
-import com.company.sailorsmarketplace.services.IAuthenticationService;
-
-import com.google.inject.Inject;
+import com.company.sailorsmarketplace.services.AuthenticationService;
 import com.google.inject.Singleton;
-import javax.validation.constraints.NotNull;
 
+import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.apache.commons.lang3.RandomStringUtils.*;
 
 @Singleton
 public class TestValues {
 
-    @Inject
-    private IAuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+    private final UserRepository userRepo;
 
     @Inject
-    private Database userDAO;
-
+    public TestValues(AuthenticationService authenticationService, UserRepository userRepo) {
+        this.authenticationService = authenticationService;
+        this.userRepo = userRepo;
+    }
 
     public Map initialTableWithNTestUsers(int number) {
         Map<Long, User> testUsers = new HashMap<>();
@@ -48,54 +47,20 @@ public class TestValues {
 
     @NotNull
     public User createTestUser() {
-        String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        String username = randomAlphanumeric(8);
-        String password = "#testPass1";
-        String telephone = "+" + randomNumeric(11);
-
-        String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
-
-        User testUser = new User(
-                username,
-                securePassword,
-                email,
-                telephone,
-                Authority.ROLE_USER
-        );
-
-        testUser.setSalt(salt);
-        testUser.setEnabled(false);
-
-        userDAO.save(testUser);
-        User user = userDAO.getByEmail(testUser.getEmail());
-
-        UserProfileInfo userProfileInfo = new UserProfileInfo(user.getUserId());
-        userProfileInfo.setUser(user);
-
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        dao.save(userProfileInfo);
-
-        user.setUserProfileInfo(userProfileInfo);
-        userDAO.update(user);
-
-        return user;
+        return createTestUserByAuthority(Authority.ROLE_USER, "User_");
     }
-
 
     public User createTestUserByAuthority(Authority authority, String prefix) {
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        String username = prefix + randomAlphanumeric(8);
         String password = prefix + "#Pass1" + randomAlphanumeric(5);
+        return createTestUserByAuthority(authority, prefix, email, password);
+    }
+
+    public User createTestUserByAuthority(Authority authority, String prefix, String email, String password) {
+        String username = prefix + randomAlphanumeric(8);
         String telephone = "+" + randomNumeric(11);
-
         String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
-
-        while (userDAO.getByEmail(email) != null) {
-            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        }
-
+        String securePassword = AuthenticationUtil.passwordHash(password, salt);
         User testUser = new User(
                 username,
                 securePassword,
@@ -106,19 +71,19 @@ public class TestValues {
 
         testUser.setSalt(salt);
         testUser.setEnabled(false);
-        userDAO.save(testUser);
+        userRepo.save(testUser);
 
-        User user = userDAO.getByEmail(testUser.getEmail());
-        UserProfileInfo userProfileInfo = new UserProfileInfo(user.getUserId());
-        userProfileInfo.setUser(user);
+        //User user = userRepo.getByEmail(testUser.getEmail());
+        UserProfileInfo userProfileInfo = new UserProfileInfo(testUser.getUserId());
+        userProfileInfo.setUser(testUser);
 
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
+        UserProfileInfoRepository dao = new UserProfileInfoRepository();
         dao.save(userProfileInfo);
 
-        user.setUserProfileInfo(userProfileInfo);
-        userDAO.update(user);
+        testUser.setUserProfileInfo(userProfileInfo);
+        userRepo.update(testUser);
 
-        return user;
+        return testUser;
     }
 
 
@@ -128,57 +93,23 @@ public class TestValues {
     }
 
 
-    public void removeTestUser(@NotNull User testUser) {
-        User entity = userDAO.getById(testUser.getUserId());
-
-        userDAO.delete(entity);
-        userDAO.getById(testUser.getUserId());
+    public void removeTestUser(final User testUser) {
+        userRepo.delete(testUser);
     }
 
     @NotNull
-    public AuthenticationRequest createTestUserForAutorization()  {
+    public AuthenticationRequest createTestUserForAuthorization() {
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-
-        String username = randomAlphanumeric(8);
         String password = "#testPass1" + randomAlphabetic(4);
-        String telephone = "+" + randomNumeric(11);
 
-        String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
-
-        while (userDAO.getByEmail(email) != null) {
-            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        }
-
-        User testUser = new User(
-                username,
-                securePassword,
-                email,
-                telephone,
-                Authority.ROLE_USER
-        );
-
-        testUser.setSalt(salt);
-        testUser.setEnabled(false);
-
-        userDAO.save(testUser);
-        User user = userDAO.getByEmail(testUser.getEmail());
-
-        UserProfileInfo userProfileInfo = new UserProfileInfo(user.getUserId());
-        userProfileInfo.setUser(user);
-
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        dao.save(userProfileInfo);
-
-        user.setUserProfileInfo(userProfileInfo);
-        userDAO.update(user);
-
+        createTestUserByAuthority(Authority.ROLE_USER, "User_", email, password);
         return new AuthenticationRequest(email, password);
     }
 
-    public AuthenticationDetails createSignatedInUserWithCredentials()  {
-        AuthenticationRequest loginDetails = createTestUserForAutorization();
-        User createdUser = userDAO.getByEmail(loginDetails.email);
+    public AuthenticationDetails createSignedInUserWithCredentials() {
+        AuthenticationRequest loginDetails = createTestUserForAuthorization();
+        User createdUser = userRepo.getByEmail(loginDetails.email)
+                .orElseThrow(() -> new IllegalStateException("No created user with generated email"));
 
         AllUserParams userDto = allUserParamsDto().email(loginDetails.email)
                 .username(createdUser.getUsername())

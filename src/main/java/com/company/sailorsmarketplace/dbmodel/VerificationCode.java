@@ -1,7 +1,5 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -12,8 +10,7 @@ import java.util.Objects;
 public class VerificationCode implements Serializable {
 
     @Id
-//    @GenericGenerator(name = "verif_gen", strategy = "increment")
-//    @GeneratedValue(generator = "verif_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "source_system", nullable = false)
     private EnumType sourceSystem;
 
@@ -96,7 +93,6 @@ public class VerificationCode implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(sourceSystem, verificationCode, validTill, targetId, targetUserId);
     }
 }

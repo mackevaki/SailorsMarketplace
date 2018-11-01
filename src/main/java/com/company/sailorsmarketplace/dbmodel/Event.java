@@ -1,18 +1,18 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "events", schema = "smarket")
 public class Event {
 
     @Id
-    @GenericGenerator(name = "event_gen", strategy = "increment")
-    @GeneratedValue(generator = "event_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     private Long eventId;
 
@@ -25,15 +25,15 @@ public class Event {
     private String description;
 
     @Basic
-    @Column(name = "date_start", nullable = true)
+    @Column(name = "date_start")
     private Date dateStart;
 
     @Basic
-    @Column(name = "date_end", nullable = true)
+    @Column(name = "date_end")
     private Date dateEnd;
 
     @Basic
-    @Column(name = "place", nullable = true)
+    @Column(name = "place")
     private byte[] place;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
@@ -112,6 +112,16 @@ public class Event {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public Event addUser(final User user) {
+        this.users.add(user);
+        return this;
+    }
+
+    public Event removeUser(final User user) {
+        this.users.remove(user);
+        return this;
     }
 
     public void setUsers(List<User> eventParticipations) {

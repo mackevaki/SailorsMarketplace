@@ -6,7 +6,7 @@ import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
-import com.company.sailorsmarketplace.services.IAuthenticationService;
+import com.company.sailorsmarketplace.services.AuthenticationService;
 import com.company.sailorsmarketplace.utils.Secured;
 import org.apache.http.HttpStatus;
 
@@ -19,8 +19,12 @@ import javax.ws.rs.core.Response;
 
 @Path("/authentication")
 public class AuthenticationResource {
+    private final AuthenticationService authenticationService;
+
     @Inject
-    private IAuthenticationService authenticationService;
+    public AuthenticationResource(final AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @POST
     @Path("/login")

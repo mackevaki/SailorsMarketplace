@@ -10,7 +10,8 @@ import java.util.Objects;
 public class UserProfileInfo {
 
     @Id
-    @Column(name = "user_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Basic

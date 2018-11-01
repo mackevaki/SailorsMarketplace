@@ -1,14 +1,14 @@
 package com.company.sailorsmarketplace.utils;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.validation.constraints.NotNull;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Random;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.validation.constraints.NotNull;
 
 public class AuthenticationUtil {
 
@@ -38,23 +38,16 @@ public class AuthenticationUtil {
         }
     }
 
-    public static String generateSecurePassword(@NotNull String password, @NotNull String salt) {
-        String returnValue = null;
+    public static String passwordHash(final String password, final String salt) {
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
 
-        returnValue = Base64.getEncoder().encodeToString(securePassword);
-
-        return returnValue;
+        return Base64.getEncoder().encodeToString(securePassword);
     }
 
     public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {
-        boolean returnValue = false;
-        // Generate New secure password with the same salt
-        String newSecurePassword = generateSecurePassword(providedPassword, salt);
-        // Check if two passwords are equal
-        returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
+        final String newSecurePassword = passwordHash(providedPassword, salt);
 
-        return returnValue;
+        return newSecurePassword.equalsIgnoreCase(securedPassword);
     }
 
     @NotNull

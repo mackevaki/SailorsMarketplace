@@ -5,9 +5,9 @@ import com.company.sailorsmarketplace.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import javax.swing.*;
+import java.util.Optional;
 
-public class EventDAO implements DAO<Event> {
+public class EventRepository {
 
     public Event save(Event event) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
@@ -19,40 +19,25 @@ public class EventDAO implements DAO<Event> {
         }
     }
 
-    public Event getById(Long id) {
-        Event event;
-
+    public Optional<Event> getById(Long id) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            event = session.get(Event.class, id);
-            return event;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error in getById EventDAO method", JOptionPane.ERROR_MESSAGE);
-            return null;
+            return Optional.ofNullable(session.get(Event.class, id));
         }
     }
 
     public void update(Event event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Event is null");
-        }
-
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.update(event);
-            session.flush();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            throw new RuntimeException();
+            transaction.commit();
         }
     }
 
     public void delete(Event event) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.delete(event);
-            tx.commit();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage(), ex);
+            transaction.commit();
         }
     }
 }

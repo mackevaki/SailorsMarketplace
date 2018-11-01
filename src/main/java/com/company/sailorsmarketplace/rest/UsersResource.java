@@ -5,8 +5,8 @@ import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.requests.CreateUserRequest;
 import com.company.sailorsmarketplace.requests.UpdateUserRequest;
-import com.company.sailorsmarketplace.services.IUserProfileInfoService;
-import com.company.sailorsmarketplace.services.IUserService;
+import com.company.sailorsmarketplace.services.UserProfileInfoService;
+import com.company.sailorsmarketplace.services.UserService;
 import com.company.sailorsmarketplace.utils.Secured;
 import org.apache.http.HttpStatus;
 
@@ -23,11 +23,14 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/users")
 public class UsersResource {
-    @Inject
-    IUserService userService;
+    private final UserService userService;
+    private final UserProfileInfoService userProfileInfoService;
 
     @Inject
-    IUserProfileInfoService userProfileInfoService;
+    public UsersResource(final UserService userService, final UserProfileInfoService userProfileInfoService) {
+        this.userService = userService;
+        this.userProfileInfoService = userProfileInfoService;
+    }
 
     @GET
     @Secured
@@ -64,12 +67,8 @@ public class UsersResource {
     @Secured
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
-
-        if (userService.deleteUser(id)) {
-            return Response.ok("removed").build();
-        } else {
-            return Response.status(404).entity(String.format("User with id %d does not exist\n", id)).build();
-        }
+        userService.deleteUser(id);
+        return Response.ok("removed").build();
     }
 
     @PUT
@@ -77,7 +76,6 @@ public class UsersResource {
     @Consumes(APPLICATION_JSON)
     @Path("/update/{id}")
     public Response updateUser(@Valid UpdateUserRequest request, @PathParam("id") Long userId) {
-
         final User updUser = userService.updateUser(
                 createUpdateUserParams()
                         .username(request.username)
@@ -87,19 +85,15 @@ public class UsersResource {
                         .build(), request.userId
         );
 
-        if (updUser != null) {
-            return Response.ok(updUser.getUserId()).build();
-        } else {
-            return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
-        }
+        return Response.ok(updUser.getUserId()).build();
     }
 
     @POST
     @Path("/reg")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response createUser(@Valid CreateUserRequest request) throws UserExistsException, ConstraintViolationException {
-
+    public Response createUser(@Valid CreateUserRequest request)
+            throws UserExistsException, ConstraintViolationException {
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()
                         .username(request.username)

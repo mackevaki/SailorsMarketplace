@@ -4,38 +4,39 @@ import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
-import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserDAO;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.utils.TestValues;
-import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)
 public class AuthenticationTest {
     private WebTarget target;
 
-    @Inject
-    private Database database;
+    private final UserRepository userRepo;
+    private final TestValues testValues;
 
     @Inject
-    private TestValues testValues;
+    public AuthenticationTest(final UserRepository userRepo, final TestValues testValues) {
+        this.userRepo = userRepo;
+        this.testValues = testValues;
+    }
 
     @Before
     public void startServer() throws Exception {
@@ -56,14 +57,14 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        AuthenticationRequest loginRequest = testValues.createTestUserForAutorization();
+        AuthenticationRequest loginRequest = testValues.createTestUserForAuthorization();
 
         Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
         AuthenticationDetails authenticationDetails = response.readEntity(AuthenticationDetails.class);
 
         System.out.println(authenticationDetails.id + " - id; token: " + authenticationDetails.token);
 
-        testValues.removeTestUser(database.getById(authenticationDetails.id));
+        userRepo.getById(authenticationDetails.id).ifPresent(testValues::removeTestUser);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
@@ -76,7 +77,7 @@ public class AuthenticationTest {
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
         String password = "#NotExists1";
 
-        while (database.getByEmail(email) != null) {
+        while (userRepo.getByEmail(email) != null) {
             email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
         }
 
@@ -92,7 +93,7 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        AuthenticationRequest rightLoginInfo = testValues.createTestUserForAutorization();
+        AuthenticationRequest rightLoginInfo = testValues.createTestUserForAuthorization();
         AuthenticationRequest loginRequestWithWrongPassword = new AuthenticationRequest(
                 rightLoginInfo.email,
                 rightLoginInfo.password + "Wrong"
@@ -100,7 +101,7 @@ public class AuthenticationTest {
 
         Response response = invocationBuilder.post(Entity.entity(loginRequestWithWrongPassword, MediaType.APPLICATION_JSON));
 
-        testValues.removeTestUser(database.getByEmail(rightLoginInfo.email));
+        userRepo.getByEmail(rightLoginInfo.email).ifPresent(testValues::removeTestUser);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
     }

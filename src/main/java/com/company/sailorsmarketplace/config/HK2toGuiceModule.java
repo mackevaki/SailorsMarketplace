@@ -1,9 +1,9 @@
 package com.company.sailorsmarketplace.config;
 
-import com.company.sailorsmarketplace.services.IAuthenticationService;
-import com.company.sailorsmarketplace.services.IEventService;
-import com.company.sailorsmarketplace.services.IUserProfileInfoService;
-import com.company.sailorsmarketplace.services.IUserService;
+import com.company.sailorsmarketplace.services.AuthenticationService;
+import com.company.sailorsmarketplace.services.EventService;
+import com.company.sailorsmarketplace.services.UserProfileInfoService;
+import com.company.sailorsmarketplace.services.UserService;
 import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Injector;
 import org.glassfish.hk2.api.Factory;
@@ -18,11 +18,11 @@ public class HK2toGuiceModule extends AbstractBinder {
 
     @Override
     protected void configure() {
-        bindFactory(new ServiceFactory<IUserService>(guiceInjector, IUserService.class)).to(IUserService.class);
-        bindFactory(new ServiceFactory<IAuthenticationService>(guiceInjector, IAuthenticationService.class)).to(IAuthenticationService.class);
-        bindFactory(new ServiceFactory<IUserProfileInfoService>(guiceInjector, IUserProfileInfoService.class)).to(IUserProfileInfoService.class);
-        bindFactory(new ServiceFactory<IEventService>(guiceInjector, IEventService.class)).to(IEventService.class);
-        bindFactory(new ServiceFactory<TestValues>(guiceInjector, TestValues.class)).to(TestValues.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, UserService.class)).to(UserService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, AuthenticationService.class)).to(AuthenticationService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, UserProfileInfoService.class)).to(UserProfileInfoService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, EventService.class)).to(EventService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, TestValues.class)).to(TestValues.class);
     }
 
     private static class ServiceFactory<T> implements Factory<T> {

@@ -1,32 +1,38 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.CreateUpdateUserParams;
 import com.company.sailorsmarketplace.exceptions.UserExistsException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService implements IUserService {
+import static java.lang.String.format;
+
+@Singleton
+public class UserService {
+
+    private final UserRepository userRepo;
 
     @Inject
-    private Database database;
+    public UserService(final UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
-    @Override
-    public User createNewUser(CreateUpdateUserParams params, Authority authority) throws UserExistsException {
+    public User createNewUser(final CreateUpdateUserParams params, final Authority authority)
+            throws UserExistsException {
         if (userExists(params.email)) {
             throw new UserExistsException(params.email);
         }
 
         String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(params.password, salt);
+        String securePassword = AuthenticationUtil.passwordHash(params.password, salt);
 
         final User userEntity = new User(
                 params.username,
@@ -39,72 +45,46 @@ public class UserService implements IUserService {
         userEntity.setSalt(salt);
         userEntity.setEnabled(false); // will be true after activation
 
-        return database.save(userEntity);
+        return userRepo.save(userEntity);
     }
 
-    @Override
-    public User updateUser(CreateUpdateUserParams user, Long userId) {
-        User old = database.getByEmail(user.email);
-
-        if (!old.getEmail().equals(user.email)) {
-            old.setEmail(user.email);
-        }
-
-        if (!old.getUsername().equals(user.username)) {
-            old.setUsername(user.username);
-        }
-
-        if (!old.getPassword().equals(user.password)) {
-            old.setPassword(user.password);
-        }
-
-        if (!old.getTelephone().equals(user.telephone)) {
-            old.setTelephone(user.telephone);
-        }
-
-        database.update(old);
-        return database.getById(userId);
+    public User updateUser(final CreateUpdateUserParams updateParams, final Long userId) {
+        return userRepo.getByEmail(updateParams.email)
+                .map(user -> user.setEmail(updateParams.email))
+                .map(user -> user.setUsername(updateParams.username))
+                .map(user -> user.setPassword(updateParams.password))
+                .map(user -> user.setTelephone(updateParams.telephone))
+                .map(user -> {
+                    userRepo.update(user);
+                    return user;
+                })
+                .orElseThrow(() -> new UserNotFoundException(format("No user with email \"%s\"", updateParams.email)));
     }
 
-    @Override
     public boolean userExists(String email) {
-        User user = database.getByEmail(email);
-        return user != null;
+        return userRepo.getByEmail(email).isPresent();
     }
 
-    @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
-        User user = database.getByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException(email);
-        }
-        return user;
+        return userRepo.getByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
-    @Override
     public User getUserByUsername(String username) {
         return null;
     }
 
-    @Override
     public User getUserById(Long id) throws UserNotFoundException {
-        User user = database.getById(id);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-        return user;
+        return userRepo.getById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    @Override
-    public boolean deleteUser(Long id) {
-        User entity = database.getById(id);
-        database.delete(entity);
-        return database.getById(id) == null;
+    public void deleteUser(Long id) {
+        userRepo.getById(id).ifPresent(userRepo::delete);
     }
 
-    @Override
     public List<User> getAllUsers() {
-        List<User> users = database.findAll();
+        List<User> users = userRepo.findAll();
         return new ArrayList<>(users);
     }
 
