@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "events", schema = "smarket")
+@Table(name = "events")
 public class Event {
 
     @Id
@@ -36,7 +36,7 @@ public class Event {
     @Column(name = "place")
     private byte[] place;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
             foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
     private User chargeUser;

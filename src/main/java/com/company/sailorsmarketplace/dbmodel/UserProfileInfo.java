@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users_profiles", schema = "smarket")
+@Table(name = "users_profiles")
 public class UserProfileInfo {
 
     @Id

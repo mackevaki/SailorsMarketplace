@@ -7,7 +7,6 @@ import com.company.sailorsmarketplace.config.Module;
 import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
-import com.company.sailorsmarketplace.utils.TestValues;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -27,16 +26,13 @@ import static org.junit.Assert.assertThat;
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)
 public class AuthenticationTest {
-    private WebTarget target;
-
-    private final UserRepository userRepo;
-    private final TestValues testValues;
 
     @Inject
-    public AuthenticationTest(final UserRepository userRepo, final TestValues testValues) {
-        this.userRepo = userRepo;
-        this.testValues = testValues;
-    }
+    private UserRepository userRepo;
+    @Inject
+    private UserTestData userTestData;
+
+    private WebTarget target;
 
     @Before
     public void startServer() throws Exception {
@@ -57,14 +53,14 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        AuthenticationRequest loginRequest = testValues.createTestUserForAuthorization();
+        AuthenticationRequest loginRequest = userTestData.createTestUserForAuthorization();
 
         Response response = invocationBuilder.post(Entity.entity(loginRequest, MediaType.APPLICATION_JSON));
         AuthenticationDetails authenticationDetails = response.readEntity(AuthenticationDetails.class);
 
         System.out.println(authenticationDetails.id + " - id; token: " + authenticationDetails.token);
 
-        userRepo.getById(authenticationDetails.id).ifPresent(testValues::removeTestUser);
+        userRepo.getById(authenticationDetails.id).ifPresent(userTestData::removeTestUser);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
@@ -76,10 +72,6 @@ public class AuthenticationTest {
 
         String email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
         String password = "#NotExists1";
-
-        while (userRepo.getByEmail(email) != null) {
-            email = randomAlphanumeric(7, 20) + "@" + randomAlphabetic(2, 14)+ "." + randomAlphabetic(2, 5);
-        }
 
         AuthenticationRequest loginRequest = new AuthenticationRequest(email, password);
 
@@ -93,7 +85,7 @@ public class AuthenticationTest {
         WebTarget userWebTarget = target.path("/rest/authentication/login");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        AuthenticationRequest rightLoginInfo = testValues.createTestUserForAuthorization();
+        AuthenticationRequest rightLoginInfo = userTestData.createTestUserForAuthorization();
         AuthenticationRequest loginRequestWithWrongPassword = new AuthenticationRequest(
                 rightLoginInfo.email,
                 rightLoginInfo.password + "Wrong"
@@ -101,7 +93,7 @@ public class AuthenticationTest {
 
         Response response = invocationBuilder.post(Entity.entity(loginRequestWithWrongPassword, MediaType.APPLICATION_JSON));
 
-        userRepo.getByEmail(rightLoginInfo.email).ifPresent(testValues::removeTestUser);
+        userRepo.getByEmail(rightLoginInfo.email).ifPresent(userTestData::removeTestUser);
 
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
     }

@@ -1,4 +1,4 @@
-package com.company.sailorsmarketplace.utils;
+package sailorsmarketplace;
 
 import com.company.sailorsmarketplace.dao.UserProfileInfoRepository;
 import com.company.sailorsmarketplace.dao.UserRepository;
@@ -9,6 +9,7 @@ import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.services.AuthenticationService;
+import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Singleton;
 
 import javax.inject.Inject;
@@ -20,13 +21,13 @@ import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserPa
 import static org.apache.commons.lang3.RandomStringUtils.*;
 
 @Singleton
-public class TestValues {
+public class UserTestData {
 
     private final AuthenticationService authenticationService;
     private final UserRepository userRepo;
 
     @Inject
-    public TestValues(AuthenticationService authenticationService, UserRepository userRepo) {
+    public UserTestData(AuthenticationService authenticationService, UserRepository userRepo) {
         this.authenticationService = authenticationService;
         this.userRepo = userRepo;
     }

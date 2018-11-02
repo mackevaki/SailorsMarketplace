@@ -8,7 +8,6 @@ import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.CreateUserRequest;
-import com.company.sailorsmarketplace.utils.TestValues;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -28,16 +27,13 @@ import static org.junit.Assert.assertThat;
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)
 public class UsersResourceTest {
-    private WebTarget target;
-
-    private final UserRepository userRepo;
-    private final TestValues testValues;
 
     @Inject
-    public UsersResourceTest(UserRepository userRepo, TestValues testValues) {
-        this.userRepo = userRepo;
-        this.testValues = testValues;
-    }
+    private UserRepository userRepo;
+    @Inject
+    private UserTestData userTestData;
+
+    private WebTarget target;
 
     @Before
     public void startServer() throws Exception {
@@ -83,7 +79,7 @@ public class UsersResourceTest {
         WebTarget userWebTarget = target.path("/rest/users/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        User existedUser = testValues.createTestUser();
+        User existedUser = userTestData.createTestUser();
 
         CreateUserRequest createUserRequest = new CreateUserRequest(
                 existedUser.getUsername(),
@@ -100,7 +96,7 @@ public class UsersResourceTest {
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
 
         // cleanup
-        testValues.removeTestUser(existedUser);
+        userTestData.removeTestUser(existedUser);
     }
 
     @Test
@@ -132,7 +128,7 @@ public class UsersResourceTest {
     @Test
     public void shouldShowUserProfileInfoWhenAllInputsAreValid() {
         // given
-        User testUser = testValues.createTestUser();
+        User testUser = userTestData.createTestUser();
         Long userId = testUser.getUserId();
 
         WebTarget userWebTarget = target.path("/rest/profile_info/" + userId);
@@ -145,13 +141,13 @@ public class UsersResourceTest {
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         // cleanup
-        testValues.removeTestUser(testUser);
+        userTestData.removeTestUser(testUser);
     }
 
     @Test
     public void shouldRemoveUserWhenThereAreAllCredentials() {
         // given
-        AuthenticationDetails details = testValues.createSignedInUserWithCredentials();
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String token = details.token;
         Long userId = details.id;
 
@@ -170,7 +166,7 @@ public class UsersResourceTest {
     @Test
     public void shouldNotRemoveUserWhenTokenIsNotValid() {
         // given
-        AuthenticationDetails details = testValues.createSignedInUserWithCredentials();
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String invalidToken = details.token + "Invalid";
         Long userId = details.id;
 
@@ -186,13 +182,13 @@ public class UsersResourceTest {
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
 
         // cleanup
-        userRepo.getById(details.id).ifPresent(testValues::removeTestUser);
+        userRepo.getById(details.id).ifPresent(userTestData::removeTestUser);
     }
 
     @Test
     public void shouldGetUserWhenThereAreAllCredentials() {
         // given
-        AuthenticationDetails details = testValues.createSignedInUserWithCredentials();
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String token = details.token;
         Long userId = details.id;
 
@@ -208,6 +204,6 @@ public class UsersResourceTest {
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         // cleanup
-        userRepo.getById(details.id).ifPresent(testValues::removeTestUser);
+        userRepo.getById(details.id).ifPresent(userTestData::removeTestUser);
     }
 }

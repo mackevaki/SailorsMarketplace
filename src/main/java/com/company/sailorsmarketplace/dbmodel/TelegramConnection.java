@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "telegram_connections", schema = "smarket")
+@Table(name = "telegram_connections")
 @IdClass(TelegramConnectionPK.class)
 public class TelegramConnection {
 

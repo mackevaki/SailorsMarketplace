@@ -45,11 +45,8 @@ public class EventResource {
     @DELETE
     @Path("/{id}")
     public Response removeEvent(@PathParam("id") Long id) {
-        if (eventService.deleteEvent(id)) {
-            return Response.ok("removed").build();
-        } else {
-            return Response.status(404).entity(String.format("Event with id %d does not exist\n", id)).build();
-        }
+        eventService.deleteEvent(id);
+        return Response.ok("removed").build();
     }
 
 

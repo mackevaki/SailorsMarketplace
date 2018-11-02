@@ -1,5 +1,7 @@
 package com.company.sailorsmarketplace.dbmodel;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users", schema = "smarket")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -64,9 +66,10 @@ public class User {
 //    private List<TelegramConnection> telegramConnections = new ArrayList<>();
 
     @ElementCollection(targetClass = Authority.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = Authority.TABLE, joinColumns =
-                            @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
+    @CollectionTable(name = Authority.TABLE,
+            joinColumns = @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
     @Column(name = Authority.COLUMN_AUTHORITY)
     private List<Authority> authorities;
 
