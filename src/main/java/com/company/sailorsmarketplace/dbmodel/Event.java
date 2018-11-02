@@ -21,7 +21,7 @@ public class Event {
     private String name;
 
     @Basic
-    @Column(name = "description", nullable = false, length = 100)
+    @Column(name = "description", nullable = false, length = 45)
     private String description;
 
     @Basic
@@ -36,12 +36,12 @@ public class Event {
     @Column(name = "place")
     private byte[] place;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
             foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
     private User chargeUser;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(name = "user_events")
     private List<User> users = new ArrayList<>();
 

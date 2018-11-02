@@ -20,7 +20,7 @@ public class TelegramConnection {
     @Column(name = "verified", nullable = false)
     private Boolean verified;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false,
                 foreignKey = @ForeignKey(name = "telegram_connections_users_user_id_fk"))
     private User user;

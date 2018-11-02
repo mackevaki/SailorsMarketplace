@@ -1,7 +1,5 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,8 +8,7 @@ import java.util.Objects;
 public class Organization {
 
     @Id
-    @GenericGenerator(name = "org_gen", strategy = "increment")
-    @GeneratedValue(generator = "org_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "org_id", nullable = false)
     private Integer orgId;
 
@@ -19,7 +16,7 @@ public class Organization {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false,
                 foreignKey = @ForeignKey(name = "organizations_owner_id_user_id_fk"))
     private User owner;

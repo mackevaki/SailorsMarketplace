@@ -61,8 +61,8 @@ public class EventResourceTest {
 
         User createdUser = userTestData.createTestUser();
 
-        String eventName = "Event: " + randomAlphabetic(15, 45 - 7);
-        String description = randomAlphabetic(20, 100);
+        String eventName = "Event: " + randomAlphabetic(15, 45 - 8);
+        String description = randomAlphabetic(20, 45);
         String  address = randomAlphabetic(15) + "street, " + randomNumeric(2);
         byte[] place = address.getBytes(StandardCharsets.UTF_8);
 
