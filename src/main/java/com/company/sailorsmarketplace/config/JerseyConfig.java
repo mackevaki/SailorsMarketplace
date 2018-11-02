@@ -26,7 +26,6 @@ public class JerseyConfig extends ResourceConfig {
         register(UserNotFoundExceptionMapper.class);
         register(AuthenticationExceptionMapper.class);
         register(ConstraintViolationMapper.class);
-        register(ApplicationExceptionMapper.class);
 
         // Filters
         register(AuthenticationFilter.class);

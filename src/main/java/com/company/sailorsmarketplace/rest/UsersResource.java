@@ -68,7 +68,7 @@ public class UsersResource {
         if (userService.deleteUser(id)) {
             return Response.ok("removed").build();
         } else {
-            return Response.status(404).entity(String.format("User with id %d does not exist\n", id)).build();
+            return Response.status(HttpStatus.SC_NOT_FOUND).entity(String.format("User with id %d does not exist\n", id)).build();
         }
     }
 

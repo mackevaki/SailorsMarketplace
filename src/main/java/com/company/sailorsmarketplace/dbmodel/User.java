@@ -1,10 +1,10 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,8 @@ import java.util.Objects;
 public class User {
 
     @Id
-    @GenericGenerator(name = "user_gen", strategy = "increment")
-    @GeneratedValue(generator = "user_gen")
-    @Column(name = "user_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
     @Basic
@@ -28,7 +27,7 @@ public class User {
     @Basic
     @Email(message = "Please provide a valid e-mail")
     @NotEmpty(message = "Please provide an e-mail")
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email", nullable = false, length = 45, unique = true)
     private String email;
 
     @Basic

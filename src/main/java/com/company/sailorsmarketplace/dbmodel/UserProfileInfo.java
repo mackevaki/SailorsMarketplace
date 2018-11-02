@@ -14,35 +14,35 @@ public class UserProfileInfo {
     private Long userId;
 
     @Basic
-    @Column(name = "firstname", nullable = true, length = 45)
+    @Column(name = "firstname", length = 45)
     private String firstname;
 
     @Basic
-    @Column(name = "lastname", nullable = true, length = 45)
+    @Column(name = "lastname", length = 45)
     private String lastname;
 
     @Basic
-    @Column(name = "birthdate", nullable = true)
+    @Column(name = "birthdate")
     private Date birthdate;
 
     @Basic
-    @Column(name = "gender", nullable = true)
+    @Column(name = "gender")
     private Enum gender;
 
     @Basic
-    @Column(name = "city", nullable = true, length = 45)
+    @Column(name = "city", length = 45)
     private String city;
 
     @Basic
-    @Column(name = "organization", nullable = true, length = 45)
+    @Column(name = "organization", length = 45)
     private String organization;
 
     @Basic
-    @Column(name = "avatar", nullable = true)
+    @Column(name = "avatar")
     private byte[] avatar;
 
     @Basic
-    @Column(name = "telegram_id", nullable = true)
+    @Column(name = "telegram_id")
     private Integer telegramId;
 
     @OneToOne(mappedBy = "userProfileInfo")
@@ -162,13 +162,13 @@ public class UserProfileInfo {
         return "User Profile:\n" +
                 "user id: " + userId + "\n" +
                 "firstname: " + firstname + "\n" +
-                "lastname" + lastname + "\n" +
-                "birthdate" + birthdate + "\n" +
-                "gender" + gender + "\n" +
-                "city" + city + "\n" +
-                "organization" + organization + "\n" +
-                "avatar" + Arrays.toString(avatar) + "\n" +
-                "telegram id" + telegramId + "\n";
+                "lastname: " + lastname + "\n" +
+                "birthdate: " + birthdate + "\n" +
+                "gender: " + gender + "\n" +
+                "city: " + city + "\n" +
+                "organization: " + organization + "\n" +
+                "avatar: " + Arrays.toString(avatar) + "\n" +
+                "telegram id: " + telegramId + "\n";
     }
 
 }
