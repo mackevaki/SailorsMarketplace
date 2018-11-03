@@ -1,55 +1,42 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllUserParams;
 import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
-import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.inject.Inject;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
+import static com.company.sailorsmarketplace.utils.AuthenticationUtil.verifyUserPassword;
 
-public class AuthenticationService implements IAuthenticationService {
+public class AuthenticationService {
+
+    private final UserRepository userRepo;
+    private final UserService userService;
+
     @Inject
-    private Database database;
+    public AuthenticationService(UserRepository userRepo, UserService userService) {
+        this.userRepo = userRepo;
+        this.userService = userService;
+    }
 
-    @Inject
-    private IUserService userService;
+    public AllUserParams authenticate(final String email, final String providedPassword)
+            throws AuthenticationException, UserNotFoundException {
+        final User user = userService.getUserByEmail(email);
 
-    @Override
-    public AllUserParams authenticate(String email, String userPassword) throws AuthenticationException, UserNotFoundException {
-        AllUserParams userDto;
-
-        User user = null;
-        try {
-            user = userService.getUserByEmail(email); // Email must be unique in our system
-        } catch (UserNotFoundException e) {
-            throw new UserNotFoundException(email);
-        }
-
-        // perform authentication business logic
-        String secureUserPassword = null;
-        secureUserPassword = AuthenticationUtil.generateSecurePassword(userPassword, user.getSalt());
-
-        boolean authenticated = false;
-
-        if (secureUserPassword != null && secureUserPassword.equalsIgnoreCase(user.getPassword())) {
-            if (email != null && email.equalsIgnoreCase(user.getEmail())) {
-                authenticated = true;
-            }
-        }
+        final boolean authenticated = verifyUserPassword(providedPassword, user.getPassword(), user.getSalt());
 
         if (!authenticated) {
             throw new AuthenticationException("Authentication failed");
         }
 
-        userDto = allUserParamsDto()
+        return allUserParamsDto()
                 .id(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -58,11 +45,8 @@ public class AuthenticationService implements IAuthenticationService {
                 .salt(user.getSalt())
                 .enabled(user.getEnabled())
                 .build();
-
-        return userDto;
     }
 
-    @Override
     public String issueSecureToken(AllUserParams userDto) throws AuthenticationException {
         String returnValue = null;
 
@@ -88,10 +72,9 @@ public class AuthenticationService implements IAuthenticationService {
         return returnValue;
     }
 
-    @Override
     public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
         String salt = AuthenticationUtil.generateSalt(30);
-        String secureUserPassword = AuthenticationUtil.generateSecurePassword(password, salt);
+        String secureUserPassword = AuthenticationUtil.passwordHash(password, salt);
 
         userDto = allUserParamsDto()
                 .id(userDto.id)
@@ -109,28 +92,24 @@ public class AuthenticationService implements IAuthenticationService {
         user.setSalt(userDto.salt);
         user.setEnabled(userDto.enabled);
 
-        database.update(user);
+        userRepo.update(user);
 
         return userDto;
     }
 
-    @Override
-    public User removeSecureCredentials(Long userId) {
-        User user = database.getById(userId);
-
-        user.setToken(null);
-        user.setSalt(null);
-
-        database.update(user);
-
-        return user;
+    public User removeSecureCredentials(final Long userId) {
+        return userRepo.getById(userId)
+                .map(user -> user.setToken(null))
+                .map(user -> user.setSalt(null))
+                .map(userRepo::update)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    private void storeAccessToken(@NotNull AllUserParams userDto, String tokenToSaveToDatabase) {
-        User user = database.getByEmail(userDto.email);
-
-        user.setToken(tokenToSaveToDatabase);
-        database.update(user);
+    private void storeAccessToken(final AllUserParams userDto, final String tokenToSaveToDatabase) {
+        userRepo.getByEmail(userDto.email)
+                .map(user -> user.setToken(tokenToSaveToDatabase))
+                .map(userRepo::update)
+                .orElseThrow(() -> new UserNotFoundException(userDto.email));
     }
 
 

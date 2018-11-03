@@ -1,14 +1,14 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "events", schema = "smarket")
+@Table(name = "events")
 public class Event {
 
     @Id
@@ -36,13 +36,12 @@ public class Event {
     @Column(name = "place")
     private byte[] place;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToOne
     @JoinColumn(name = "charge_user_id", referencedColumnName = "user_id", nullable = false,
             foreignKey = @ForeignKey(name = "events_charge_user_id_user_id_fk"))
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private User chargeUser;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToMany
     @JoinTable(name = "user_events")
     private List<User> users = new ArrayList<>();
 
@@ -113,6 +112,16 @@ public class Event {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public Event addUser(final User user) {
+        this.users.add(user);
+        return this;
+    }
+
+    public Event removeUser(final User user) {
+        this.users.remove(user);
+        return this;
     }
 
     public void setUsers(List<User> eventParticipations) {

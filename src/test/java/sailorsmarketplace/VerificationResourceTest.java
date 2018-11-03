@@ -8,7 +8,6 @@ import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.SourceSystem;
 import com.company.sailorsmarketplace.requests.VerificationRequest;
 import com.company.sailorsmarketplace.services.VerificationService;
-import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -19,7 +18,6 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.Date;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -32,7 +30,7 @@ public class VerificationResourceTest {
     private WebTarget target;
 
     @Inject
-    private TestValues testValues;
+    private UserTestData testValues;
 
     @Inject
     private VerificationService serv;
@@ -59,7 +57,7 @@ public class VerificationResourceTest {
 
         Date date = new Date();//Date.valueOf(LocalDate.now().toString());
         String targetId = randomNumeric(11);
-        String targetUserId = String.valueOf(createdUser.getUserId());
+        Long targetUserId = createdUser.getUserId();
         SourceSystem sourceSystem = SourceSystem.MOBILE_PHONE;
 
         VerificationRequest request = new VerificationRequest(
@@ -69,7 +67,6 @@ public class VerificationResourceTest {
                 targetUserId);
 
         Response response = invocationBuilder.post(Entity.entity(request, MediaType.APPLICATION_JSON));
-        System.out.println(response.readEntity(String.class));
 
         testValues.removeTestUser(createdUser);
 

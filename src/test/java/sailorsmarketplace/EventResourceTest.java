@@ -4,10 +4,10 @@ import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
+import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
 import com.company.sailorsmarketplace.utils.HibernateUtils;
-import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.hibernate.Session;
@@ -21,13 +21,11 @@ import javax.persistence.Query;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -35,10 +33,13 @@ import static org.junit.Assert.assertThat;
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)
 public class EventResourceTest {
-    private WebTarget target;
 
     @Inject
-    private TestValues testValues;
+    private UserTestData userTestData;
+    @Inject
+    EventTestData eventTestData;
+
+    private WebTarget target;
 
     @Before
     public void startServer() throws Exception {
@@ -58,10 +59,10 @@ public class EventResourceTest {
         WebTarget userWebTarget = target.path("/rest/events/create");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        User createdUser = testValues.createTestUser();
+        User createdUser = userTestData.createTestUser();
 
-        String eventName = "Event: " + randomAlphabetic(15, 50);
-        String description = randomAlphabetic(20, 100);
+        String eventName = "Event: " + randomAlphabetic(15, 45 - 8);
+        String description = randomAlphabetic(20, 45);
         String  address = randomAlphabetic(15) + "street, " + randomNumeric(2);
         byte[] place = address.getBytes(StandardCharsets.UTF_8);
 
@@ -79,15 +80,20 @@ public class EventResourceTest {
 
     @Test
     public void shouldRemoveEventWhenThereAreAllCredentials() {
-        WebTarget userWebTarget = target.path("/rest/events/" + getLastEventId());
+        // given
+        final User user = userTestData.createTestUser();
+        final Event event = eventTestData.anEvent(user);
+        WebTarget userWebTarget = target.path("/rest/events/" + event.getEventId());
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
+        // when
         Response response = invocationBuilder.delete();
 
-        String info = response.readEntity(String.class);
-        System.out.println(info);
-
+        //then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+        // cleanup
+        userTestData.removeTestUser(user);
     }
 
     private Long getLastEventId() {

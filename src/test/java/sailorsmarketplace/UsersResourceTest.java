@@ -4,41 +4,36 @@ import com.carlosbecker.guice.GuiceModules;
 import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
-import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.CreateUserRequest;
-
-import com.company.sailorsmarketplace.utils.TestValues;
-import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.apache.commons.lang3.RandomStringUtils.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)
 public class UsersResourceTest {
+
+    @Inject
+    private UserRepository userRepo;
+    @Inject
+    private UserTestData userTestData;
+
     private WebTarget target;
-
-    @Inject
-    private Database database;
-
-    @Inject
-    private TestValues testValues;
-
 
     @Before
     public void startServer() throws Exception {
@@ -55,6 +50,7 @@ public class UsersResourceTest {
 
     @Test
     public void shouldCreateUserWhenAllInputsAreValid() {
+        // given
         WebTarget userWebTarget = target.path("/rest/users/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
@@ -70,16 +66,20 @@ public class UsersResourceTest {
                 telephone
         );
 
+        // when
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
+
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
     public void shouldNotCreateUserWhenHeIsAlreadyRegistered() {
+        // given
         WebTarget userWebTarget = target.path("/rest/users/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
-        User existedUser = testValues.createTestUser();
+        User existedUser = userTestData.createTestUser();
 
         CreateUserRequest createUserRequest = new CreateUserRequest(
                 existedUser.getUsername(),
@@ -89,15 +89,19 @@ public class UsersResourceTest {
                 existedUser.getTelephone()
         );
 
+        // when
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
 
-        testValues.removeTestUser(existedUser);
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+
+        // cleanup
+        userTestData.removeTestUser(existedUser);
     }
 
     @Test
     public void shouldNotCreateUserWhenEmailIsInvalid() {
+        // given
         WebTarget userWebTarget = target.path("/rest/users/reg");
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
@@ -113,85 +117,93 @@ public class UsersResourceTest {
                 telephone
         );
 
+        // when
         Response response = invocationBuilder.post(Entity.entity(createUserRequest, MediaType.APPLICATION_JSON));
+
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
 
     @Test
     public void shouldShowUserProfileInfoWhenAllInputsAreValid() {
-        User testUser = testValues.createTestUser();
+        // given
+        User testUser = userTestData.createTestUser();
         Long userId = testUser.getUserId();
 
         WebTarget userWebTarget = target.path("/rest/profile_info/" + userId);
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
+        // when
         Response response = invocationBuilder.get();
-        String info = response.readEntity(String.class);
-        System.out.println(info);
 
-        testValues.removeTestUser(testUser);
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+        // cleanup
+        userTestData.removeTestUser(testUser);
     }
 
     @Test
     public void shouldRemoveUserWhenThereAreAllCredentials() {
-        AuthenticationDetails details = testValues.createSignatedInUserWithCredentials();
+        // given
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String token = details.token;
         Long userId = details.id;
 
         WebTarget userWebTarget = target.path("/rest/users/" + userId);
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
+        // when
         Response response = invocationBuilder
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .delete();
 
-        String info = response.readEntity(String.class);
-        System.out.println(info);
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
     public void shouldNotRemoveUserWhenTokenIsNotValid() {
-        AuthenticationDetails details = testValues.createSignatedInUserWithCredentials();
+        // given
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String invalidToken = details.token + "Invalid";
         Long userId = details.id;
 
         WebTarget userWebTarget = target.path("/rest/users/" + userId);
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
+        // when
         Response response = invocationBuilder
                 .header("Authorization", "Bearer " + invalidToken)
                 .delete();
 
-        String info = response.readEntity(String.class);
-        System.out.println(info);
-        testValues.removeTestUser(database.getById(details.id));
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
+
+        // cleanup
+        userRepo.getById(details.id).ifPresent(userTestData::removeTestUser);
     }
 
     @Test
     public void shouldGetUserWhenThereAreAllCredentials() {
-        AuthenticationDetails details = testValues.createSignatedInUserWithCredentials();
+        // given
+        AuthenticationDetails details = userTestData.createSignedInUserWithCredentials();
         String token = details.token;
         Long userId = details.id;
 
         WebTarget userWebTarget = target.path("/rest/users/" + userId);
         Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
 
+        // when
         Response response = invocationBuilder
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .get();
 
-        String info = response.readEntity(String.class);
-        System.out.println(info);
-
-        testValues.removeTestUser(database.getById(details.id));
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+        // cleanup
+        userRepo.getById(details.id).ifPresent(userTestData::removeTestUser);
     }
 }

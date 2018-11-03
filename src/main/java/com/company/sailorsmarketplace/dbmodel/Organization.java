@@ -1,12 +1,10 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "organizations", schema = "smarket")
+@Table(name = "organizations")
 public class Organization {
 
     @Id

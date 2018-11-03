@@ -1,21 +1,26 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.VerificationCode;
 import com.company.sailorsmarketplace.dto.AllVerificationParams;
 import com.company.sailorsmarketplace.dto.VerificationParams;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.utils.HibernateUtils;
-import com.google.inject.Inject;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import javax.inject.Inject;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 public class VerificationService {
 
+    private UserRepository userRepo;
+
     @Inject
-    private Database database;
+    public VerificationService(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     public AllVerificationParams createVerificationCode(VerificationParams params) {
 
@@ -28,7 +33,7 @@ public class VerificationService {
 
         String code = randomNumeric(8);
 
-        if (database.getById(Long.valueOf(params.targetUserId)) != null) {
+        if (userRepo.getById(params.targetUserId).isPresent()) {
             verificationCode.setCode(code);
 
             try (final Session session = HibernateUtils.getSessionFactory().openSession()) {

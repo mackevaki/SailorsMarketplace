@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
+        <property name="connection.driver_class">org.h2.Driver</property>
+        <property name="connection.url">jdbc:h2:mem:smarket</property>
+
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="show_sql">true</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.query.factory_class">
+            org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory
+        </property>
+
+        <property name="hibernate.id.new_generator_mappings">true</property>
+
+        <mapping class="com.company.sailorsmarketplace.dbmodel.User"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.UserProfileInfo"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.VerificationCode"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.AdminsRoles"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.Event"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.Organization"/>
+        <mapping class="com.company.sailorsmarketplace.dbmodel.TelegramConnection"/>
+    </session-factory>
+</hibernate-configuration>

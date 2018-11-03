@@ -1,6 +1,7 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users", schema = "smarket")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -65,9 +66,10 @@ public class User {
 //    private List<TelegramConnection> telegramConnections = new ArrayList<>();
 
     @ElementCollection(targetClass = Authority.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = Authority.TABLE, joinColumns =
-                            @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
+    @CollectionTable(name = Authority.TABLE,
+            joinColumns = @JoinColumn(name = Authority.COLUMN_USERID, referencedColumnName = "user_id"))
     @Column(name = Authority.COLUMN_AUTHORITY)
     private List<Authority> authorities;
 
@@ -110,24 +112,27 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public Boolean getEnabled() {
@@ -142,24 +147,27 @@ public class User {
         return telephone;
     }
 
-    public void setTelephone(String telephone) {
+    public User setTelephone(String telephone) {
         this.telephone = telephone;
+        return this;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public User setToken(String token) {
         this.token = token;
+        return this;
     }
 
     public String getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public User setSalt(String salt) {
         this.salt = salt;
+        return this;
     }
 
     public UserProfileInfo getUserProfileInfo() {
@@ -172,6 +180,11 @@ public class User {
 
     public List<Event> getEvents() {
         return events;
+    }
+
+    public User addEvent(Event event) {
+        this.events.add(event);
+        return this;
     }
 
     public void setEvents(List<Event> events) {
