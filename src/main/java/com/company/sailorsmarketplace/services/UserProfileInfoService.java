@@ -11,20 +11,23 @@ import javax.inject.Inject;
 
 public class UserProfileInfoService {
 
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
+    private final UserProfileInfoRepository userProfileInfoRepo;
+
 
     @Inject
-    public UserProfileInfoService(final UserRepository userRepo) {
+    public UserProfileInfoService(final UserRepository userRepo,
+                                  final UserProfileInfoRepository userProfileInfoRepo) {
         this.userRepo = userRepo;
+        this.userProfileInfoRepo = userProfileInfoRepo;
     }
 
     public UserProfileInfo createUserProfileInfoForNewUser(Long userId) {
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
         User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        UserProfileInfoRepository dao = new UserProfileInfoRepository();
 
         userProfileInfo.setUser(user);
-        dao.save(userProfileInfo);
+        userProfileInfoRepo.save(userProfileInfo);
         user.setUserProfileInfo(userProfileInfo);
         userRepo.update(user);
 
@@ -40,8 +43,8 @@ public class UserProfileInfoService {
     public void updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
         User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        UserProfileInfoRepository dao = new UserProfileInfoRepository();
-        UserProfileInfo userProfileInfo = dao.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        UserProfileInfo userProfileInfo = userProfileInfoRepo.getById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         userProfileInfo.setFirstname(params.firstname);
         userProfileInfo.setLastname(params.lastname);
@@ -53,15 +56,13 @@ public class UserProfileInfoService {
 
         user.setUserProfileInfo(userProfileInfo);
         userProfileInfo.setUser(user);
-        dao.update(userProfileInfo);
+        userProfileInfoRepo.update(userProfileInfo);
 
         userRepo.update(user);
     }
 
     public UserProfileInfo getUserProfileInfoById(Long userId) throws UserNotFoundException {
-        UserProfileInfoRepository dao = new UserProfileInfoRepository();
-
-        return dao.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return userProfileInfoRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
 }
