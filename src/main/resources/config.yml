@@ -1,0 +1,33 @@
+# Connection parameters
+
+MyConfig:
+ type: configuration
+   jmx.enabled: false
+  #DATA SOURCE
+   properties:
+      show-sql: true
+      open-in-view: false
+      -  hibernate:
+         connection.driver_class: com.mysql.cj.jdbc.Driver
+         connection.url: jdbc:mysql://localhost:3306/smarket?useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true
+         connection.connection.username: 'smarket'
+         connection.password: 'smarket'
+         connection.pool_size: 5
+         ddl-auto: 'update'
+
+       - properties:
+           hibernate.hbm2ddl.auto: update
+           hibernate.jdbc.time_zone: UTC
+           hibernate.id.new_generator_mappings: true
+           hibernate.connection.provider_disables_autocommit: true
+           hibernate.cache.use_second_level_cache: false
+           hibernate.cache.use_query_cache: false
+           hibernate.generate_statistics: true
+           hibernate.cache.provider_class: org.hibernate.cache.NoCacheProvider
+           hibernate.dialect: org.hibernate.dialect.MySQLDialect
+           hibernate.jdbc.lob.non_contextual_creation: true
+           hibernate.current_session_context_class: thread
+           hibernate.query.factory_class: org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory
+          
+          
+#............

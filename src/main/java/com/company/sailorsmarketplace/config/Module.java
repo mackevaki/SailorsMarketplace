@@ -1,28 +1,24 @@
 package com.company.sailorsmarketplace.config;
 
-import com.company.sailorsmarketplace.dao.*;
-import com.company.sailorsmarketplace.dbmodel.Event;
-import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
-import com.company.sailorsmarketplace.exceptions.AuthenticationException;
+import com.company.sailorsmarketplace.dao.EventRepository;
+import com.company.sailorsmarketplace.dao.UserProfileInfoRepository;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.services.*;
-import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.MapBinder;
+import com.google.inject.Singleton;
 
 public class Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(IAuthenticationService.class).to(AuthenticationService.class);
-        bind(IUserService.class).to(UserService.class);
-        bind(Database.class).to(UserDAO.class);
-        bind(IUserProfileInfoService.class).to(UserProfileInfoService.class);
-        bind(IEventService.class).to(EventService.class);
-        bind(new TypeLiteral<DAO<Event>>(){}).to(EventDAO.class);
-        bind(new TypeLiteral<DAO<UserProfileInfo>>(){}).to(UserProfileInfoDAO.class);
-        bind(TestValues.class);
+        bind(AuthenticationService.class).in(Singleton.class);
+        bind(UserService.class).in(Singleton.class);
+        bind(UserRepository.class).in(Singleton.class);
+        bind(UserProfileInfoService.class).in(Singleton.class);
+        bind(EventService.class).in(Singleton.class);
+        bind(EventRepository.class).in(Singleton.class);
+        bind(UserProfileInfoRepository.class).in(Singleton.class);
+
         bind(VerificationService.class);
     }
 }

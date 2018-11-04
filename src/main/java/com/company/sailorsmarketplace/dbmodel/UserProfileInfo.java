@@ -1,12 +1,12 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users_profiles", schema = "smarket")
+@Table(name = "users_profiles")
 public class UserProfileInfo {
 
     @Id
@@ -21,7 +21,7 @@ public class UserProfileInfo {
     @Column(name = "lastname", length = 45)
     private String lastname;
 
-    @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "birthdate")
     private Date birthdate;
 
@@ -58,80 +58,90 @@ public class UserProfileInfo {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public UserProfileInfo setUserId(Long userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
+    public UserProfileInfo setFirstname(String firstname) {
         this.firstname = firstname;
+        return this;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
+    public UserProfileInfo setLastname(String lastname) {
         this.lastname = lastname;
+        return this;
     }
 
     public Date getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public UserProfileInfo setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+        return this;
     }
 
     public Enum getGender() {
         return gender;
     }
 
-    public void setGender(Enum gender) {
+    public UserProfileInfo setGender(Enum gender) {
         this.gender = gender;
+        return this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public UserProfileInfo setCity(String city) {
         this.city = city;
+        return this;
     }
 
     public String getOrganization() {
         return organization;
     }
 
-    public void setOrganization(String organization) {
+    public UserProfileInfo setOrganization(String organization) {
         this.organization = organization;
+        return this;
     }
 
     public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(byte[] avatar) {
+    public UserProfileInfo setAvatar(byte[] avatar) {
         this.avatar = avatar;
+        return this;
     }
 
     public Integer getTelegramId() {
         return telegramId;
     }
 
-    public void setTelegramId(Integer telegramId) {
+    public UserProfileInfo setTelegramId(Integer telegramId) {
         this.telegramId = telegramId;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User usersByUserId) {
+    public UserProfileInfo setUser(User usersByUserId) {
         this.user = usersByUserId;
+        return this;
     }
 
     @Override

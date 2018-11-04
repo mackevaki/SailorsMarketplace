@@ -1,9 +1,11 @@
 package com.company.sailorsmarketplace.dto;
 
 import com.company.sailorsmarketplace.dbmodel.Authority;
+import com.google.common.collect.ImmutableSet;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 public class AllUserParams {
     public final Long id;
@@ -13,10 +15,10 @@ public class AllUserParams {
     public final String telephone;
     public final String salt;
     public final Boolean enabled;
-    public final List<Authority> authorities;
+    public final Set<Authority> authorities;
 
     private AllUserParams(
-            @NotNull Builder builder, List<Authority> authorities) {
+            @NotNull Builder builder) {
         this.id = builder.id;
         this.username = builder.username;
         this.email = builder.email;
@@ -24,7 +26,7 @@ public class AllUserParams {
         this.telephone = builder.telephone;
         this.salt = builder.salt;
         this.enabled = builder.enabled;
-        this.authorities = authorities;
+        this.authorities = builder.authorities.build();
     }
 
     public static class Builder {
@@ -35,7 +37,7 @@ public class AllUserParams {
         private String telephone;
         private String salt;
         private Boolean enabled;
-        private List<Authority> authorities;
+        private ImmutableSet.Builder<Authority> authorities = ImmutableSet.builder();
 
         private Builder() {}
 
@@ -76,12 +78,33 @@ public class AllUserParams {
         }
 
         public Builder authorities(List<Authority> authorities) {
-            this.authorities = authorities;
+            this.authorities.addAll(authorities);
+            return this;
+        }
+
+        public Builder withAuthority(Authority authority) {
+            this.authorities.add(authority);
             return this;
         }
 
         public AllUserParams build() {
-            return new AllUserParams(this, authorities);
+            return new AllUserParams(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "AllUserParams{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", salt='" + salt + '\'' +
+                ", enabled=" + enabled +
+                ", authorities=" + authorities +
+                '}';
+    }
+
+
 }

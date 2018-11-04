@@ -8,7 +8,6 @@ import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.SourceSystem;
 import com.company.sailorsmarketplace.requests.VerificationRequest;
 import com.company.sailorsmarketplace.services.VerificationService;
-import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -32,7 +31,7 @@ public class VerificationResourceTest {
     private WebTarget target;
 
     @Inject
-    private TestValues testValues;
+    private UserTestData userTestData;
 
     @Inject
     private VerificationService serv;
@@ -52,14 +51,11 @@ public class VerificationResourceTest {
 
     @Test
     public void shouldSendCodeWhenAllInputsAreValid() {
-        WebTarget userWebTarget = target.path("/rest/verify/send");
-        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
-
-        User createdUser = testValues.createTestUser();
-
-        Date date = new Date();//Date.valueOf(LocalDate.now().toString());
+        // given
+        User createdUser = userTestData.createTestUser();
+        Date date = new Date();
         String targetId = randomNumeric(11);
-        String targetUserId = String.valueOf(createdUser.getUserId());
+        Long targetUserId = createdUser.getUserId();
         SourceSystem sourceSystem = SourceSystem.MOBILE_PHONE;
 
         VerificationRequest request = new VerificationRequest(
@@ -68,11 +64,17 @@ public class VerificationResourceTest {
                 targetId,
                 targetUserId);
 
+        WebTarget userWebTarget = target.path("/rest/verify/send");
+        Invocation.Builder invocationBuilder = userWebTarget.request(MediaType.APPLICATION_JSON);
+
+        // when
         Response response = invocationBuilder.post(Entity.entity(request, MediaType.APPLICATION_JSON));
-        System.out.println(response.readEntity(String.class));
 
-        testValues.removeTestUser(createdUser);
-
+        // then
         assertThat(response.getStatusInfo().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+        // cleanup
+        userTestData.removeTestUser(createdUser);
+
     }
 }

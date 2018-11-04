@@ -1,6 +1,5 @@
 package com.company.sailorsmarketplace.requests;
 
-import com.company.sailorsmarketplace.dbmodel.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

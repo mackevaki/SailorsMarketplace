@@ -1,63 +1,62 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.DAO;
-import com.company.sailorsmarketplace.dao.Database;
+import com.company.sailorsmarketplace.dao.EventRepository;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.Event;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
+import com.company.sailorsmarketplace.exceptions.EventNotFoundException;
+import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.google.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEventParamsDto;
 
-public class EventService implements IEventService {
+public class EventService {
+
+    private final UserRepository userRepository;
+    private final EventRepository eventRepository;
 
     @Inject
-    private Database database;
-
-    @Inject
-    private DAO<Event> eventDAO;
-
-    @Override
-    public User addUserToEvent(Long userId, Long eventId) {
-        User user = database.getById(userId);
-        Event event = eventDAO.getById(eventId);
-
-        event.getUsers().add(user);
-
-        if (user.getEvents() == null) {
-            List<Event> events = new ArrayList<>();
-            events.add(event);
-            user.setEvents(events);
-        } else {
-            user.getEvents().add(event);
-        }
-
-        eventDAO.update(event);
-        database.update(user);
-
-        return user;
+    public EventService(final UserRepository userRepository, final EventRepository eventRepository) {
+        this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
     }
 
-    @Override
-    public AllEventParams createEvent(CreateUpdateEventParams params) {
-        User owner = database.getById(params.chargeUserId);
-        Event event = new Event(
+    public void addUserToEvent(final Long userId, final Long eventId) {
+        final User user = userRepository.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        final Event event = eventRepository.getById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+
+        event.addUser(user);
+
+//        if (user.getEvents() == null) {
+//            List<Event> events = new ArrayList<>();
+//            events.add(event);
+//            user.setEvents(events);
+//        } else {
+//            user.getEvents().add(event);
+//        }
+
+        eventRepository.update(event);
+        //userRepository.update(user);
+
+        //return user;
+    }
+
+    public AllEventParams createEvent(final CreateUpdateEventParams params) {
+        final User owner = userRepository.getById(params.chargeUserId).orElseThrow(() -> new UserNotFoundException(params.chargeUserId));
+        final Event event = new Event(
                 params.name,
                 params.description,
                 params.place,
                 params.dateStart,
                 params.dateEnd,
-                owner);
+                owner)
+                .addUser(owner); ///////////
 
-        event.getUsers().add(owner);
+        final Event createdEvent = eventRepository.save(event);
 
-        Event createdEvent = eventDAO.save(event);
-
-        AllEventParams eventParams = allEventParamsDto()
+        return allEventParamsDto()
                 .eventId(createdEvent.getEventId())
                 .name(createdEvent.getName())
                 .description(createdEvent.getDescription())
@@ -68,34 +67,31 @@ public class EventService implements IEventService {
                 .users(createdEvent.getUsers())
                 .build();
 
-        owner.getEvents().add(createdEvent);
-        database.update(owner);
-
-        return eventParams;
+//        owner.getEvents().add(createdEvent);
+//        userRepository.update(owner);
+//
+//        return eventParams;
     }
 
-    @Override
-    public boolean deleteEvent(Long eventId) {
-        Event event = eventDAO.getById(eventId);
-
-        event.setChargeUser(null);
-        event.setUsers(null);
-
-        eventDAO.delete(event);
-        return eventDAO.getById(eventId) == null;
+    public void deleteEvent(Long eventId) { // not final????
+        eventRepository.getById(eventId).ifPresent(eventRepository::delete);
+//
+//        event.setChargeUser(null);
+//        event.setUsers(null);
+//
+//        eventRepository.delete(event);
+//        return eventRepository.getById(eventId) == null;
     }
 
-    @Override
-    public Event updateEvent(Long eventId) {
+    public Event updateEvent(Long eventId) { // not final ????
         return null;
     }
 
-    @Override
-    public void deleteUserFromEvent(Long userId, Long eventId) {
-        User user = database.getById(userId);
-        Event event = eventDAO.getById(eventId);
+    public void deleteUserFromEvent(final Long userId, final Long eventId) {
+        final User user = userRepository.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        final Event event = eventRepository.getById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
-        event.getUsers().remove(user);
-        eventDAO.update(event);
+        event.removeUser(user);
+        eventRepository.update(event);
     }
 }

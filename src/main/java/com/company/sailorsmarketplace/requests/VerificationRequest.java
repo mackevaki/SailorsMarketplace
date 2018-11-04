@@ -10,7 +10,7 @@ public class VerificationRequest {
     public final Date date;
     public final SourceSystem sourceSystem;
     public final String targetId;
-    public final String targetUserId;
+    public final Long targetUserId;
 
 
     @JsonCreator
@@ -18,7 +18,7 @@ public class VerificationRequest {
             @JsonProperty("date") Date date,
             @JsonProperty("sourceSystem") SourceSystem sourceSystem,
             @JsonProperty("targetId") String targetId,
-            @JsonProperty("targetUserId") String targetUserId) {
+            @JsonProperty("targetUserId") Long targetUserId) {
         this.date = date;
         this.sourceSystem = sourceSystem;
         this.targetId = targetId;

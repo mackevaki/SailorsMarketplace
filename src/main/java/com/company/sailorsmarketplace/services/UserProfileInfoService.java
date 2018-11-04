@@ -1,80 +1,65 @@
 package com.company.sailorsmarketplace.services;
 
-import com.company.sailorsmarketplace.dao.Database;
-import com.company.sailorsmarketplace.dao.UserProfileInfoDAO;
+import com.company.sailorsmarketplace.dao.UserProfileInfoRepository;
+import com.company.sailorsmarketplace.dao.UserRepository;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.UserProfileInfoParams;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-public class UserProfileInfoService implements IUserProfileInfoService {
+public class UserProfileInfoService {
+    private final UserRepository userRepo;
+    private final UserProfileInfoRepository userProfileInfoRepo;
 
     @Inject
-    Database database;
+    public UserProfileInfoService(UserRepository userRepo, UserProfileInfoRepository userProfileInfoRepo) {
+        this.userRepo = userRepo;
+        this.userProfileInfoRepo = userProfileInfoRepo;
+    }
 
-    @Override
-    public UserProfileInfo createUserProfileInfoForNewUser(Long userId) {
+    public UserProfileInfo createUserProfileInfoForNewUser(final Long userId) {
         UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
-        User user = database.getById(userId);
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
+        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         userProfileInfo.setUser(user);
-        dao.save(userProfileInfo);
+        userProfileInfoRepo.save(userProfileInfo);
         user.setUserProfileInfo(userProfileInfo);
-        database.update(user);
+        userRepo.update(user);
 
         return userProfileInfo;
     }
 
-    @Override
-    public String showUserProfileInfo(Long userId) throws UserNotFoundException {
-        User user = database.getById(userId);
-
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-
+    public String showUserProfileInfo(final Long userId) throws UserNotFoundException {
+        final User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         return user.getUserProfileInfo().toString();
     }
 
-    @Override
-    public void updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
-        User user;
+    public UserProfileInfo updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
+        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        if ((user = database.getById(userId)) == null) {
-            throw new UserNotFoundException();
-        }
+        return userProfileInfoRepo.getById(userId)
+                .map(profileInfo -> profileInfo.setFirstname(params.firstname))
+                .map(profileInfo -> profileInfo.setLastname(params.lastname))
+                .map(profileInfo -> profileInfo.setCity(params.city))
+                .map(profileInfo -> profileInfo.setBirthdate(params.birthdate))
+                .map(profileInfo -> profileInfo.setGender(params.gender))
+                .map(profileInfo -> profileInfo.setAvatar(params.avatar))
+                .map(profileInfo -> profileInfo.setOrganization(params.organization))
+                .map(profileInfo -> {
+                    user.setUserProfileInfo(profileInfo);
+                    profileInfo.setUser(user);
+                    userProfileInfoRepo.update(profileInfo);
+                    userRepo.update(user);
 
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        UserProfileInfo userProfileInfo = dao.getById(userId);
-
-        userProfileInfo.setFirstname(params.firstname);
-        userProfileInfo.setLastname(params.lastname);
-        userProfileInfo.setCity(params.city);
-        userProfileInfo.setBirthdate(params.birthdate);
-        userProfileInfo.setGender(params.gender);
-        userProfileInfo.setAvatar(params.avatar);
-        userProfileInfo.setOrganization(params.organization);
-
-        user.setUserProfileInfo(userProfileInfo);
-        userProfileInfo.setUser(user);
-        dao.update(userProfileInfo);
-
-        database.update(user);
+                    return profileInfo;
+                })
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    @Override
     public UserProfileInfo getUserProfileInfoById(Long id) throws UserNotFoundException {
-        UserProfileInfoDAO dao = new UserProfileInfoDAO();
-        UserProfileInfo userProfileInfo = dao.getById(id);
-
-        if (userProfileInfo == null) {
-            throw new UserNotFoundException();
-        }
-
-        return userProfileInfo;
+        return userProfileInfoRepo.getById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
 }

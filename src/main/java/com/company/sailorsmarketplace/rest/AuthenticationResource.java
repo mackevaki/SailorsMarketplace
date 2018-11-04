@@ -6,7 +6,7 @@ import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.requests.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
-import com.company.sailorsmarketplace.services.IAuthenticationService;
+import com.company.sailorsmarketplace.services.AuthenticationService;
 import com.company.sailorsmarketplace.utils.Secured;
 import org.apache.http.HttpStatus;
 
@@ -19,8 +19,12 @@ import javax.ws.rs.core.Response;
 
 @Path("/authentication")
 public class AuthenticationResource {
+    private final AuthenticationService authenticationService;
+
     @Inject
-    private IAuthenticationService authenticationService;
+    public AuthenticationResource(final AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @POST
     @Path("/login")
@@ -48,7 +52,6 @@ public class AuthenticationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response userLogout(@PathParam("id") Long userId) throws UserNotFoundException{
-
         User user = authenticationService.removeSecureCredentials(userId);
 
         return Response.ok().status(HttpStatus.SC_OK).entity(user.getUserId()).build();

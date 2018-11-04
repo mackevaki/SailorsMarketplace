@@ -11,13 +11,5 @@ public class VerificationParams {
     public final Date date;
     public final SourceSystem sourceSystem;
     public final String targetId;
-    public final String targetUserId;
-
-
-//    public VerificationParams() {
-//        date = builder().date;
-//        sourceSystem = builder().sourceSystem;
-//        targetId = builder().targetId;
-//        targetUserId = builder().targetUserId;
-//    }
+    public final Long targetUserId;
 }

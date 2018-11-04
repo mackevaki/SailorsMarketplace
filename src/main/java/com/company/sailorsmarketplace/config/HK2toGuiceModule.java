@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.config;
 
 import com.company.sailorsmarketplace.services.*;
-import com.company.sailorsmarketplace.utils.TestValues;
 import com.google.inject.Injector;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -15,11 +14,10 @@ public class HK2toGuiceModule extends AbstractBinder {
 
     @Override
     protected void configure() {
-        bindFactory(new ServiceFactory<IUserService>(guiceInjector, IUserService.class)).to(IUserService.class);
-        bindFactory(new ServiceFactory<IAuthenticationService>(guiceInjector, IAuthenticationService.class)).to(IAuthenticationService.class);
-        bindFactory(new ServiceFactory<IUserProfileInfoService>(guiceInjector, IUserProfileInfoService.class)).to(IUserProfileInfoService.class);
-        bindFactory(new ServiceFactory<IEventService>(guiceInjector, IEventService.class)).to(IEventService.class);
-        bindFactory(new ServiceFactory<TestValues>(guiceInjector, TestValues.class)).to(TestValues.class);
+        bindFactory(new ServiceFactory<UserService>(guiceInjector, UserService.class)).to(UserService.class);
+        bindFactory(new ServiceFactory<AuthenticationService>(guiceInjector, AuthenticationService.class)).to(AuthenticationService.class);
+        bindFactory(new ServiceFactory<UserProfileInfoService>(guiceInjector, UserProfileInfoService.class)).to(UserProfileInfoService.class);
+        bindFactory(new ServiceFactory<EventService>(guiceInjector, EventService.class)).to(EventService.class);
         bindFactory(new ServiceFactory<VerificationService>(guiceInjector, VerificationService.class)).to(VerificationService.class);
     }
 

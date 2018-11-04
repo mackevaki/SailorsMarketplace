@@ -4,6 +4,7 @@ import com.company.sailorsmarketplace.dbmodel.User;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 
 public class AllEventParams {
@@ -87,5 +88,19 @@ public class AllEventParams {
         public AllEventParams build() {
             return new AllEventParams(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AllEventParams{" +
+                "eventId=" + eventId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", dateStart=" + dateStart +
+                ", dateEnd=" + dateEnd +
+                ", place=" + Arrays.toString(place) +
+                ", userByChargeUserId=" + userByChargeUserId +
+                ", users=" + users +
+                '}';
     }
 }

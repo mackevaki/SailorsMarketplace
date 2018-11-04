@@ -3,8 +3,7 @@ package com.company.sailorsmarketplace.rest;
 import com.company.sailorsmarketplace.dto.AllEventParams;
 import com.company.sailorsmarketplace.dto.CreateUpdateEventParams;
 import com.company.sailorsmarketplace.requests.CreateEventRequest;
-import com.company.sailorsmarketplace.services.IEventService;
-import com.company.sailorsmarketplace.utils.Secured;
+import com.company.sailorsmarketplace.services.EventService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -15,9 +14,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/events")
 public class EventResource {
+    private final EventService eventService;
 
     @Inject
-    private IEventService eventService;
+    public EventResource(final EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @POST
     @Produces(APPLICATION_JSON)
@@ -35,19 +37,16 @@ public class EventResource {
 
         AllEventParams allEventParams = eventService.createEvent(createEventParams);
 
-        return Response.ok(String.format("%d", allEventParams.eventId)).build();
+        return Response.ok(String.format("%d", allEventParams.eventId)).entity(allEventParams).build();
     }
 
 //    @Secured
     @DELETE
     @Path("/{id}")
+    @Produces(APPLICATION_JSON)
     public Response removeEvent(@PathParam("id") Long id) {
-
-        if (eventService.deleteEvent(id)) {
-            return Response.ok("removed").build();
-        } else {
-            return Response.status(404).entity(String.format("Event with id %d does not exist\n", id)).build();
-        }
+        eventService.deleteEvent(id);
+        return Response.ok("removed").build();
     }
 
 

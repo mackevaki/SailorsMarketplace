@@ -38,23 +38,16 @@ public class AuthenticationUtil {
         }
     }
 
-    public static String generateSecurePassword(@NotNull String password, @NotNull String salt) {
-        String returnValue = null;
+    public static String generateSecurePassword(final String password, final String salt) {
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
 
-        returnValue = Base64.getEncoder().encodeToString(securePassword);
-
-        return returnValue;
+        return Base64.getEncoder().encodeToString(securePassword);
     }
 
     public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {
-        boolean returnValue = false;
-        // Generate New secure password with the same salt
-        String newSecurePassword = generateSecurePassword(providedPassword, salt);
+        final String newSecurePassword = generateSecurePassword(providedPassword, salt);
         // Check if two passwords are equal
-        returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
-
-        return returnValue;
+        return newSecurePassword.equalsIgnoreCase(securedPassword);
     }
 
     @NotNull

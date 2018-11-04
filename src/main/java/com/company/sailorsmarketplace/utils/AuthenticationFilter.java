@@ -1,10 +1,7 @@
 package com.company.sailorsmarketplace.utils;
 
 import com.company.sailorsmarketplace.dbmodel.User;
-import com.company.sailorsmarketplace.exceptions.AuthenticationException;
 import com.company.sailorsmarketplace.exceptions.AuthenticationServiceException;
-import com.company.sailorsmarketplace.services.AuthenticationService;
-import com.company.sailorsmarketplace.services.IUserService;
 import com.company.sailorsmarketplace.services.UserService;
 
 import javax.annotation.Priority;
@@ -16,7 +13,6 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +21,12 @@ import java.util.logging.Logger;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
+    private final UserService usersService;
+
     @Inject
-    IUserService usersService;
+    public AuthenticationFilter(UserService usersService) {
+        this.usersService = usersService;
+    }
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
