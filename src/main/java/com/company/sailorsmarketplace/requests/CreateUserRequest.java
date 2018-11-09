@@ -49,4 +49,15 @@ public class CreateUserRequest {
         this.email = email;
         this.telephone = telephone;
     }
+
+    @Override
+    public String toString() {
+        return "CreateUserRequest{" +
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", matchingPassword='" + matchingPassword + '\'' +
+            ", email='" + email + '\'' +
+            ", telephone='" + telephone + '\'' +
+            '}';
+    }
 }

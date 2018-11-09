@@ -1,5 +1,6 @@
 package com.company.sailorsmarketplace.requests;
 
+import com.company.sailorsmarketplace.validators.PasswordMatches;
 import com.company.sailorsmarketplace.validators.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,8 +10,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@PasswordMatches
 public class UpdateUserRequest {
-
     @NotNull
     public final Long userId;
 
@@ -20,13 +21,13 @@ public class UpdateUserRequest {
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
     public final String password;
 
     @NotEmpty
     @ValidPassword
-    @Size(min=8, max = 30, message = "Password must be between 8 and 20 characters")
-    private final String matchingPassword;
+    @Size(min = 8, max = 30, message = "Password must be between 8 and 20 characters")
+    public final String matchingPassword;
 
     @Email(message = "Invalid Email")
     @NotEmpty(message = "Please enter email")
@@ -39,17 +40,29 @@ public class UpdateUserRequest {
 
     @JsonCreator
     public UpdateUserRequest(
-            @JsonProperty("userId") Long userId,
-            @JsonProperty("username") String username,
-            @JsonProperty("password") String password,
-            @JsonProperty("matchingPassword") String matchingPassword,
-            @JsonProperty("email") String email,
-            @JsonProperty("telephone") String telephone) {
+        @NotNull @JsonProperty("userId") Long userId,
+        @JsonProperty("username") String username,
+        @JsonProperty("password") String password,
+        @JsonProperty("matchingPassword") String matchingPassword,
+        @JsonProperty("email") String email,
+        @JsonProperty("telephone") String telephone) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.matchingPassword = matchingPassword;
         this.email = email;
         this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdateUserRequest{" +
+            "userId=" + userId +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", matchingPassword='" + matchingPassword + '\'' +
+            ", email='" + email + '\'' +
+            ", telephone='" + telephone + '\'' +
+            '}';
     }
 }

@@ -26,7 +26,7 @@ public class EventResource {
     @Consumes(APPLICATION_JSON)
     @Path("/create")
     public Response createEvent(CreateEventRequest request) {
-        CreateUpdateEventParams createEventParams = createUpdateEventParams()
+        final CreateUpdateEventParams createEventParams = createUpdateEventParams()
                 .name(request.name)
                 .description(request.description)
                 .place(request.place)
@@ -35,9 +35,9 @@ public class EventResource {
                 .chargeUser(request.userByChargeUserId)
                 .build();
 
-        AllEventParams allEventParams = eventService.createEvent(createEventParams);
+        final AllEventParams allEventParams = eventService.createEvent(createEventParams);
 
-        return Response.ok(String.format("%d", allEventParams.eventId)).entity(allEventParams).build();
+        return Response.ok(String.format("%d", allEventParams.eventId)).entity(allEventParams.toString()).build();
     }
 
 //    @Secured

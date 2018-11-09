@@ -88,5 +88,7 @@ dependencies {
         exclude group: "com.google.inject"
     }
 
+//    compile "org.yaml:snakeyaml:1.23"
+
     compileOnly 'org.projectlombok:lombok:1.18.2'
 }

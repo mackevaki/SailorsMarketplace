@@ -1,5 +1,6 @@
 package com.company.sailorsmarketplace.exceptions;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -7,6 +8,10 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class UserNotFoundExceptionMapper implements ExceptionMapper<UserNotFoundException> {
     public Response toResponse(UserNotFoundException ex) {
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response
+            .status(Response.Status.NOT_FOUND.getStatusCode())
+            .type(MediaType.APPLICATION_JSON_TYPE)
+            .entity(ex.getMessage())
+            .build();
     }
 }

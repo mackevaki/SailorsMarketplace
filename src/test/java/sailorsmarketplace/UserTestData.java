@@ -6,23 +6,19 @@ import com.company.sailorsmarketplace.dbmodel.Authority;
 import com.company.sailorsmarketplace.dbmodel.User;
 import com.company.sailorsmarketplace.dbmodel.UserProfileInfo;
 import com.company.sailorsmarketplace.dto.AllUserParams;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
-import com.company.sailorsmarketplace.requests.AuthenticationDetails;
+import com.company.sailorsmarketplace.dto.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.company.sailorsmarketplace.services.AuthenticationService;
-
 import com.company.sailorsmarketplace.utils.AuthenticationUtil;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.validation.constraints.NotNull;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserParamsDto;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.apache.commons.lang3.RandomStringUtils.*;
 
 @Singleton
 public class UserTestData {
@@ -68,7 +64,7 @@ public class UserTestData {
 //        String password = prefix + "#Pass1" + randomAlphanumeric(5);
         String telephone = "+" + randomNumeric(11);
         String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(password, salt);
+        String securePassword = AuthenticationUtil.hashPassword(password, salt);
         User testUser = new User(
                 username,
                 securePassword,

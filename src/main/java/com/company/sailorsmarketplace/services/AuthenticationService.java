@@ -16,15 +16,17 @@ import static com.company.sailorsmarketplace.dto.AllUserParams.Builder.allUserPa
 import static com.company.sailorsmarketplace.utils.AuthenticationUtil.verifyUserPassword;
 
 public class AuthenticationService  {
-    @Inject
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Inject
-    private UserService userService;
+    public AuthenticationService(final UserRepository userRepository, final UserService userService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
-    public AllUserParams authenticate(final String email, final String providedPassword) throws AuthenticationException, UserNotFoundException {
+    public AllUserParams authenticate(final String email, final String providedPassword) {
         final User user =  userService.getUserByEmail(email); // Email must be unique in our system
-
         // perform authentication business logic
         final boolean authenticated = verifyUserPassword(providedPassword, user.getPassword(), user.getSalt());
         if (!authenticated) {
@@ -40,15 +42,12 @@ public class AuthenticationService  {
                 .salt(user.getSalt())
                 .enabled(user.getEnabled())
                 .build();
-
     }
 
-    public String issueSecureToken(AllUserParams userDto) throws AuthenticationException {
-        String returnValue = null;
-
-        String newSaltAsPostfix = userDto.salt;
-        String accessTokenMaterial = userDto.id + newSaltAsPostfix;
-        byte[] encryptedAccessToken = null;
+    public String issueSecureToken(AllUserParams userDto) {
+        final String newSaltAsPostfix = userDto.salt;
+        final String accessTokenMaterial = userDto.id + newSaltAsPostfix;
+        byte[] encryptedAccessToken;
 
         try {
             encryptedAccessToken = AuthenticationUtil.encrypt(userDto.password, accessTokenMaterial);
@@ -57,20 +56,17 @@ public class AuthenticationService  {
             throw new AuthenticationException("Faled to issue secure access token");
         }
 
-        String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
-
-        int tokenLength = encryptedAccessTokenBase64Encoded.length();
-        String tokenToSaveToDatabase = encryptedAccessTokenBase64Encoded.substring(0, tokenLength / 2);
-        returnValue = encryptedAccessTokenBase64Encoded.substring(tokenLength / 2, tokenLength);
+        final String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
+        final int tokenLength = encryptedAccessTokenBase64Encoded.length();
+        final String tokenToSaveToDatabase = encryptedAccessTokenBase64Encoded.substring(0, tokenLength / 2);
 
         storeAccessToken(userDto, tokenToSaveToDatabase);
-
-        return returnValue;
+        return encryptedAccessTokenBase64Encoded.substring(tokenLength / 2, tokenLength);
     }
 
-    public AllUserParams resetSecurityCredentials(String password, AllUserParams userDto) {
-        String salt = AuthenticationUtil.generateSalt(30);
-        String secureUserPassword = AuthenticationUtil.generateSecurePassword(password, salt);
+    public AllUserParams resetSecurityCredentials(final String password, AllUserParams userDto) {
+        final String salt = AuthenticationUtil.generateSalt(30);
+        final String secureUserPassword = AuthenticationUtil.hashPassword(password, salt);
 
         userDto = allUserParamsDto()
                 .id(userDto.id)
@@ -82,7 +78,7 @@ public class AuthenticationService  {
                 .password(secureUserPassword)
                 .build();
 
-        User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
+        final User user = new User(userDto.username, userDto.password, userDto.email, userDto.telephone);
 
         user.setUserId(userDto.id);
         user.setSalt(userDto.salt);

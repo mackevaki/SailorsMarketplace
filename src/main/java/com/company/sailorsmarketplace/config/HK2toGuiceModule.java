@@ -14,11 +14,11 @@ public class HK2toGuiceModule extends AbstractBinder {
 
     @Override
     protected void configure() {
-        bindFactory(new ServiceFactory<UserService>(guiceInjector, UserService.class)).to(UserService.class);
-        bindFactory(new ServiceFactory<AuthenticationService>(guiceInjector, AuthenticationService.class)).to(AuthenticationService.class);
-        bindFactory(new ServiceFactory<UserProfileInfoService>(guiceInjector, UserProfileInfoService.class)).to(UserProfileInfoService.class);
-        bindFactory(new ServiceFactory<EventService>(guiceInjector, EventService.class)).to(EventService.class);
-        bindFactory(new ServiceFactory<VerificationService>(guiceInjector, VerificationService.class)).to(VerificationService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, UserService.class)).to(UserService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, AuthenticationService.class)).to(AuthenticationService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, UserProfileInfoService.class)).to(UserProfileInfoService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, EventService.class)).to(EventService.class);
+        bindFactory(new ServiceFactory<>(guiceInjector, VerificationService.class)).to(VerificationService.class);
     }
 
     private static class ServiceFactory<T> implements Factory<T> {

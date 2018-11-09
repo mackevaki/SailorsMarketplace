@@ -4,6 +4,7 @@ import com.company.sailorsmarketplace.dto.AllVerificationParams;
 import com.company.sailorsmarketplace.dto.VerificationParams;
 import com.company.sailorsmarketplace.requests.VerificationRequest;
 import com.company.sailorsmarketplace.services.VerificationService;
+import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,22 +18,25 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON)
 @Path("/verify")
 public class VerificationResource {
+    private final VerificationService verificationService;
 
     @Inject
-    private VerificationService verificationService;
+    public VerificationResource(final VerificationService verificationService) {
+        this.verificationService = verificationService;
+    }
 
     @POST
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
     @Path("/send")
     public Response sendCode(VerificationRequest request) {
-        AllVerificationParams params = verificationService.createVerificationCode(
+        final AllVerificationParams params = verificationService.createVerificationCode(
                 VerificationParams.builder().date(request.date)
                         .sourceSystem(request.sourceSystem)
                         .targetId(request.targetId)
                         .targetUserId(request.targetUserId).build()
         );
 
-        return Response.ok(params.toString()).build();
+        return Response.ok().status(HttpStatus.SC_OK).entity(params.date).build();
     }
 }

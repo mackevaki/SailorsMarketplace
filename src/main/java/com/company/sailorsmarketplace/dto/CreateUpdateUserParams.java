@@ -6,7 +6,7 @@ public class CreateUpdateUserParams {
     public final String email;
     public final String telephone;
 
-    public CreateUpdateUserParams(Builder builder) {
+    private CreateUpdateUserParams(Builder builder) {
         this.username = builder.username;
         this.password = builder.password;
         this.email = builder.email;
@@ -49,5 +49,15 @@ public class CreateUpdateUserParams {
         public CreateUpdateUserParams build() {
             return new CreateUpdateUserParams(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CreateUpdateUserParams{" +
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", email='" + email + '\'' +
+            ", telephone='" + telephone + '\'' +
+            '}';
     }
 }

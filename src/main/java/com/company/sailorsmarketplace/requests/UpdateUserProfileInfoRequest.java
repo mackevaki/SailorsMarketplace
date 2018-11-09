@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.util.Arrays;
 
 public class UpdateUserProfileInfoRequest {
     @NotNull
@@ -36,5 +37,19 @@ public class UpdateUserProfileInfoRequest {
         this.city = city;
         this.organization = organization;
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdateUserProfileInfoRequest{" +
+            "userId=" + userId +
+            ", firstname='" + firstname + '\'' +
+            ", lastname='" + lastname + '\'' +
+            ", birthdate=" + birthdate +
+            ", city='" + city + '\'' +
+            ", gender=" + gender +
+            ", organization='" + organization + '\'' +
+            ", avatar=" + Arrays.toString(avatar) +
+            '}';
     }
 }

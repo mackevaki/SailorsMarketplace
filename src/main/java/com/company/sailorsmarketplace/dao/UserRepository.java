@@ -14,7 +14,7 @@ import static com.company.sailorsmarketplace.utils.HibernateUtils.getSessionFact
 
 public class UserRepository {
 
-    public User save(User user) {
+    public User save(final User user) {
         try (final Session session = getSessionFactory().openSession()) {
             final Transaction transaction = session.beginTransaction();
             session.save(user);
@@ -23,13 +23,13 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> getById(Long id) {
+    public Optional<User> getById(final Long id) {
         try (final Session session = getSessionFactory().openSession()) {
             return Optional.ofNullable(session.get(User.class, id));
         }
     }
 
-    public Optional<User> getByUsername(String username) {
+    public Optional<User> getByUsername(final String username) {
         try(final Session session = getSessionFactory().openSession()) {
             TypedQuery<User> query = session.createQuery("from User where username = :username", User.class);
             query.setParameter("username", username);
@@ -39,11 +39,10 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> getByEmail(String findEmail) {
+    public Optional<User> getByEmail(final String findEmail) {
         try (final Session session = getSessionFactory().openSession()) {
             Query<User> q = session.createNativeQuery(
                     "SELECT e.* FROM smarket.users e WHERE e.email = :findEmail", User.class);
-            // force read from database
             q.setHint("eclipselink.cache-usage", "DoNotCheckCache");
             q.setParameter("findEmail", findEmail);
             return Optional.of(q.getSingleResult());

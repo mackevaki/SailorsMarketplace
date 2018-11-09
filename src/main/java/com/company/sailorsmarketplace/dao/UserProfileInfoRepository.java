@@ -5,7 +5,6 @@ import com.company.sailorsmarketplace.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import javax.persistence.NoResultException;
 import java.util.Optional;
 
 public class UserProfileInfoRepository {
@@ -23,9 +22,6 @@ public class UserProfileInfoRepository {
         try (final Session session = HibernateUtils.getSessionFactory().openSession()) {
             return Optional.ofNullable(session.get(UserProfileInfo.class, id));
         }
-//        } catch (NoResultException e) {
-//            return Optional.empty();
-//        }
     }
 
     public void update(final UserProfileInfo profileInfo) {
@@ -36,7 +32,7 @@ public class UserProfileInfoRepository {
         }
     }
 
-    public void delete(final UserProfileInfo profileInfo) {
+    public void delete(UserProfileInfo profileInfo) {
         try (final Session session = HibernateUtils.getSessionFactory().openSession()) {
             final Transaction transaction = session.beginTransaction();
             session.delete(profileInfo);

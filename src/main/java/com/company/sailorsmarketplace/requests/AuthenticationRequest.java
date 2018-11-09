@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-
 public class AuthenticationRequest {
-
     @Email(message = "Invalid Email")
     @NotEmpty(message = "Email can not be empty")
     public final String email;
@@ -23,5 +21,13 @@ public class AuthenticationRequest {
             @JsonProperty("password") String password) {
         this.email = email;
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthenticationRequest{" +
+            "email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            '}';
     }
 }

@@ -49,7 +49,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
-    private void validateToken(String token, Long userId) throws AuthenticationServiceException {
+    private void validateToken(String token, Long userId) {
         User userProfile = usersService.getUserById(userId);
 
         String completeToken = userProfile.getToken() + token;
@@ -57,8 +57,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String salt = userProfile.getSalt();
         String accessTokenMaterial = userId + salt;
 
-        byte[] encryptedAccessToken = null;
-        encryptedAccessToken = AuthenticationUtil.encrypt(securePassword, accessTokenMaterial);
+        byte[] encryptedAccessToken = AuthenticationUtil.encrypt(securePassword, accessTokenMaterial);
 
         String encryptedAccessTokenBase64Encoded = Base64.getEncoder().encodeToString(encryptedAccessToken);
         if (!encryptedAccessTokenBase64Encoded.equalsIgnoreCase(completeToken)) {

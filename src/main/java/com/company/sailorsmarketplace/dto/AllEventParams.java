@@ -3,8 +3,8 @@ package com.company.sailorsmarketplace.dto;
 import com.company.sailorsmarketplace.dbmodel.User;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class AllEventParams {
@@ -26,7 +26,6 @@ public class AllEventParams {
         this.place = builder.place;
         this.userByChargeUserId = builder.userByChargeUserId;
         this.users = builder.users;
-
     }
 
     public static class Builder {

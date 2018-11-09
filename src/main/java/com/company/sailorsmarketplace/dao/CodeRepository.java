@@ -4,11 +4,11 @@ import com.company.sailorsmarketplace.dbmodel.VerificationCode;
 
 public class CodeRepository {
 
-    public VerificationCode save(VerificationCode entity) {
+    public VerificationCode save(final VerificationCode entity) {
         return null;
     }
 
-    public VerificationCode getById(Long id) {
+    public VerificationCode getById(final Long id) {
         return null;
     }
 

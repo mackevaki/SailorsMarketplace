@@ -82,4 +82,12 @@ public class TelegramConnection {
         return Objects.hash(userId, telegramId, verified);
     }
 
+    @Override
+    public String toString() {
+        return "TelegramConnection{" +
+            "telegramId=" + telegramId +
+            ", verified=" + verified +
+            ", user=" + user +
+            '}';
+    }
 }

@@ -1,14 +1,13 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users_profiles")
 public class UserProfileInfo {
-
     @Id
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -170,7 +169,6 @@ public class UserProfileInfo {
     @Override
     public String toString() {
         return "User Profile:\n" +
-                "user id: " + userId + "\n" +
                 "firstname: " + firstname + "\n" +
                 "lastname: " + lastname + "\n" +
                 "birthdate: " + birthdate + "\n" +

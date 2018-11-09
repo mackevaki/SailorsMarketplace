@@ -5,7 +5,7 @@ import com.carlosbecker.guice.GuiceTestRunner;
 import com.company.sailorsmarketplace.Launcher;
 import com.company.sailorsmarketplace.config.Module;
 import com.company.sailorsmarketplace.dao.UserRepository;
-import com.company.sailorsmarketplace.requests.AuthenticationDetails;
+import com.company.sailorsmarketplace.dto.AuthenticationDetails;
 import com.company.sailorsmarketplace.requests.AuthenticationRequest;
 import com.google.inject.Inject;
 import org.apache.http.HttpStatus;
@@ -19,9 +19,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 @RunWith(GuiceTestRunner.class)
 @GuiceModules(Module.class)

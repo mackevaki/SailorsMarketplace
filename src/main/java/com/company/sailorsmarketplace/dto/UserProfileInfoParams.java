@@ -2,6 +2,7 @@ package com.company.sailorsmarketplace.dto;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.util.Arrays;
 
 public class UserProfileInfoParams {
     public final String firstname;
@@ -12,7 +13,7 @@ public class UserProfileInfoParams {
     public final String organization;
     public final byte[] avatar;
 
-    public UserProfileInfoParams(@NotNull Builder builder) {
+    private UserProfileInfoParams(@NotNull Builder builder) {
         this.firstname = builder.firstname;
         this.lastname = builder.lastname;
         this.birthdate = builder.birthdate;
@@ -30,7 +31,6 @@ public class UserProfileInfoParams {
         private String city;
         private String organization;
         private byte[] avatar;
-
 
         private Builder() {
         }
@@ -77,5 +77,18 @@ public class UserProfileInfoParams {
         public UserProfileInfoParams build() {
             return new UserProfileInfoParams(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfileInfoParams{" +
+            "firstname='" + firstname + '\'' +
+            ", lastname='" + lastname + '\'' +
+            ", birthdate=" + birthdate +
+            ", city='" + city + '\'' +
+            ", gender=" + gender +
+            ", organization='" + organization + '\'' +
+            ", avatar=" + Arrays.toString(avatar) +
+            '}';
     }
 }

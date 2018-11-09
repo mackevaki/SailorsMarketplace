@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.dbmodel;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.*;
 
 @Entity
@@ -22,10 +21,12 @@ public class Event {
     private String description;
 
     @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "date_start")
     private Date dateStart;
 
     @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "date_end")
     private Date dateEnd;
 
@@ -142,6 +143,20 @@ public class Event {
         int result = Objects.hash(eventId, name, description, dateStart, dateEnd);
         result = 31 * result + Arrays.hashCode(place);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "eventId=" + eventId +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", dateStart=" + dateStart +
+            ", dateEnd=" + dateEnd +
+            ", place=" + Arrays.toString(place) +
+            ", chargeUser=" + chargeUser +
+            ", users=" + users +
+            '}';
     }
 
     public User getChargeUser() {

@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepo;
 
     @Inject
-    public UserService(UserRepository userRepo) {
+    public UserService(final UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
@@ -27,9 +27,8 @@ public class UserService {
             throw new UserExistsException(params.email);
         }
 
-        String salt = AuthenticationUtil.generateSalt(20);
-        String securePassword = AuthenticationUtil.generateSecurePassword(params.password, salt);
-
+        final String salt = AuthenticationUtil.generateSalt(20);
+        final String securePassword = AuthenticationUtil.hashPassword(params.password, salt);
         final User userEntity = new User(
                 params.username,
                 securePassword,
@@ -61,7 +60,7 @@ public class UserService {
         return userRepo.getByEmail(email).isPresent();
     }
 
-    public User getUserByEmail(final String email) throws UserNotFoundException {
+    public User getUserByEmail(final String email) {
         return userRepo.getByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
     }
 
@@ -70,7 +69,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(format("Can't find user with username \"%s\"", username)));
     }
 
-    public User getUserById(final Long id) throws UserNotFoundException {
+    public User getUserById(final Long id)  {
         return userRepo.getById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
@@ -79,7 +78,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        List<User> users = userRepo.findAll();
+        final List<User> users = userRepo.findAll();
         return new ArrayList<>(users);
     }
 

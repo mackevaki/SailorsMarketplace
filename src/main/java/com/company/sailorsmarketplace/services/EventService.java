@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 import static com.company.sailorsmarketplace.dto.AllEventParams.Builder.allEventParamsDto;
 
 public class EventService {
-
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
@@ -28,19 +27,7 @@ public class EventService {
         final Event event = eventRepository.getById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
         event.addUser(user);
-
-//        if (user.getEvents() == null) {
-//            List<Event> events = new ArrayList<>();
-//            events.add(event);
-//            user.setEvents(events);
-//        } else {
-//            user.getEvents().add(event);
-//        }
-
         eventRepository.update(event);
-        //userRepository.update(user);
-
-        //return user;
     }
 
     public AllEventParams createEvent(final CreateUpdateEventParams params) {
@@ -52,8 +39,7 @@ public class EventService {
                 params.dateStart,
                 params.dateEnd,
                 owner)
-                .addUser(owner); ///////////
-
+                .addUser(owner);
         final Event createdEvent = eventRepository.save(event);
 
         return allEventParamsDto()
@@ -66,14 +52,9 @@ public class EventService {
                 .chargeUser(createdEvent.getChargeUser())
                 .users(createdEvent.getUsers())
                 .build();
-
-//        owner.getEvents().add(createdEvent);
-//        userRepository.update(owner);
-//
-//        return eventParams;
     }
 
-    public void deleteEvent(Long eventId) { // not final????
+    public void deleteEvent(Long eventId) {
         eventRepository.getById(eventId).ifPresent(eventRepository::delete);
 //
 //        event.setChargeUser(null);
@@ -83,7 +64,7 @@ public class EventService {
 //        return eventRepository.getById(eventId) == null;
     }
 
-    public Event updateEvent(Long eventId) { // not final ????
+    public Event updateEvent(final Long eventId) {
         return null;
     }
 

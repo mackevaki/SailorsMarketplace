@@ -38,6 +38,7 @@ public class UsersResource {
     @Produces({APPLICATION_JSON})
     public Response getAllUsers() {
         List<User> users = userService.getAllUsers();
+
         if (users != null) {
             GenericEntity<List<User>> entity = new GenericEntity<List<User>>(users) {
             };
@@ -52,14 +53,9 @@ public class UsersResource {
     @Produces(APPLICATION_JSON)
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
+        final User user = userService.getUserById(id);
 
-        User user = userService.getUserById(id);
-
-        if(user != null) {
-            return Response.ok(user.toString()).build();
-        } else {
-            return Response.status(HttpStatus.SC_NOT_FOUND).build();
-        }
+        return Response.ok(user.toString()).build();
     }
 
 
@@ -69,6 +65,7 @@ public class UsersResource {
     @Path("/{id}")
     public Response removeUser(@PathParam("id") Long id) {
         userService.deleteUser(id);
+
         return Response.ok("removed").build();
     }
 
@@ -87,7 +84,7 @@ public class UsersResource {
                         .build(), request.userId
         );
 
-        return Response.ok(updUser.getUserId()).build();
+        return Response.ok(updUser.toString()).build();
     }
 
     @POST
@@ -95,7 +92,6 @@ public class UsersResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public Response createUser(@Valid CreateUserRequest request) throws UserExistsException, ConstraintViolationException {
-
         final User createdUser = userService.createNewUser(
                 createUpdateUserParams()
                         .username(request.username)
@@ -108,7 +104,7 @@ public class UsersResource {
 
         userProfileInfoService.createUserProfileInfoForNewUser(createdUser.getUserId());
 
-        return Response.ok(createdUser.getUserId()).build();
+        return Response.ok(createdUser.toString()).build();
     }
 
 }

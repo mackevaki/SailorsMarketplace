@@ -23,7 +23,7 @@ public class VerificationCode implements Serializable {
     @Column(name = "verification_code", nullable = false, length = 8)
     private String code;
 
-    @Basic ////
+    @Basic
     @Column(name = "valid_till", nullable = false)
     private String validTill;
 
@@ -34,7 +34,6 @@ public class VerificationCode implements Serializable {
     @Basic
     @Column(name = "target_user_id", nullable = false, length = 45)
     private Long targetUserId;
-
 
     public VerificationCode(
             SourceSystem system,
@@ -107,5 +106,16 @@ public class VerificationCode implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, sourceSystem, code, validTill, targetId, targetUserId);
+    }
+
+    @Override
+    public String toString() {
+        return "VerificationCode{" +
+            "sourceSystem=" + sourceSystem +
+            ", code='" + code + '\'' +
+            ", validTill='" + validTill + '\'' +
+            ", targetId='" + targetId + '\'' +
+            ", targetUserId=" + targetUserId +
+            '}';
     }
 }

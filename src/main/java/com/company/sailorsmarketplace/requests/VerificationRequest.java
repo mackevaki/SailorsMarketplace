@@ -24,4 +24,14 @@ public class VerificationRequest {
         this.targetId = targetId;
         this.targetUserId = targetUserId;
     }
+
+    @Override
+    public String toString() {
+        return "VerificationRequest{" +
+            "date=" + date +
+            ", sourceSystem=" + sourceSystem +
+            ", targetId='" + targetId + '\'' +
+            ", targetUserId=" + targetUserId +
+            '}';
+    }
 }

@@ -1,7 +1,5 @@
 package com.company.sailorsmarketplace.dbmodel;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -46,13 +44,21 @@ public class Organization {
         this.name = name;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User usersByOwnerId) {
+        this.owner = usersByOwnerId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
         return Objects.equals(orgId, that.orgId) &&
-                Objects.equals(name, that.name);
+            Objects.equals(name, that.name);
     }
 
     @Override
@@ -60,11 +66,12 @@ public class Organization {
         return Objects.hash(orgId, name);
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User usersByOwnerId) {
-        this.owner = usersByOwnerId;
+    @Override
+    public String toString() {
+        return "Organization{" +
+            "orgId=" + orgId +
+            ", name='" + name + '\'' +
+            ", owner=" + owner +
+            '}';
     }
 }

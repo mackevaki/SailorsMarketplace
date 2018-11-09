@@ -3,7 +3,8 @@ package com.company.sailorsmarketplace.requests;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Date;
+import java.util.Arrays;
+import java.util.Date;
 
 public class CreateEventRequest {
     public final String name;
@@ -29,4 +30,15 @@ public class CreateEventRequest {
         this.userByChargeUserId = userByChargeUserId;
     }
 
+    @Override
+    public String toString() {
+        return "CreateEventRequest{" +
+            "name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", dateStart=" + dateStart +
+            ", dateEnd=" + dateEnd +
+            ", place=" + Arrays.toString(place) +
+            ", userByChargeUserId=" + userByChargeUserId +
+            '}';
+    }
 }

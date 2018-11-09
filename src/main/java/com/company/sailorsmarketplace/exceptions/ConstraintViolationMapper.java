@@ -2,6 +2,7 @@ package com.company.sailorsmarketplace.exceptions;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -18,7 +19,10 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
-        /* TODO: HttpStatus vs Response.Status with 2 arguments */
-        return Response.status(BAD_REQUEST).entity(messages).build();
+        return Response
+            .status(BAD_REQUEST.getStatusCode())
+            .type(MediaType.APPLICATION_JSON_TYPE)
+            .entity(messages)
+            .build();
     }
 }

@@ -13,14 +13,14 @@ public class UserProfileInfoService {
     private final UserProfileInfoRepository userProfileInfoRepo;
 
     @Inject
-    public UserProfileInfoService(UserRepository userRepo, UserProfileInfoRepository userProfileInfoRepo) {
+    public UserProfileInfoService(final UserRepository userRepo, final UserProfileInfoRepository userProfileInfoRepo) {
         this.userRepo = userRepo;
         this.userProfileInfoRepo = userProfileInfoRepo;
     }
 
     public UserProfileInfo createUserProfileInfoForNewUser(final Long userId) {
-        UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
-        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        final UserProfileInfo userProfileInfo = new UserProfileInfo(userId);
+        final User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         userProfileInfo.setUser(user);
         userProfileInfoRepo.save(userProfileInfo);
@@ -30,13 +30,13 @@ public class UserProfileInfoService {
         return userProfileInfo;
     }
 
-    public String showUserProfileInfo(final Long userId) throws UserNotFoundException {
+    public String showUserProfileInfo(final Long userId) {
         final User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         return user.getUserProfileInfo().toString();
     }
 
-    public UserProfileInfo updateUserProfileInfo(UserProfileInfoParams params, Long userId) throws UserNotFoundException {
-        User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+    public UserProfileInfo updateUserProfileInfo(final UserProfileInfoParams params, final Long userId) {
+        final User user = userRepo.getById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         return userProfileInfoRepo.getById(userId)
                 .map(profileInfo -> profileInfo.setFirstname(params.firstname))
@@ -57,7 +57,7 @@ public class UserProfileInfoService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    public UserProfileInfo getUserProfileInfoById(Long id) throws UserNotFoundException {
+    public UserProfileInfo getUserProfileInfoById(final Long id) {
         return userProfileInfoRepo.getById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }

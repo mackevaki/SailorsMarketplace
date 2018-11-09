@@ -1,7 +1,8 @@
 package com.company.sailorsmarketplace.dto;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Arrays;
+import java.util.Date;
 
 public class CreateUpdateEventParams {
     public final String name;
@@ -64,9 +65,20 @@ public class CreateUpdateEventParams {
             return this;
         }
 
-
         public CreateUpdateEventParams build() {
             return new CreateUpdateEventParams(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CreateUpdateEventParams{" +
+            "name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", dateStart=" + dateStart +
+            ", dateEnd=" + dateEnd +
+            ", place=" + Arrays.toString(place) +
+            ", chargeUserId=" + chargeUserId +
+            '}';
     }
 }

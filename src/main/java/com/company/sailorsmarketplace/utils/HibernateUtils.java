@@ -8,81 +8,46 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static java.lang.System.out;
-
 public class HibernateUtils {
+    private static final Logger log = LoggerFactory.getLogger(HibernateUtils.class);
     private static SessionFactory sessionFactory;
-
     static {
         try {
             sessionFactory = buildSessionFactory();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            log.info(e.getMessage(), e);
         }
     }
+    private HibernateUtils() { throw new AssertionError(); }
 
-    private HibernateUtils() {}
-
-    protected static SessionFactory buildSessionFactory() throws IOException {
+    private static SessionFactory buildSessionFactory() throws IOException {
         // A SessionFactory is set up once for an application!
         Configuration configuration = new Configuration();
         InputStream inputStream = HibernateUtils.class.getClassLoader().
-            getResourceAsStream("config.yml");
+            getResourceAsStream("hibernate-configuration.yml");
         if (inputStream == null) {
             throw ExceptionFactory.createException(InvalidConnectionAttributeException.class,
-                                                   Messages.getString("ConnectionString.10", new Object[] {"config.yml"}));
+                                                   Messages.getString("ConnectionString.10", new Object[] {"hibernate-configuration.yml"}));
         }
         Properties hibernateProperties = new Properties();
         hibernateProperties.load(inputStream);
         configuration.setProperties(hibernateProperties);
-        // Настройки hibernate
-//        Configuration configuration = new Configuration()
-//                .setProperty( "hibernate.dialect",
-//                             "org.hibernate.dialect.MySQLDialect" )
-//                .setProperty( "hibernate.connection.driver_class",
-//                              "com.mysql.cj.jdbc.Driver" )
-//                .setProperty( "hibernate.connection.url",
-//                              "jdbc:mysql://localhost:3306/smarket?useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true" )
-//                .setProperty( "hibernate.connection.username",
-//                              "smarket" )
-//                .setProperty( "hibernate.connection.password",
-//                              "smarket" )
-//                .setProperty( "hibernate.connection.pool_size",
-//                              "10" )
-//                .setProperty( "hibernate.connection.autocommit",
-//                              "false" )
-//                .setProperty( "hibernate.cache.provider_class",
-//                              "org.hibernate.cache.NoCacheProvider" )
-//                .setProperty( "hibernate.cache.use_second_level_cache",
-//                              "false" )
-//                .setProperty( "hibernate.hbm2ddl.auto",
-//                              "create-drop" )
-//                .setProperty( "hibernate.cache.use_query_cache",
-//                              "false" )
-//                .setProperty( "hibernate.show_sql",
-//                              "true" )
-//                .setProperty( "hibernate.query.factory_class",
-//                             "org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory" )
-//                .setProperty( "hibernate.current_session_context_class",
-//                              "thread" )
-//                .setProperty("hibernate.jdbc.lob.non_contextual_creation",
-//                             "true" )
-//                .setProperty("hibernate.id.new_generator_mappings", "true")
-                configuration.addPackage("com.company.sailorsmarketplace.dbmodel")
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(UserProfileInfo.class)
-                .addAnnotatedClass(VerificationCode.class)
-                .addAnnotatedClass(AdminsRoles.class)
-                .addAnnotatedClass(Event.class)
-                .addAnnotatedClass(Organization.class)
-                .addAnnotatedClass(TelegramConnection.class);
+        configuration.addPackage("com.company.sailorsmarketplace.dbmodel")
+            .addAnnotatedClass(User.class)
+            .addAnnotatedClass(UserProfileInfo.class)
+            .addAnnotatedClass(VerificationCode.class)
+            .addAnnotatedClass(AdminsRoles.class)
+            .addAnnotatedClass(Event.class)
+            .addAnnotatedClass(Organization.class)
+            .addAnnotatedClass(TelegramConnection.class);
 
-                out.println(configuration.getProperties().toString());
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties()).build();
         try {
@@ -91,12 +56,10 @@ public class HibernateUtils {
             // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
             // so destroy it manually.
             StandardServiceRegistryBuilder.destroy( registry );
-
-            throw new RuntimeException("Building session factory failed: " + e.getMessage(), e);
+            throw new ExceptionInInitializerError("Building session factory failed: " + e.getMessage());
         }
         return sessionFactory;
     }
-
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;

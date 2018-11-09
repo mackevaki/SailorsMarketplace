@@ -10,12 +10,11 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ValidationExceptionMapper implements ExceptionMapper<ValidationException> {
-
     @Override
     public Response toResponse(javax.validation.ValidationException e) {
         final StringBuilder strBuilder = new StringBuilder();
         for (ConstraintViolation<?> cv : ((ConstraintViolationException) e).getConstraintViolations()) {
-            strBuilder.append(cv.getPropertyPath().toString() + " " + cv.getMessage());
+            strBuilder.append(cv.getPropertyPath().toString()).append(" ").append(cv.getMessage());
         }
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())

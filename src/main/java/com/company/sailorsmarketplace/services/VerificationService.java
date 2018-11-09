@@ -16,20 +16,18 @@ public class VerificationService {
     private final UserRepository userRepo;
 
     @Inject
-    public VerificationService(UserRepository userRepo) {
+    public VerificationService(final UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
-    public AllVerificationParams createVerificationCode(VerificationParams params) {
-
-        VerificationCode verificationCode = new VerificationCode(
+    public AllVerificationParams createVerificationCode(final VerificationParams params) {
+        final VerificationCode verificationCode = new VerificationCode(
                 params.sourceSystem,
                 params.date.toString(),
                 params.targetId,
                 params.targetUserId
         );
-
-        String code = randomNumeric(8);
+        final String code = randomNumeric(8);
 
         if (userRepo.getById(params.targetUserId).isPresent()) {
             verificationCode.setCode(code);

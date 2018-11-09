@@ -18,7 +18,7 @@ public class EventRepository {
         }
     }
 
-    public Optional<Event> getById(Long id) {
+    public Optional<Event> getById(final Long id) {
         try (final Session session = HibernateUtils.getSessionFactory().openSession()) {
             return Optional.ofNullable(session.get(Event.class, id));
         }

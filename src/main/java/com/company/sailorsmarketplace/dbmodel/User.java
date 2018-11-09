@@ -2,9 +2,6 @@ package com.company.sailorsmarketplace.dbmodel;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.boot.model.naming.NamingStrategyHelper;
-import org.hibernate.cfg.DefaultNamingStrategy;
-import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -227,15 +224,23 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        if (userId != null && username != null && email != null && telephone != null && password != null && salt != null && enabled != null) {
-            return userId.toString() + " " + username + " " + email + " " + telephone + " " + password + " " + salt + " " + enabled.toString();
-        }
-        return null;
+    public int hashCode() {
+        return Objects.hash(userId, username, email, password, enabled, telephone);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(userId, username, email, password, enabled, telephone);
+    public String toString() {
+        return "User{" +
+            "username='" + username + '\'' +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", telephone='" + telephone + '\'' +
+            ", salt='" + salt + '\'' +
+            ", enabled=" + enabled +
+            ", token='" + token + '\'' +
+            ", userProfileInfo=" + userProfileInfo +
+            ", events=" + events +
+            ", authorities=" + authorities +
+            '}';
     }
 }

@@ -45,4 +45,12 @@ public class AdminsRoles {
     public int hashCode() {
         return Objects.hash(roleId, roleName);
     }
+
+    @Override
+    public String toString() {
+        return "AdminsRoles{" +
+            "roleId=" + roleId +
+            ", roleName='" + roleName + '\'' +
+            '}';
+    }
 }

@@ -1,7 +1,6 @@
 package com.company.sailorsmarketplace.rest;
 
 import com.company.sailorsmarketplace.dto.UserProfileInfoParams;
-import com.company.sailorsmarketplace.exceptions.UserNotFoundException;
 import com.company.sailorsmarketplace.requests.UpdateUserProfileInfoRequest;
 import com.company.sailorsmarketplace.services.UserProfileInfoService;
 
@@ -14,7 +13,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/profile_info")
 public class UserProfileInfoResource {
-
     private final UserProfileInfoService userProfileInfoService;
 
     @Inject
@@ -26,9 +24,8 @@ public class UserProfileInfoResource {
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
     @Path("/update")
-    public Response updateUserProfileInfo(UpdateUserProfileInfoRequest request) throws UserNotFoundException {
-
-        UserProfileInfoParams profileInfoParams = userProfileInfoParams()
+    public Response updateUserProfileInfo(UpdateUserProfileInfoRequest request) {
+        final UserProfileInfoParams profileInfoParams = userProfileInfoParams()
                 .firstname(request.firstname)
                 .lastname(request.lastname)
                 .city(request.city)
@@ -46,8 +43,8 @@ public class UserProfileInfoResource {
     @GET
     @Produces(APPLICATION_JSON)
     @Path("/{id}")
-    public Response showUserProfileInfo(@PathParam("id") Long id) throws UserNotFoundException {
-        String info = userProfileInfoService.showUserProfileInfo(id);
+    public Response showUserProfileInfo(@PathParam("id") Long id) {
+        final String info = userProfileInfoService.showUserProfileInfo(id);
 
         return Response.ok().entity(info).build();
     }
